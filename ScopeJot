@@ -1,0 +1,29 @@
+-------------------------09-02-2021-----------------
+
+commands- syntax:
+	print('+');
+	var = input(DATATYPE);	
+
+keywords:
+	(data types) int, float, char
+	void
+	if, else, while, 
+	continue, break, return
+	
+funtions:
+	function void blah (type var, ...[just in case... funct also]){
+	}
+	
+	
+operators: 
+	https://ecs-network.serv.pacific.edu/ecpe-170/tutorials/mips-instruction-set
+	+, -, *, /, %,
+	all that is there
+arrays:
+	multi
+	
+	
+	
+	
+brush up the last used, next use thingies
+	
