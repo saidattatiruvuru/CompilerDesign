@@ -1,0 +1,42 @@
+-------------------------10-02-2021-----------------
+LEXER
+digit - [0-9]
+alpha - [a-zA-Z]
+charac - alpha | digit | "\n"      and all those 
+keywords - int|float|char|void|if|else|while|function|return|continue|break|input|print
+semicolon - ;
+separators - ,
+number - digit+
+
+comments - // (charac)* 
+identifier - {alpha|_}{alpha|_|digit}*
+floatnum - (number . number)
+intnum - number
+char - '(charac)'
+string - " (charac)* "
+operator - + | - | * | / | % | >> | << AND ALL THOSE
+LFB - {
+RFB - }
+LCB - (
+RCB - )
+LSB - [
+RSB - ]
+ws - {\t| |\n}* .
+
+
+PARSER
+
+prgm - (funcdef | stmts)*
+stmts - stmts stmt |stmt
+funcdef - function type identifier (args) { stmts }
+	args - args , arg | null
+	arg - type identifier|arrayid
+
+arrayid - identifier [number] | arrayid [number]
+
+stmt - funccall | 
+
+
+//declare
+	
+	A = -8675 
