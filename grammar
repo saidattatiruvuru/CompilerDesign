@@ -3,7 +3,7 @@ LEXER
 digit - [0-9]
 alpha - [a-zA-Z]
 charac - alpha | digit | "\n"      and all those 
-keywords - int|float|char|void|if|else|while|function|return|continue|break|input|print
+keywords - int|float|char|void|if|else|while|function|return|continue|break|input|print 		//seperate 
 semicolon - ;
 separators - ,
 number - digit+
@@ -13,7 +13,7 @@ identifier - {alpha|_}{alpha|_|digit}*
 floatnum - (number . number)
 intnum - number
 char - '(charac)'
-string - " (charac)* "
+string - \" (charac)* \"
 operator - + | - | * | / | % | >> | << AND ALL THOSE
 LFB - {
 RFB - }
@@ -28,15 +28,56 @@ PARSER
 
 prgm - (funcdef | stmts)*
 stmts - stmts stmt |stmt
-funcdef - function type identifier (args) { stmts }
-	args - args , arg | null
-	arg - type identifier|arrayid
+funcdef - function type identifier (nulltypeargs) { stmts }
+	nulltypesargs - null | typeargs
+	typeargs - typeargs , typearg | typearg 
+	typearg - type identifier|arrayid
 
 arrayid - identifier [number] | arrayid [number]
 
-stmt - funccall | 
+stmt - funccall | declare | assign | ifstmt | whilestmt | printstmt
 
+	declare - type vars; 
+		vars - var , vars | var
+		var - identifier val | arrayid
+		val - = expression | = inputstmt| null
+		
+-------------------------11-02-2021-----------------
 
-//declare
+		expression - expression OR andterm | andterm
+			andterm - andterm AND equalterm | equalterm
+			equalterm - equalterm EQUAL relopterm |equalterm NOTEQUAL relopterm | relopterm
+			relopterm - relopterm RELOP arithterm | arithterm
+			arithterm - arithterm ARITHOP multterm | multterm
+			multterm - multterm MULTOP singleterm | singleterm
+			singleterm - identifier |prefix intnum |prefix floatnum | char | (expression) | arrayid | funccall
+			prefix - +|-|null
+		
+	assign - LHS = RHS;
+		LHS - identifier | arrayid
+		RHS - inputstmt | expression
+		inputstmt - input(datatype)
 	
-	A = -8675 
+	funccall - identifier ( nullargs ) ;
+		nullargs - null | args
+		args - args , arg | arg
+		arg - identifier |prefix intnum |prefix floatnum | char | arrayid 
+	
+	ifstmt - if (expression) {stmts} elsepart
+		elsepart - else {stmts} | null
+		
+	whilestmt - while(expression) {stmts}
+	
+	printstmt - print(printables)
+		printables - printables , printable | printable
+		printable - string | identifier | arrayid 
+
+-------------------------12-02-2021-----------------
+	
+	
+	
+	
+	
+	
+	
+	

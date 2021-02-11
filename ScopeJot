@@ -1,7 +1,7 @@
 -------------------------09-02-2021-----------------
 
 commands- syntax:
-	print('+');
+	print(',');
 	var = input(DATATYPE);	
 
 keywords:
@@ -27,3 +27,5 @@ arrays:
 	
 brush up the last used, next use thingies
 	
+	
+	int i=0,j,k=54;
