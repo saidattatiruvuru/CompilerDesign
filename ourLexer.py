@@ -1,0 +1,148 @@
+
+import ply.lex as lex
+
+reserved = {
+   'if' : 'IF',
+   'else' : 'ELSE',
+   'input' : 'INPUT',
+   'break' : 'break',
+   'continue' : 'CONTINUE',
+   'return' : 'RETURN',
+   'function' : 'FUNCTION',
+   'void' : 'VOID',
+   'float' : 'FLOAT',
+   'int' : 'INT',
+   'while' : 'WHILE',
+   'print' : 'PRINT',
+   'char' : 'CHAR'
+}
+
+tokens = [
+   'LFB',
+   'RFB',
+   'COMMENTS',
+   'IDENTIFIER',
+   'FLOATNUM',
+   'INTNUM',
+   'STRING',
+   'RELOP',
+   'ARITHOP',
+   'LCB',
+   'RCB',
+   'LSB',
+   'RSB',
+   'OR',
+   'AND',
+   'EQUAL',
+   'NOTEQUAL',
+   'MULTOP',
+   'SEMICOLON',
+   'ASSIGN',
+   'NOT',
+   'CHARACTER', #CHARACTER VALUE   
+   'SEPARATORS'
+ ] + list(reserved.values())
+
+# Regular expression rules for simple tokens
+
+#The keywords
+'''
+t_INPUT= r'input'
+t_BREAK= r'break'
+t_CONTINUE= r'continue'
+t_RETURN= r'return'
+t_ELSE= r'else'
+t_FUNCTION= r'function'
+t_IF= r'if'
+t_VOID= r'void'
+t_FLOAT= r'float'
+t_INT= r'int'
+t_WHILE= r'while'
+t_PRINT= r'print'
+t_CHAR = r'char'
+'''
+
+def t_IDENTIFIER(t):
+  r'[a-zA_Z_]\w*'
+  t.type = reserved.get(t.value,'IDENTIFIER') 
+  return t
+	
+def t_FLOATNUM(t):
+  r'\d+\.\d+'
+  t.value = float(t.value)
+  return t
+def t_INTNUM(t):
+  r'\d+'
+  t.value = int(t.value)
+  return t
+def t_CHARACTER(t):
+  r'\'(\s|\S)\''
+  l = len(t.value)
+  t.value = t.value[1:(l-1)]
+  return t
+def t_STRING(t):
+  r'\"\w+\"' 
+  l = len(t.value)
+  t.value = t.value[1:l-1]
+  return t
+
+
+t_LCB  = r'\('
+t_RCB  = r'\)'
+t_LFB = r'\{'
+t_RFB = r'\}'
+t_LSB = r'\['
+t_RSB = r'\]'
+
+
+t_SEPARATORS = r','
+t_SEMICOLON=   r';'
+t_MULTOP=   r'\*|/'
+t_NOTEQUAL=   r'!='
+t_EQUAL=   r'=='
+t_AND=   r'&&'
+t_OR=   r'\|\|'
+t_RELOP = r'(>= |<=|<|=|>)'
+t_ARITHOP = r'(\+|-)'
+t_ASSIGN=   r'='
+t_NOT=   r'!'
+
+ 
+# Define a rule so we can track line numbers
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+# A string containing ignored characters (spaces and tabs) and comments
+def t_COMMENT(t):
+    r'//[^\n]*\n'
+    pass
+t_ignore  = ' \t'
+
+# Error handling rule
+def t_error(t):
+    print("Illegal character '%s'" % t.value[0])
+    t.lexer.skip(1)
+
+# Build the lexer
+lexer = lex.lex()
+
+# Test it out
+data = '''
+3 + 4 * 10.0
+  + -20 *2 + 1 ; "string" 'c' 
+  int char chara
+  // comenet
+  hello
+  <= <= , ;
+'''
+
+# Give the lexer some input
+lexer.input(data)
+
+# Tokenize
+while True:
+    tok = lexer.token()
+    if not tok:
+        break      # No more input
+    print(tok)

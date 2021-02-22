@@ -1,0 +1,41 @@
+// Sample Program of selection sort
+
+int n, arr[10];
+int i =0;
+n =  input(int);
+while(i<n)
+{
+	arr[i] = input(int);
+	i=i+1;
+}
+int j=0,k=0;
+
+// sorting the array
+
+while(j<n)
+{
+	k = j+ 1;
+	while(k<n)
+	{
+	if(arr[j]<arr[k])
+	{
+		int temp = arr[j];
+		arr[j] = arr[k];
+		arr[k] = temp;
+	}
+		
+	k= k+1;
+	}
+	j = j+1;
+}
+// printing the array
+
+i = 0;
+while(i<n)
+{
+	print("Array values", i , " ",arr[i], "\n");
+	i=i+1;
+}
+	
+
+
