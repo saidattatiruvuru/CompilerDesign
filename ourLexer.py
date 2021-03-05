@@ -1,47 +1,47 @@
+%%writefile ourLexer.py 
 
 import ply.lex as lex
 
 reserved = {
-   'if' : 'IF',
-   'else' : 'ELSE',
-   'input' : 'INPUT',
-   'break' : 'break',
-   'continue' : 'CONTINUE',
-   'return' : 'RETURN',
-   'function' : 'FUNCTION',
-   'void' : 'VOID',
-   'float' : 'FLOAT',
-   'int' : 'INT',
-   'while' : 'WHILE',
-   'print' : 'PRINT',
-   'char' : 'CHAR'
+  'if' : 'IF',
+  'else' : 'ELSE',
+  'input' : 'INPUT',
+  'break' : 'BREAK',
+  'continue' : 'CONTINUE',
+  'return' : 'RETURN',
+  'function' : 'FUNCTION',
+  'void' : 'VOID',
+  'float' : 'FLOAT',
+  'int' : 'INT',
+  'while' : 'WHILE',
+  'print' : 'PRINT',
+  'char' : 'CHAR'
 }
 
 tokens = [
-   'LFB',
-   'RFB',
-   'COMMENTS',
-   'IDENTIFIER',
-   'FLOATNUM',
-   'INTNUM',
-   'STRING',
-   'RELOP',
-   'ARITHOP',
-   'LCB',
-   'RCB',
-   'LSB',
-   'RSB',
-   'OR',
-   'AND',
-   'EQUAL',
-   'NOTEQUAL',
-   'MULTOP',
-   'SEMICOLON',
-   'ASSIGN',
-   'NOT',
-   'CHARACTER', #CHARACTER VALUE   
-   'SEPARATORS'
- ] + list(reserved.values())
+  'LFB',
+  'RFB',
+  'COMMENTS',
+  'IDENTIFIER',
+  'FLOATNUM',
+  'INTNUM',
+  'STRING',
+  'RELOP',
+  'ARITHOP',
+  'LCB',
+  'RCB',
+  'LSB',
+  'RSB',
+  'OR',
+  'AND',
+  'LOG',
+  'MULTOP',
+  'SEMICOLON',
+  'ASSIGN',
+  'NOT',
+  'CHARACTER', #CHARACTER VALUE   
+  'SEPARATORS'
+] + list(reserved.values())
 
 # Regular expression rules for simple tokens
 
@@ -62,11 +62,17 @@ t_PRINT= r'print'
 t_CHAR = r'char'
 '''
 
+# A string containing ignored characters (spaces and tabs) and comments
+def t_COMMENT(t):
+    r'//[^\n]*'
+    pass
+t_ignore  = ' \t'
+
 def t_IDENTIFIER(t):
   r'[a-zA_Z_]\w*'
   t.type = reserved.get(t.value,'IDENTIFIER') 
   return t
-	
+  
 def t_FLOATNUM(t):
   r'\d+\.\d+'
   t.value = float(t.value)
@@ -81,7 +87,7 @@ def t_CHARACTER(t):
   t.value = t.value[1:(l-1)]
   return t
 def t_STRING(t):
-  r'\"\w+\"' 
+  r'\"[^\"]*\"' 
   l = len(t.value)
   t.value = t.value[1:l-1]
   return t
@@ -98,26 +104,19 @@ t_RSB = r'\]'
 t_SEPARATORS = r','
 t_SEMICOLON=   r';'
 t_MULTOP=   r'\*|/'
-t_NOTEQUAL=   r'!='
-t_EQUAL=   r'=='
+t_LOG=   r'!= | =='
 t_AND=   r'&&'
 t_OR=   r'\|\|'
-t_RELOP = r'(>= |<=|<|=|>)'
+t_RELOP = r'(>= |<=|<|>)'
 t_ARITHOP = r'(\+|-)'
 t_ASSIGN=   r'='
 t_NOT=   r'!'
 
- 
+
 # Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
-
-# A string containing ignored characters (spaces and tabs) and comments
-def t_COMMENT(t):
-    r'//[^\n]*\n'
-    pass
-t_ignore  = ' \t'
 
 # Error handling rule
 def t_error(t):
@@ -129,12 +128,35 @@ lexer = lex.lex()
 
 # Test it out
 data = '''
-3 + 4 * 10.0
-  + -20 *2 + 1 ; "string" 'c' 
-  int char chara
-  // comenet
-  hello
-  <= <= , ;
+function int fibo(int n) {
+	int first = 0, second = 1;
+	int i = 0;
+  while(i < n) {
+		int third = first + second;
+    //print(" lfjbvkmn", third);
+		first = second;
+		second = third;
+    int saidatta;
+	}
+	return second;
+}
+int n = input(int);
+int ans = fibo(n);
+//print(n, "th fibonacci:", ans);
+float f = input(float);
+float result = 0;
+if(f < 0 ) {
+	result = 2 * (f <= -1 && f >= -3);
+	if(result == 2) {
+		//print("Yay!");
+	}
+}
+else {
+	result = -2 * (f || 1);
+	if(result == -2) {
+		print("\nHurray");
+	}
+}
 '''
 
 # Give the lexer some input
@@ -146,3 +168,4 @@ while True:
     if not tok:
         break      # No more input
     print(tok)
+
