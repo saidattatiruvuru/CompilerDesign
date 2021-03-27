@@ -12,7 +12,7 @@ comments - // (charac)*
 identifier - {alpha|_}{alpha|_|digit}*
 floatnum - (number . number)
 intnum - number
-char - '(charac)'
+character - '(charac)'
 string - \" (charac)* \"
 operator - + | - | * | / | % | >> | << AND ALL THOSE
 LFB - {
@@ -50,7 +50,7 @@ stmt - funccall | declare | assign | ifstmt | whilestmt | printstmt
 			relopterm - relopterm RELOP arithterm | arithterm
 			arithterm - arithterm ARITHOP multterm | multterm
 			multterm - multterm MULTOP singleterm | singleterm
-			singleterm - identifier |prefix intnum |prefix floatnum | char | (expression) | arrayid | funccall
+			singleterm - identifier |prefix intnum |prefix floatnum | character | (expression) | arrayid | funccall
 			prefix - +|-|null
 		
 	assign - LHS = RHS;
@@ -61,7 +61,7 @@ stmt - funccall | declare | assign | ifstmt | whilestmt | printstmt
 	funccall - identifier ( nullargs ) ;
 		nullargs - null | args
 		args - args , arg | arg
-		arg - identifier |prefix intnum |prefix floatnum | char | arrayid 
+		arg - identifier |prefix intnum |prefix floatnum | character | arrayid 
 	
 	ifstmt - if (expression) {stmts} elsepart
 		elsepart - else {stmts} | null
