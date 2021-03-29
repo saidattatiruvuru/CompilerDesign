@@ -1,12 +1,19 @@
 import ply.yacc as yacc
 from Lexer import tokens
 lineno = 0
+# symbol table
 table = []
-scopestack = [table]
+scopestack = [tabled
+# address of the allocatable memory
 curr_mem = 0
+# scope for memory
 mem_stack = [0]
+#the number given to next temporary variable
+newTemp = 0
+#the number given to next Label
+newLabel = 0
 
-
+#returns reference to the latest scope entry of the variable with identifier 'a', if exists. else returns [False,None]
 def checkid(a):
   found = False
 
@@ -28,6 +35,7 @@ def checkid(a):
         
   return [found , j]
 
+#to see of the identifier with name a already exists
 def checkid_in_scope(a):
   found = False
   j = None
@@ -42,6 +50,7 @@ def checkid_in_scope(a):
         
   return found
 
+#intermediate type casting
 def type_declare(var_type, val_type, value):
   flag_err = 0
   if var_type == 'int':
@@ -62,12 +71,15 @@ def type_declare(var_type, val_type, value):
       p_error("Float cann't be assigned to char type")
   return [value, flag_err]
 
-
+#checks if the array access is valid
 def checkarrayid(a):
   found = False
   i = len(scopestack) - 1
   j = None
   flag = 1
+  global newLabel
+  global newTemp
+  codeblock = None
 
   while i >= 0 :
     temptable = scopestack[i]
@@ -75,22 +87,60 @@ def checkarrayid(a):
       if 'identifier' in j.keys() and 'arguments' not in j.keys() :
         if j['identifier'] == a['identifier'] and len(j['dimension'])==len(a['dimension']):
           flag = 1
+          code = []
+          cumProduct = 't'+str(newTemp + 1)
+          curIndex = 't'+str(newTemp + 2)
+          resultTemp = 't' + str(newTemp + 3)
+          #T1 = 1 cum pro
+          code.append({'inst_type':'ASGN' , 'src1': {'constant': 1 , 'type':'int'} , 'src2':{}, 'dest':cumProduct})
+          #T3 = 0 fin
+          code.append({'inst_type':'ASGN' , 'src1': {'constant': 0 , 'type':'int'} , 'src2':{}, 'dest':resultTemp})
           for k in range(len(j['dimension'])):
-            if type(a['dimension'][k]) == int:   
+            if type(a['dimension'][k]) == int:
               if j['dimension'][k] <= a['dimension'][k] :
                 flag = 0
                 j = a['identifier'] + 'Array out of bound'
                 break
+              #T2 = t1 * index //cur offset
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant': a['dimension'][k] , 'type':'int'}, 'dest':curIndex})
+              #T3 = t3 + t2
+              code.append({'inst_type': 'ADD' , 'src1': curIndex , 'src2':resultTemp, 'dest':resultTemp})
+              #T1 = t1 * dim
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':j['dimension'][k], 'dest':cumProduct})
+            
+            elif type(a['dimension'][k]) == dict:
+              #T4 = sgt i , dim
+              code.append({'inst_type': 'SGT' , 'src1': a['dimension'][k] , 'src2':j['dimension'][k] , 'dest':curIndex})
+              #IF0 T4 GOTO Lnext1
+              #error
+              #Lnext1:
+              #.
+              code.append({'inst_type': 'IF0' , 'src1': curIndex, 'src2':'' , 'dest':'L'+str(newLabel)})
+              code.append({'inst_type': 'ERROR' , 'src1': '', 'src2':'' , 'dest':''})
+              code.append({'inst_type': 'LABEL' , 'src1': '', 'src2':'' , 'dest':'L'+str(newLabel)})
+              newLabel = newLabel + 1
+              #T2 = t1 * index //cur offset
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant': a['dimension'][k] , 'type':'int'}, 'dest':curIndex})
+              #T3 = t3 + t2
+              code.append({'inst_type': 'ADD' , 'src1': curIndex , 'src2':resultTemp, 'dest':resultTemp})
+              #T1 = t1 * dim
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':j['dimension'][k], 'dest':cumProduct})
+
           if flag == 1:
             found = True
-          break
-            
+            #t0 = a [ t3 ]
+            code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp , 'dest':'t'+str(newTemp)})
+            codeblock = {'Code': code, 'PassedValue': 't'+str(newTemp)}
+            #advancing into next temporary
+            newTemp = newTemp + 1
+          break     
+
     if found or flag == 0 :
       break
     i -= 1
+  return [found, j, codeblock]
 
-  return [found, j]
-
+#checks if function with identifier 'funcid' exists
 def checkfuncdef(funcid):
   deffound = False
   for i in table:
@@ -100,7 +150,7 @@ def checkfuncdef(funcid):
         break
   return deffound
 
-
+#checks if function call is valid
 def checkfunccall(funcid, args):
   deffound = False
   argright = False
@@ -121,6 +171,7 @@ def checkfunccall(funcid, args):
         break
   return [deffound, argright]
 
+#type converion
 def type_conversion(p,q,r):
   ty = None
   if r['type'] != q['type']:
@@ -149,6 +200,7 @@ def type_conversion(p,q,r):
 
   return [ty,val1,val2, p]
 
+#type conv log
 def type_conv_log(p,q,r):
   ty = 'int'
   p = {'type':'int'}
@@ -168,7 +220,7 @@ def type_conv_log(p,q,r):
 
   return [ty,val1,val2, p]
 
-  
+
 def p_prgm(p):
   'prgm : prgm stmt'
   global lineno
@@ -477,29 +529,32 @@ def exprfunc(p, q):
 def p_singleterm(p):
   'singleterm : IDENTIFIER'
   res = checkid(p[1])
+  p[0] = {}
   if res[0] == True:
-    p[0] = res[1]
+    p[0]['PassedValue'] = res[1]
   else:
-    p[0] = {}
+    p[0]['PassedValue'] = None
     p_error(p[1])
+  p[0]['Code'] = ''
+  
     
 
 def p_singleterm_or(p):
   'singleterm : prefix INTNUM'
   if p[1] == '-':
     p[2] = p[2] * -1
-  p[0] = {'constant' : p[2],'type':'int'}
+  p[0] = {'PassedValue': {'constant' : p[2],'type':'int'}}
 
 def p_singleterm_or2(p):
   'singleterm : prefix FLOATNUM'
   if p[1] == '-':
     p[2] = p[2] * -1
-  p[0] = {'constant' : p[2],'type':'float'}
+  p[0] = {'PassedValue': {'constant' : p[2],'type':'float'}}
     
 
 def p_singleterm_or3(p):
   'singleterm : CHARACTER'
-  p[0] = {'constant' : p[1],'type':'char'}
+  p[0] = {'PassedValue': {'constant' : p[1],'type':'char'}}
 
 def p_singleterm_or4(p):
   'singleterm : LCB expr RCB'
@@ -508,11 +563,11 @@ def p_singleterm_or4(p):
 def p_singleterm_or5(p):
   'singleterm : arrayid'
   result = checkarrayid(p[1]) 
+  p[0] = {}
   if result[0] == False:
-    p[0] = {}
     p_error(result[1])   
   else:
-    p[0] = result[1]
+    p[0]= result[2]
   
 
 #def p_singleterm_or6(p):
@@ -949,3 +1004,8 @@ result = parser.parse(s)
 #print(result)
 for i in table:
   print(i)
+
+
+
+#thisplace
+#code.append({'inst_type':, 'src1': , 'src2':, 'dest':})
