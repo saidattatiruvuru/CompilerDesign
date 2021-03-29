@@ -88,11 +88,12 @@ def checkarrayid(a):
         if j['identifier'] == a['identifier'] and len(j['dimension'])==len(a['dimension']):
           flag = 1
           code = []
-          cumProduct = 't'+str(newTemp + 1)
-          curIndex = 't'+str(newTemp + 2)
-          resultTemp = 't' + str(newTemp + 3)
+          curType = a['type']
+          cumProduct = {'tempID' : newTemp + 1, 'type' : curType}
+          curIndex = {'tempID' : newTemp + 2, 'type' : curType}
+          resultTemp = {'tempID' : newTemp + 3, 'type' : curType}
           #T1 = 1 cum pro
-          code.append({'inst_type':'ASGN' , 'src1': {'constant': 1 , 'type':'int'} , 'src2':{}, 'dest':cumProduct})
+          code.append({'inst_type':'ASGN' , 'src1': {'constant': 4 , 'type':'int'} , 'src2':{}, 'dest':cumProduct})
           #T3 = 0 fin
           code.append({'inst_type':'ASGN' , 'src1': {'constant': 0 , 'type':'int'} , 'src2':{}, 'dest':resultTemp})
           for k in range(len(j['dimension'])):
@@ -110,14 +111,14 @@ def checkarrayid(a):
             
             elif type(a['dimension'][k]) == dict:
               #T4 = sgt i , dim
-              code.append({'inst_type': 'SGT' , 'src1': a['dimension'][k] , 'src2':j['dimension'][k] , 'dest':curIndex})
+              code.append({'inst_type': 'SGT' , 'src1': a['dimension'][k], 'src2':j['dimension'][k] , 'dest':curIndex})
               #IF0 T4 GOTO Lnext1
               #error
               #Lnext1:
               #.
-              code.append({'inst_type': 'IF0' , 'src1': curIndex, 'src2':'' , 'dest':'L'+str(newLabel)})
-              code.append({'inst_type': 'ERROR' , 'src1': '', 'src2':'' , 'dest':''})
-              code.append({'inst_type': 'LABEL' , 'src1': '', 'src2':'' , 'dest':'L'+str(newLabel)})
+              code.append({'inst_type': 'IF0' , 'src1': curIndex, 'src2': {} , 'dest':{'Label' : 'L'+str(newLabel)}})
+              code.append({'inst_type': 'ERROR' , 'src1': {}, 'src2':{} , 'dest':{}})
+              code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(newLabel)}}})
               newLabel = newLabel + 1
               #T2 = t1 * index //cur offset
               code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant': a['dimension'][k] , 'type':'int'}, 'dest':curIndex})
@@ -129,8 +130,8 @@ def checkarrayid(a):
           if flag == 1:
             found = True
             #t0 = a [ t3 ]
-            code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp , 'dest':'t'+str(newTemp)})
-            codeblock = {'Code': code, 'PassedValue': 't'+str(newTemp)}
+            code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp , 'dest':newTemp})
+            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': a['type']}
             #advancing into next temporary
             newTemp = newTemp + 1
           break     
@@ -478,13 +479,14 @@ def p_arithterm_or(p):
 
 def p_multerm(p):
   'multerm : multerm MULTOP singleterm'
-    
+  global newTemp
   #type checking and conversion
-  res = type_conversion(p[0],p[1],p[3])
+  p[0] = {'PassedValue' : {} }
+  res = type_conversion(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2]
-  p[0] = res[3]
+  p[0]['PassedValue'].update(res[3])
     
   value = None
   if val1 != None and val2 != None:
@@ -504,24 +506,41 @@ def p_multerm(p):
           value = (int)(val1/val2)
         else:
           p_error("Division by Zero Error")
-    p[0].update({'value':value})
+    p[0]['PassedValue'].update({'constant':value})
   else:
-    p[0].update({'code':''})
-  # else: Intermediate code
+    #p[1].code      -ti
+    #p[3].code      -tj
+    #mul ti , tj , ti  
+    p[0].update({'Code':[]})
+    p[0]['Code'] = p[1]['Code'] + p[3]['Code']
+    resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
+    if p[2] == '*':
+      p[0]['Code'].append({'inst_type':'MUL', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': {'tempID':resultTemp , 'type':res[3]}})
+    else:
+      p[0]['Code'].append({'inst_type':'DIV', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': {'tempID':resultTemp , 'type':res[3]}})
+
+    p[0]['PassedValue'].update({'tempID':resultTemp, 'type':res[3]})
+    newTemp = resultTemp + 1
+  
 
 def p_multerm_or(p):
   'multerm : singleterm'
   #print(p[1])
-  p[0] = exprfunc(p[0], p[1])
+  #p[0] = exprfunc(p[0], p[1])
+  p[0] = p[1]
 
-def exprfunc(p, q):
+""" def exprfunc(p, q):
   if 'constant' in q.keys():
     p = {'type':q['type'],'value':q['constant']}
   elif 'identifier' in q.keys():
-    p = {'type':q['type'],'code':''}
+    p = {'type':q['type'],'Code':''}
   else:
     p = q
-  return p
+  return p """
   
 
 # do type conversions from here on and above 
