@@ -486,7 +486,7 @@ def p_multerm(p):
   ty = res[0]
   val1 = res[1]
   val2 = res[2]
-  p[0]['PassedValue'].update(res[3])
+  p[0]['PassedValue'].update(res[3])  
     
   value = None
   if val1 != None and val2 != None:
@@ -710,6 +710,28 @@ def p_arg_or4(p):
 
 def p_ifstmt(p):
   'ifstmt  : IF LCB expr RCB LFB ifbegin stmt2 RFB ifend elsepart'
+  global newLabel
+  l1 = newLabel 
+  l2 = newLabel + 1
+  l3 = newLabel + 2
+  newLabel += 3
+  code = []
+  code += p[3]['Code']
+  temp = {}
+  if 'tempID' not in p[3]['PassedValue'].keys():
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']})
+    temp = {'tempID':newTemp, 'type':p[3]['type']}
+  else:
+    temp = p[3]['PassedValue']
+  code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
+  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}}})
+  code += p[7]['Code']
+  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l3)})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}}})
+  code += p[10]['Code']
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}}})
+  p[0]['Code'] = code
 
 def p_ifbegin(p):
   'ifbegin : '
@@ -729,6 +751,7 @@ def p_ifend(p):
 
 def p_elsepart(p):
   'elsepart : ELSE LFB elsebegin stmt2 RFB elseend'
+  p[0]['Code'] = p[4]['Code']
 
 
 def p_elsebegin(p):
@@ -749,9 +772,28 @@ def p_elseend(p):
 
 def p_elsepart_or(p):
   'elsepart : '
+  p[0]['Code'] = []
 
 def p_whilestmt(p):
   'whilestmt : WHILE LCB expr RCB LFB whilebegin stmt2 RFB whileend'
+  global newLabel
+  l1 = newLabel
+  l2 = newLabel + 1
+  newLabel += 2
+  code = []
+  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}}})
+  code += p[7]['Code']
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}}})
+  code += p[3]['Code']
+  temp = {}
+  if 'tempID' not in p[3]['PassedValue'].keys():
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']})
+    temp = {'tempID':newTemp, 'type':p[3]['type']}
+  else:
+    temp = p[3]['PassedValue']
+  code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
+  p[0]['Code'] = code
 
 def p_whilebegin(p):
   'whilebegin : '
@@ -771,23 +813,34 @@ def p_whileend(p):
 
 def p_printstmt(p):
   'printstmt : PRINT LCB printables RCB SEMICOLON'
+  p[0] = p[3]
 
 def p_printables(p):
   'printables : printables SEPARATORS printable'
+  code = p[1]['Code']
+  code += p[3]['Code']
+  p[0]['Code'] = code
 
 def p_printables_or(p):
   'printables : printable'
+  p[0] = p[1]
 
 def p_printable(p):
   'printable : STRING' 
+  code = []
+  code.append({'inst_type':'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': p[1], 'type': 'string'}})
+  p[0]['Code'] = code
 
 def p_printable_or(p):
   'printable :  IDENTIFIER'
   res = checkid(p[1])
+  p[0]['Code'] = []
   if res[0] == True:
     p[0] = res[1]
+    p[0]['Code'].append({'inst_type':'PRINT', 'src1': {}, 'src2': {}, 'dest': res[1]})
   else:
     p[0] = {}
+    p[0]['Code'].append({'inst_type':'ERROR', 'src1': {}, 'src2': {}, 'dest': {}})
     p_error(str(p[1]) + " Not Found")
 
 def p_printable_and(p):
@@ -798,27 +851,39 @@ def p_printable_and(p):
   else:
     p[0] = {}
     p_error(p[1] + " Not Found")
+  p[0]['Code'] = [res[2]['Code']]
+  temp = res[2]['PassedValue']
+  p[0]['Code'].append({'inst_type':'PRINT', 'src1': {}, 'src2': {}, 'dest': temp})
 
 def p_returnstmt(p):
   'returnstmt : RETURN returnelt SEMICOLON'
+  p[0]['Code'] = p[2]['Code']
 
 def p_returnelt(p):
   'returnelt : expr'
+  code = []
+  code += p[1]['Code']
+  code.append({'inst_type':'RETURN', 'src1': {}, 'src2': {}, 'dest': p[1]['PassedValue']})
+  p[0]['Code'] = code
 
 def p_returnelt_or(p):
   'returnelt : '
+  p[0]['Code'] = [{'inst_type':'RETURN', 'src1': {}, 'src2': {}, 'dest': {}}]
 
 def p_breakstmt(p):
   'breakstmt  : BREAK SEMICOLON'
+  p[0]['Code'] = [{'inst_type':'BREAK', 'src1': {}, 'src2': {}, 'dest': {}}]
 
 def p_continuestmt(p):
   'continuestmt : CONTINUE SEMICOLON'
+  p[0]['Code'] = [{'inst_type':'CONTINUE', 'src1': {}, 'src2': {}, 'dest': {}}]
 
 def p_declare(p):
   'declare : type vars SEMICOLON'
   global lineno
   global curr_mem
   currenttable = scopestack[-1]
+  code = []
   for i in p[2]:
     if i == {}:
       continue
@@ -837,7 +902,16 @@ def p_declare(p):
         if res[1] == 0:
           act_value =  res[0]
           i['valuedict']['value'] = res[0]
+    code += i['Code']
+    if 'PassedValue' in i.keys():
+      del i['Code']
+      code.append({'inst_type':'DECLARE', 'src1':i['PassedValue'], 'src2':{}, 'dest':i})
+      del i['PassedValue']
+    else:
+      del i['Code']
+      code.append({'inst_type':'DECLARE', 'src1':{}, 'src2':{}, 'dest':i})
     currenttable.append(i)
+  p[0]['Code'] = code
   #print(currenttable)
 
 def p_type(p):
@@ -860,15 +934,23 @@ def p_lastvars(p):
 def p_var(p):
   'var : IDENTIFIER val'
   res = checkid_in_scope(p[1])
+  idDic = {}
   if res == False:
-    p[0] = {'identifier':p[1], 'dimension':[], 'size':1, 'valuedict' : p[2]}
+    p[0] = {'identifier':p[1], 'dimension':[], 'size':1}
   else:
     p[0] = {}
     p_error("Multiple Declaration of " + p[1])
+  code = []
+  if p[2] != {}:
+    code += p[2]['Code']
+    p[0]['PassedValue'] = p[2]['PassedValue']
+  p[0]['Code'] = code 
+  
 
 def p_vararray(p):
   'var : arrayvar'
   p[0] = p[1]
+  p[0].update({'Code': []})
 
 def p_arrayid_var(p):
   'arrayvar : arrayvar LSB INTNUM RSB'
