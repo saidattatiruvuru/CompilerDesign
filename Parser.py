@@ -233,74 +233,107 @@ def p_prgm(p):
   'prgm : prgm stmt'
   global lineno
   lineno =lineno + 1
+  code = p[1]['Code']
+  code += p[2]['Code']
+  p[0]['Code'] = code
 
 def p_lastprgm(p):
   'prgm : '
+  p[0]['Code'] = []
 
 def p_stmts(p):
   'stmt : funcdef'
+  p[0] = p[1]
 
 def p_stmt_funccall(p):
   'stmt : funccall SEMICOLON'
+  p[0] = p[1]
 
 def p_stmt_declare(p):
   'stmt : declare'
+  p[0] = p[1]
 
 def p_stmt_assign(p):
   'stmt : assign'
+  p[0] = p[1]
 
 def p_stmt_ifstmt(p):
   'stmt : ifstmt'
+  p[0] = p[1]
 
 def p_stmt_whilestmt(p):
   'stmt : whilestmt'
+  p[0] = p[1]
 
 def p_stmt_printstmt(p):
   'stmt : printstmt'
+  p[0] = p[1]
 
 def p_stmt2(p):
   'stmt2 : stmt2 stmtelt'
   global lineno
   lineno += 1
+  code = p[1]['Code']
+  code += p[2]['Code']
+  p[0]['Code'] = code
 
 def p_stmt2_or(p):
   'stmt2 : '
+  p[0]['Code'] = []
   
 def p_stmtelt_funccall(p):
   'stmtelt : funccall SEMICOLON'
+  p[0] = p[1]
 
 def p_stmtelt_declare(p):
   'stmtelt : declare'
+  p[0] = p[1]
 
 def p_stmtelt_assign(p):
   'stmtelt : assign'
+  p[0] = p[1]
 
 def p_stmtelt_ifstmt(p):
   'stmtelt : ifstmt'
+  p[0] = p[1]
 
 def p_stmtelt_whilestmt(p):
   'stmtelt : whilestmt'
+  p[0] = p[1]
 
 def p_stmtelt_printstmt(p):
   'stmtelt : printstmt'
+  p[0] = p[1]
 
 def p_stmtelt_returnstmt(p):
   'stmtelt : returnstmt'
+  p[0] = p[1]
 
 def p_stmtelt_continuestmt(p):
   'stmtelt : continuestmt'
+  p[0] = p[1]
 
 def p_stmtelt_breakstmt(p):
   'stmtelt : breakstmt'
+  p[0] = p[1]
 
 
 def p_funcdef(p):
   'funcdef : FUNCTION type IDENTIFIER funcdefy LCB nulltypeargsx RCB LFB stmt2 RFB fundefexit'
   res = checkfuncdef(p[3])
+  global newTemp
+  code = []
   if res == False:
     table[p[4]].update({'identifier': p[3], 'returntype':p[2], 'arguments':p[6]})
+    code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : p[3]}}})
+    code.append({'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': p[6]})
+    code += p[9]['Code']
+    code += p[11]['Code']
   else:
     p_error(str(p[3]) + " Function already Exist ")
+    code.append({'inst_type': 'ERROR',  'src1': {}, 'src2':{} , 'dest':{}})
+  p[0]['Code'] = code
+  
 
 def p_fundefy(p):
   'funcdefy : '
@@ -318,6 +351,7 @@ def p_fundefexit(p):
   scopestack.pop()
   curr_mem = mem_stack[-1]
   mem_stack.pop()
+  p[0]['Code'] = [{'inst_type':'EOF', 'src1': {}, 'src2': {}, 'dest': {}}]
   
 
 def p_nulltypeargsx(p):
