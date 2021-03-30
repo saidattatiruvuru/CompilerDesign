@@ -72,7 +72,7 @@ def type_declare(var_type, val_type, value):
   return [value, flag_err]
 
 #checks if the array access is valid
-def checkarrayid(a):
+def checkarrayid(a , isLhs = False ):
   found = False
   i = len(scopestack) - 1
   j = None
@@ -130,8 +130,11 @@ def checkarrayid(a):
           if flag == 1:
             found = True
             #t0 = a [ t3 ]
-            code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp , 'dest':newTemp})
-            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': a['type']}
+            if(isLhs):
+              code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':{'constant':a['start_addr'], 'type':'int'} , 'dest':{'tempID': newTemp, 'type': a['type']}})
+            else:
+              code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': a['type']}})
+            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': a['type']}}
             #advancing into next temporary
             newTemp = newTemp + 1
           break     
@@ -155,11 +158,13 @@ def checkfuncdef(funcid):
 def checkfunccall(funcid, args):
   deffound = False
   argright = False
+  rettype = ''
 
   for i in table:
     if 'identifier' in i.keys() and 'arguments' in i.keys():
       if i['identifier'] == funcid:
         deffound = True
+        rettype = i['returntype']
         if len(args) != len(i['arguments']):
           break
         count = 0
@@ -170,7 +175,7 @@ def checkfunccall(funcid, args):
         if count == len(i['arguments']):
           argright = True
         break
-  return [deffound, argright]
+  return [deffound, argright, rettype]
 
 #type converion
 def type_conversion(p,q,r):
@@ -192,12 +197,13 @@ def type_conversion(p,q,r):
       val1 = ord(r['constant'])
     else:
       val1 = r['constant']
-    
-  if 'value' in q.keys():
+
+  #henceforth even 'value' shall be 'constant'  
+  if 'constant' in q.keys():
     if q['type'] == 'char':
-      val2 = ord(q['value'])
+      val2 = ord(q['constant'])
     else:
-      val2 = q['value']
+      val2 = q['constant']
 
   return [ty,val1,val2, p]
 
@@ -212,12 +218,13 @@ def type_conv_log(p,q,r):
       val1 = ord(r['constant'])
     else:
       val1 = r['constant']
-    
-  if 'value' in q.keys():
+
+  #'value' shall be 'constant'  
+  if 'constant' in q.keys():
     if q['type'] == 'char':
-      val2 = ord(q['value'])
+      val2 = ord(q['constant'])
     else:
-      val2 = q['value']
+      val2 = q['constant']
 
   return [ty,val1,val2, p]
 
@@ -354,79 +361,127 @@ def p_typeargval(p):
 
 def p_expr(p):
   'expr : expr OR andterm'
-  res = type_conv_log(p[0],p[1],p[3])
+  global newTemp
+  res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2] 
-  p[0] = res[3]
+  p[0] = {'PassedValue' : {} }
+  p[0]['PassedValue'].update(res[3])
   value = None
   if val1 != None and val2 != None:
     if p[2] == '||':
       value = (int) (val1 or val2)
-    p[0].update({'value':value})
+    p[0]['PassedValue'].update({'constant':value})
   else:
-    p[0].update({'code':''})
+    p[0].update({'code':[]})
+    p[0]['Code'] = p[1]['Code'] + p[3]['Code']
+    resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
+    resValue = {'tempID':resultTemp , 'type':res[3]['type']}
+    p[0]['Code'].append({'inst_type':'OR', 'src1':p[1]['PassedValue'] , 'src2':p[3]['PassedValue'], 'dest':resValue})
+    p[0]['PassedValue'].update(resValue)
+    newTemp = resultTemp + 1
   
 
 def p_expr_or(p):
   'expr : andterm'
   #print(p[1])
-  p[0] = exprfunc(p[0], p[1])
+  #p[0] = exprfunc(p[0], p[1])
   #print(p[0])
+  p[0] = p[1]
 
 def p_andterm(p):
   'andterm : andterm AND equalterm'
-  res = type_conv_log(p[0],p[1],p[3])
+  global newTemp
+  res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2] 
-  p[0] = res[3]
+  p[0] = {'PassedValue' : {} }
+  p[0]['PassedValue'].update(res[3])
   value = None
   if val1 != None and val2 != None:
     if p[2] == '&&':
       value = (int) (val1 and val2)
-    p[0].update({'value':value})
+    p[0]['PassedValue'].update({'constant':value})
   else:
-    p[0].update({'code':''})
+    p[0].update({'code':[]})
+    p[0]['Code'] = p[1]['Code'] + p[3]['Code']
+    resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
+    resValue = {'tempID':resultTemp , 'type':res[3]['type']}
+    p[0]['Code'].append({'inst_type':'AND', 'src1':p[1]['PassedValue'] , 'src2':p[3]['PassedValue'], 'dest':resValue})
+    p[0]['PassedValue'].update(resValue)
+    newTemp = resultTemp + 1
+
+
 
 
 def p_andterm_or(p):
   'andterm : equalterm'
   #print(p[1])
-  p[0] = exprfunc(p[0], p[1])
+  #p[0] = exprfunc(p[0], p[1])
   #print(p[0])
+  p[0] = p[1]
 
 
 def p_equaltermval(p):
   'equalterm : equalterm LOG relopterm'
-  res = type_conv_log(p[0],p[1],p[3])
+  global newTemp
+  res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2] 
-  p[0] = res[3]
+  p[0] = {'PassedValue' : {} }
+  p[0]['PassedValue'].update(res[3])
   value = None
   if val1 != None and val2 != None:
     if p[2] == '==':
       value = (int) (val1 == val2)
     if p[2] == '!=':
       value = (int) (val1 != val2)
-    p[0].update({'value':value})
+    p[0]['PassedValue'].update({'constant':value})
   else:
-    p[0].update({'code':''})
+    p[0].update({'code':[]})
+    p[0]['Code'] = p[1]['Code'] + p[3]['Code']
+    resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
+    resValue = {'tempID':resultTemp , 'type':res[3]['type']}
+    temp0 = {'tempID':newTemp , 'type':res[3]['type']}
+    temp1 = {'tempID':newTemp + 1 , 'type':res[3]['type']}
+    
+    #p[0]-> ti      p[1]-> tj       p[3]->tk
+    #  ...... 
+    # sgt tj tk t0
+    # slt tj tk t1
+    # or t0 ti ti
+    # !=.... leave it as it is
+    # ==..... not ti    ti
+
+    p[0]['Code'].append({'inst_type':'SGT', 'src1':p[1]['PassedValue'] , 'src2':p[3]['PassedValue'], 'dest':temp0})
+    p[0]['Code'].append({'inst_type':'SLT', 'src1':p[1]['PassedValue'] , 'src2':p[3]['PassedValue'], 'dest':temp1})
+    p[0]['Code'].append({'inst_type':'OR', 'src1':temp0 , 'src2':temp1 , 'dest':resValue})
+
+    if p[2] == '==':
+      p[0]['Code'].append({'inst_type':'NOT', 'src1':resValue , 'src2':{} , 'dest':resValue})
+  
+    p[0]['PassedValue'].update(resValue)
+    newTemp = resultTemp + 1
+
 
 
 def p_equalterm_or2(p):
   'equalterm : relopterm'
   #print(p[1])
-  p[0] = exprfunc(p[0], p[1])
+  #p[0] = exprfunc(p[0], p[1])
+  p[0] = p[1]
 
 def p_relopterm(p):
   'relopterm : relopterm RELOP arithterm'
-  res = type_conv_log(p[0],p[1],p[3])
+  res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2]
-  p[0] = res[3]
+  p[0] = {'PassedValue' : {} }
+  p[0]['PassedValue'].update(res[3])
   value = None
   if val1 != None and val2 != None:
     if ty == 'int':
@@ -438,22 +493,61 @@ def p_relopterm(p):
         value = (int)(val1 > val2)
       elif p[2] == '<':
        value = (int)(val1 < val2)
-    p[0].update({'value':value})
+    p[0]['PassedValue'].update({'constant':value})
   else:
-    p[0].update({'code':''})
+    p[0].update({'Code':[]})
+    p[0]['Code'] = p[1]['Code'] + p[3]['Code']
+    resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
+    resValue = {'tempID':resultTemp , 'type':res[3]['type']}
+
+    #p[0]-> ti      p[1]-> tj       p[3]->tk
+    # for >=  a>=b => !(a<b)
+    #   slt tj tk ti
+    #   not ti    ti
+    # for <=
+    #   sgt tj tk ti
+    #   not ti    ti
+    # for >/<
+    #   slt/sgt tj tk ti 
+    
+    if p[2] == '>=':
+      p[0]['Code'].append({'inst_type':'SLT', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': resValue})
+      p[0]['Code'].append({'inst_type':'NOT', 'src1':resValue , 'src2':{}, 'dest':resValue})
+    elif p[2] == '<=':
+      p[0]['Code'].append({'inst_type':'SGT', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': resValue})
+      p[0]['Code'].append({'inst_type':'NOT', 'src1':resValue , 'src2':{}, 'dest':resValue})
+    if p[2] == '<':
+      p[0]['Code'].append({'inst_type':'SLT', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': resValue})
+    else:
+      p[0]['Code'].append({'inst_type':'SGT', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': resValue})
+
+    p[0]['PassedValue'].update(resValue)
+    global newTemp
+    newTemp = resultTemp + 1
 
 def p_relopterm_or(p):
   'relopterm : arithterm'
   #print(p[1])
-  p[0] = exprfunc(p[0], p[1])
+  #p[0] = exprfunc(p[0], p[1])
+  p[0] = p[1]
 
 def p_arithterm(p):
   'arithterm : arithterm ARITHOP multerm' 
-  res = type_conversion(p[0],p[1],p[3])
+  global newTemp
+  res = type_conversion(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2]
-  p[0] = res[3]
+  p[0] = {'PassedValue' : {} }
+  p[0]['PassedValue'].update(res[3])
     
   value = None
   if val1 != None and val2 != None:
@@ -467,14 +561,29 @@ def p_arithterm(p):
         value = (int)(val1 + val2)
       elif p[2] == '-':
         value = (int)(val1 - val2)
-    p[0].update({'value':value})
+    p[0]['PassedValue'].update({'constant':value})
   else:
-    p[0].update({'code':''})
+    #add/sub ti , tj , ti  
+    p[0].update({'Code':[]})
+    p[0]['Code'] = p[1]['Code'] + p[3]['Code']
+    resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
+    if p[2] == '+':
+      p[0]['Code'].append({'inst_type':'ADD', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': {'tempID':resultTemp , 'type':res[3]['type']}})
+    else:
+      p[0]['Code'].append({'inst_type':'SUB', 'src1': p[1]['PassedValue'] ,
+                                              'src2': p[3]['PassedValue'] , 
+                                              'dest': {'tempID':resultTemp , 'type':res[3]['type']}})
+
+    p[0]['PassedValue'].update({'tempID':resultTemp, 'type':res[3]['type']})
+    newTemp = resultTemp + 1
 
 def p_arithterm_or(p):
   'arithterm : multerm'
   #print(p[1])
-  p[0] = exprfunc(p[0], p[1])
+  #p[0] = exprfunc(p[0], p[1])
+  p[0] = p [1]
   
 
 def p_multerm(p):
@@ -523,7 +632,7 @@ def p_multerm(p):
                                               'src2': p[3]['PassedValue'] , 
                                               'dest': {'tempID':resultTemp , 'type':res[3]}})
 
-    p[0]['PassedValue'].update({'tempID':resultTemp, 'type':res[3]})
+    p[0]['PassedValue'].update({'tempID':resultTemp, 'type':res[3]['type']})
     newTemp = resultTemp + 1
   
 
@@ -618,12 +727,12 @@ def p_lhs(p):
 
 def p_lhs_or(p):
   'lhs : arrayid'
-  result = checkarrayid(p[1]) 
+  result = checkarrayid(p[1] , True) 
   if result[0] == False:
     p[0] = {}
     p_error(result[1])   
   else:
-    p[0] = result[1]
+    p[0] = result[2]
 
 def p_rhs(p):
   'rhs : inputstmt'
@@ -635,16 +744,25 @@ def p_rhs_or(p):
 
 def p_rhs_or2(p):
   'rhs : funccall'
-  p[0] = p[1]   # {'value' : somvalue, 'stmttype' : 'funccall', 'type' : sometype}
+  global newTemp
+  p[0]['Code'] = p[1]['Code']   # {'value' : somvalue, 'stmttype' : 'funccall', 'type' : sometype}
+  p[0]['PassedValue'] = {'tempID':newTemp , 'type':p[1]['type']}
+  newTemp = newTemp+1
   print("heeeeerrrrrreeeee")
 
 def p_inputstmt(p):
   'inputstmt : INPUT LCB type RCB'
-  p[0] = {'type' : p[3], 'stmttype' : 'inputstmt'}
+  global newTemp
+  curValue = {'tempID':newTemp , 'type':p[3]}
+  p[0] = {'Code':[]}
+  p[0]['Code'].append({'inst_type':'INPUT', 'src1':{} , 'src2':{}, 'dest':curValue})
+  newTemp = newTemp+1
+  p[0]['PassedValue'] = curValue
 
 def p_funccall(p):
   'funccall : IDENTIFIER LCB nullargs RCB'
-  res = checkfunccall(p[1], p[3])
+  global curr_mem
+  res = checkfunccall(p[1], p[3]['PassedValue'])
   if res[0] == False:
     p[0] = {}
     p_error(str(p[1]) + " is not defined")
@@ -652,7 +770,12 @@ def p_funccall(p):
     p[0] = {}
     p_error(str(p[1])+ " does not match signature")
   else:
-    p[0] = {'func': p[1], 'argvalues': p[3]}
+    p[0] = {'PassedValue':[] , 'Code':[]}
+    #p[0] = {'func': p[1], 'argvalues': p[3]}
+    p[0]['Code'] = p[3]['Code']
+    p[0]['Code'].append({'inst_type':'FUNCALL', 'src1':curr_mem , 'src2':p[3]['PassedValue'], 'dest':p[1]})
+    p[0]['type'] = res[2]
+    
     
 
 
@@ -662,21 +785,24 @@ def p_nullargs(p):
 
 def p_nullargs_or(p):
   'nullargs : '
-  p[0] = []
+  p[0] = ['PassedValue':[], 'Code':[]]
 
 def p_args(p):
   'args : args SEPARATORS arg'
-  p[0].append(p[1])
+  
+  p[0]['PassedValue'] = p[1]['PassedValue']+ [p[3]['PassedValue']]
+  p[0]['Code']= p[1]['Code'].append(p[3]['Code'])
 
 def p_args_or(p):
   'args : arg'
-  p[0] = [p[1]]
+  p[0]['PassedValue'] = [p[1]['PassedValue']]
+  p[0]['Code'] = p[1]['Code']
 
 def p_arg(p):
   'arg : IDENTIFIER'
   res = checkid(p[1])  
   if res[0] == True:
-    p[0] = res[1]
+    p[0] = {'PassedValue':res[1] , 'Code':[]}
   else:
     p[0] = {}
     p_error(p[1])  
@@ -686,24 +812,24 @@ def p_arg_or(p):
   'arg : prefix INTNUM'
   if p[1] == '-':
     p[2] = -p[2]
-  p[0] = {'type': 'int', 'value' : p[2]}
+  p[0] = {'PassedValue':{'type' : 'int', 'constant' : p[2]} , 'Code':[]}
 
 def p_arg_or2(p):
   'arg : prefix FLOATNUM'
   if p[1] == '-':
     p[2] = -p[2]
-  p[0] = {'type' : 'float', 'value' : p[2]}  
+  p[0] = {'PassedValue':{'type' : 'float', 'constant' : p[2]} , 'Code':[]} 
 
 def p_arg_or3(p):
   'arg : CHARACTER'
-  p[0] = {'type' : 'char', 'value' : p[1]}
+  p[0] = {'PassedValue':{'type' : 'char', 'constant' : p[1]} , 'Code':[]}
 
 def p_arg_or4(p):
   'arg : arrayid'
   res = checkarrayid(p[1])
   if res[0] == True:
-    p[1].update({'type' : res[1]['type']})
-    p[0] = p[1]
+    #p[1].update({'type' : res[1]['type']})
+    p[0] =  res[2]
   else:
     p[0] = {}
     p_error(p[1])
