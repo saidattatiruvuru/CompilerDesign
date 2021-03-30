@@ -131,8 +131,10 @@ def checkarrayid(a , isLhs = False ):
             found = True
             #t0 = a [ t3 ]
             if(isLhs):
+              #send the address of the array element
               code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':{'constant':a['start_addr'], 'type':'int'} , 'dest':{'tempID': newTemp, 'type': a['type']}})
             else:
+              #send the value of the array element
               code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': a['type']}})
             codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': a['type']}}
             #advancing into next temporary
@@ -747,8 +749,11 @@ def p_prefix_or(p):
 def p_assign(p):
   'assign : lhs ASSIGN rhs SEMICOLON'
   # must do type checking and type conversion if possible
-
-  p[1].update({'valuedict' : p[3]})
+  p[0]= {'Code':[]}
+  p[0]['Code'] = p[1]['Code'] + p[3['Code']
+  #STORE stores the src1 to the variable in dest or to the address in the temp in dest
+  p[0]['Code'].append({'inst_type':'STORE', 'src1':p[3]['PassedValue'] , 'src2':{}, 'dest':p[1]['PassedValue']})
+  #p[1].update({'valuedict' : p[3]})
 
 def p_lhs(p):
   'lhs : IDENTIFIER'
@@ -757,7 +762,7 @@ def p_lhs(p):
     p[0] = {}
     p_error("identifier not found in scope")   
   else:
-    p[0] = result[1]       
+    p[0] = {'PassedValue':result[1], 'Code':[]}       
 
 def p_lhs_or(p):
   'lhs : arrayid'
