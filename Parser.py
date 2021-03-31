@@ -118,7 +118,7 @@ def checkarrayid(a , isLhs = False ):
               #.
               code.append({'inst_type': 'IF0' , 'src1': curIndex, 'src2': {} , 'dest':{'Label' : 'L'+str(newLabel)}})
               code.append({'inst_type': 'ERROR' , 'src1': {}, 'src2':{} , 'dest':{}})
-              code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(newLabel)}}})
+              code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(newLabel)}})
               newLabel = newLabel + 1
               #T2 = t1 * index //cur offset
               code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant': a['dimension'][k] , 'type':'int'}, 'dest':curIndex})
@@ -327,7 +327,7 @@ def p_funcdef(p):
   code = []
   if res == False:
     table[p[4]].update({'identifier': p[3], 'returntype':p[2], 'arguments':p[6]})
-    code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : p[3]}}})
+    code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : p[3]}})
     code.append({'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': p[6]})
     code += p[9]['Code']
     code += p[11]['Code']
@@ -750,7 +750,7 @@ def p_assign(p):
   'assign : lhs ASSIGN rhs SEMICOLON'
   # must do type checking and type conversion if possible
   p[0]= {'Code':[]}
-  p[0]['Code'] = p[1]['Code'] + p[3['Code']
+  p[0]['Code'] = p[1]['Code'] + p[3]['Code']
   #STORE stores the src1 to the variable in dest or to the address in the temp in dest
   p[0]['Code'].append({'inst_type':'STORE', 'src1':p[3]['PassedValue'] , 'src2':{}, 'dest':p[1]['PassedValue']})
   #p[1].update({'valuedict' : p[3]})
@@ -824,7 +824,7 @@ def p_nullargs(p):
 
 def p_nullargs_or(p):
   'nullargs : '
-  p[0] = ['PassedValue':[], 'Code':[]]
+  p[0] = [{'PassedValue':[], 'Code':[]}]
 
 def p_args(p):
   'args : args SEPARATORS arg'
@@ -884,18 +884,18 @@ def p_ifstmt(p):
   code += p[3]['Code']
   temp = {}
   if 'tempID' not in p[3]['PassedValue'].keys():
-    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']})
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
     temp = {'tempID':newTemp, 'type':p[3]['type']}
   else:
     temp = p[3]['PassedValue']
   code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
-  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)})
-  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}}})
+  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}})
   code += p[7]['Code']
-  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l3)})
-  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}}})
+  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l3)}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}})
   code += p[10]['Code']
-  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}})
   p[0]['Code'] = code
 
 def p_ifbegin(p):
@@ -946,14 +946,14 @@ def p_whilestmt(p):
   l2 = newLabel + 1
   newLabel += 2
   code = []
-  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)})
-  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}}})
+  code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}})
   code += p[7]['Code']
-  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}})
   code += p[3]['Code']
   temp = {}
   if 'tempID' not in p[3]['PassedValue'].keys():
-    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']})
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
     temp = {'tempID':newTemp, 'type':p[3]['type']}
   else:
     temp = p[3]['PassedValue']
