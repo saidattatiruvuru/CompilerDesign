@@ -3,7 +3,7 @@ from Lexer import tokens
 lineno = 0
 # symbol table
 table = []
-scopestack = [tabled
+scopestack = [table]
 # address of the allocatable memory
 curr_mem = 0
 # scope for memory
