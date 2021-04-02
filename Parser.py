@@ -549,7 +549,10 @@ def p_relopterm(p):
   else:
     p[0].update({'Code':[]})
     p[0]['Code'] = p[1]['Code'] + p[3]['Code']
-    resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
+    if('tempID' in p[1]['PassedValue'].keys()):
+      resultTemp = p[1]['PassedValue']['tempID']
+    elif('tempID' in p[3]['PassedValue'].keys() and ):
+      resultTemp = p[3]['PassedValue']['tempID'] )
     resValue = {'tempID':resultTemp , 'type':res[3]['type']}
 
     #p[0]-> ti      p[1]-> tj       p[3]->tk
