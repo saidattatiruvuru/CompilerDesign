@@ -233,6 +233,7 @@ def type_conv_log(p,q,r):
 
 def p_prgm(p):
   'prgm : prgm stmt'
+  p[0] = {}
   global lineno
   lineno =lineno + 1
   code = p[1]['Code']
@@ -241,6 +242,7 @@ def p_prgm(p):
 
 def p_lastprgm(p):
   'prgm : '
+  p[0] = {}
   p[0]['Code'] = []
 
 def p_stmts(p):
@@ -273,6 +275,7 @@ def p_stmt_printstmt(p):
 
 def p_stmt2(p):
   'stmt2 : stmt2 stmtelt'
+  p[0] = {}
   global lineno
   lineno += 1
   code = p[1]['Code']
@@ -281,6 +284,7 @@ def p_stmt2(p):
 
 def p_stmt2_or(p):
   'stmt2 : '
+  p[0] = {}
   p[0]['Code'] = []
   
 def p_stmtelt_funccall(p):
@@ -322,6 +326,7 @@ def p_stmtelt_breakstmt(p):
 
 def p_funcdef(p):
   'funcdef : FUNCTION type IDENTIFIER funcdefy LCB nulltypeargsx RCB LFB stmt2 RFB fundefexit'
+  p[0] = {}
   res = checkfuncdef(p[3])
   global newTemp
   code = []
@@ -349,6 +354,7 @@ def p_fundefy(p):
 
 def p_fundefexit(p):
   'fundefexit : '
+  p[0] = {}
   global curr_mem
   scopestack.pop()
   curr_mem = mem_stack[-1]
@@ -408,7 +414,9 @@ def p_expr(p):
   if val1 != None and val2 != None:
     if p[2] == '||':
       value = (int) (val1 or val2)
-    p[0]['PassedValue'].update({'constant':value})
+    p[0]['Code']=[{'inst_type':'ASGN', 'src1':{'constant': value, 'type': ty}, 'src2':{}, 'dest':{'tempID': newTemp, 'type':ty}}]
+    p[0]['PassedValue'] = {'tempID': newTemp, 'type':ty}
+    newTemp = newTemp + 1
   else:
     p[0].update({'code':[]})
     p[0]['Code'] = p[1]['Code'] + p[3]['Code']
@@ -424,7 +432,15 @@ def p_expr_or(p):
   #print(p[1])
   #p[0] = exprfunc(p[0], p[1])
   #print(p[0])
-  p[0] = p[1]
+  p[0] = {}
+  global newTemp
+  if( 'constant' in p[1]['PassedValue'].keys()):
+    ty = p[1]['PassedValue']['type']
+    p[0]['Code']=[{'inst_type':'ASGN', 'src1':p[1]['PassedValue'], 'src2':{}, 'dest':{'tempID': newTemp, 'type':ty}}]
+    p[0]['PassedValue'] = {'tempID': newTemp, 'type':ty}
+    newTemp = newTemp + 1
+  else:
+    p[0] = p[1]
 
 def p_andterm(p):
   'andterm : andterm AND equalterm'
@@ -512,11 +528,11 @@ def p_equalterm_or2(p):
 
 def p_relopterm(p):
   'relopterm : relopterm RELOP arithterm'
+  p[0] = {'PassedValue' : {} }
   res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2]
-  p[0] = {'PassedValue' : {} }
   p[0]['PassedValue'].update(res[3])
   value = None
   if val1 != None and val2 != None:
@@ -578,6 +594,7 @@ def p_relopterm_or(p):
 def p_arithterm(p):
   'arithterm : arithterm ARITHOP multerm' 
   global newTemp
+  p[0] = {'PassedValue' : {} }
   res = type_conversion(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
@@ -699,7 +716,7 @@ def p_singleterm(p):
   else:
     p[0]['PassedValue'] = None
     p_error(p[1])
-  p[0]['Code'] = ''
+  p[0]['Code'] = []
   
     
 
@@ -783,6 +800,7 @@ def p_rhs_or(p):
 
 def p_rhs_or2(p):
   'rhs : funccall'
+  p[0] = {}
   global newTemp
   p[0]['Code'] = p[1]['Code']   # {'value' : somvalue, 'stmttype' : 'funccall', 'type' : sometype}
   p[0]['PassedValue'] = {'tempID':newTemp , 'type':p[1]['type']}
@@ -800,6 +818,7 @@ def p_inputstmt(p):
 
 def p_funccall(p):
   'funccall : IDENTIFIER LCB nullargs RCB'
+  p[0] = {}
   global curr_mem
   res = checkfunccall(p[1], p[3]['PassedValue'])
   if res[0] == False:
@@ -828,12 +847,13 @@ def p_nullargs_or(p):
 
 def p_args(p):
   'args : args SEPARATORS arg'
-  
+  p[0] = {}  
   p[0]['PassedValue'] = p[1]['PassedValue']+ [p[3]['PassedValue']]
   p[0]['Code']= p[1]['Code'].append(p[3]['Code'])
 
 def p_args_or(p):
   'args : arg'
+  p[0] = {}
   p[0]['PassedValue'] = [p[1]['PassedValue']]
   p[0]['Code'] = p[1]['Code']
 
@@ -875,6 +895,7 @@ def p_arg_or4(p):
 
 def p_ifstmt(p):
   'ifstmt  : IF LCB expr RCB LFB ifbegin stmt2 RFB ifend elsepart'
+  p[0] = {}
   global newLabel
   l1 = newLabel 
   l2 = newLabel + 1
@@ -916,6 +937,7 @@ def p_ifend(p):
 
 def p_elsepart(p):
   'elsepart : ELSE LFB elsebegin stmt2 RFB elseend'
+  p[0] = {}
   p[0]['Code'] = p[4]['Code']
 
 
@@ -937,10 +959,12 @@ def p_elseend(p):
 
 def p_elsepart_or(p):
   'elsepart : '
+  p[0] = {}
   p[0]['Code'] = []
 
 def p_whilestmt(p):
   'whilestmt : WHILE LCB expr RCB LFB whilebegin stmt2 RFB whileend'
+  p[0] = {}
   global newLabel
   l1 = newLabel
   l2 = newLabel + 1
@@ -982,6 +1006,7 @@ def p_printstmt(p):
 
 def p_printables(p):
   'printables : printables SEPARATORS printable'
+  p[0] = {}
   code = p[1]['Code']
   code += p[3]['Code']
   p[0]['Code'] = code
@@ -992,12 +1017,14 @@ def p_printables_or(p):
 
 def p_printable(p):
   'printable : STRING' 
+  p[0] = {}
   code = []
   code.append({'inst_type':'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': p[1], 'type': 'string'}})
   p[0]['Code'] = code
 
 def p_printable_or(p):
   'printable :  IDENTIFIER'
+  p[0] = {}
   res = checkid(p[1])
   p[0]['Code'] = []
   if res[0] == True:
@@ -1010,6 +1037,7 @@ def p_printable_or(p):
 
 def p_printable_and(p):
   'printable : arrayid'
+  p[0] = {}
   res = checkarrayid(p[1])
   if res[0] == True:
     p[0] = res[1]
@@ -1022,10 +1050,12 @@ def p_printable_and(p):
 
 def p_returnstmt(p):
   'returnstmt : RETURN returnelt SEMICOLON'
+  p[0] = {}
   p[0]['Code'] = p[2]['Code']
 
 def p_returnelt(p):
   'returnelt : expr'
+  p[0] = {}
   code = []
   code += p[1]['Code']
   code.append({'inst_type':'RETURN', 'src1': {}, 'src2': {}, 'dest': p[1]['PassedValue']})
@@ -1033,18 +1063,22 @@ def p_returnelt(p):
 
 def p_returnelt_or(p):
   'returnelt : '
+  p[0] = {}
   p[0]['Code'] = [{'inst_type':'RETURN', 'src1': {}, 'src2': {}, 'dest': {}}]
 
 def p_breakstmt(p):
   'breakstmt  : BREAK SEMICOLON'
+  p[0] = {}
   p[0]['Code'] = [{'inst_type':'BREAK', 'src1': {}, 'src2': {}, 'dest': {}}]
 
 def p_continuestmt(p):
   'continuestmt : CONTINUE SEMICOLON'
+  p[0] = {}
   p[0]['Code'] = [{'inst_type':'CONTINUE', 'src1': {}, 'src2': {}, 'dest': {}}]
 
 def p_declare(p):
   'declare : type vars SEMICOLON'
+  p[0] = {}
   global lineno
   global curr_mem
   currenttable = scopestack[-1]
@@ -1098,6 +1132,7 @@ def p_lastvars(p):
 
 def p_var(p):
   'var : IDENTIFIER val'
+  p[0] = {}
   res = checkid_in_scope(p[1])
   idDic = {}
   if res == False:
@@ -1107,6 +1142,8 @@ def p_var(p):
     p_error("Multiple Declaration of " + p[1])
   code = []
   if p[2] != {}:
+    print("hiiiiiiiiiiiiii")
+    print(p[2])
     code += p[2]['Code']
     p[0]['PassedValue'] = p[2]['PassedValue']
   p[0]['Code'] = code 
