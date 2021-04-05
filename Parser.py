@@ -420,9 +420,10 @@ def p_expr(p):
   if val1 != None and val2 != None:
     if p[2] == '||':
       value = (int) (val1 or val2)
-    p[0]['Code']=[{'inst_type':'ASGN', 'src1':{'constant': value, 'type': ty}, 'src2':{}, 'dest':{'tempID': newTemp, 'type':ty}}]
-    p[0]['PassedValue'] = {'tempID': newTemp, 'type':ty}
-    newTemp = newTemp + 1
+    #p[0]['Code']=[{'inst_type':'ASGN', 'src1':{'constant': value, 'type': ty}, 'src2':{}, 'dest':{'tempID': newTemp, 'type':ty}}]
+    p[0]['PassedValue'] = {'constant': value, 'type':ty}
+    p[0]['Code'] = []
+    #newTemp = newTemp + 1
   else:
     p[0].update({'Code':[]})
     p[0]['Code'] = p[1]['Code'] + p[3]['Code']
@@ -445,15 +446,8 @@ def p_expr_or(p):
   #print(p[1])
   #p[0] = exprfunc(p[0], p[1])
   #print(p[0])
-  p[0] = {}
-  global newTemp
-  if( 'constant' in p[1]['PassedValue'].keys()):
-    ty = p[1]['PassedValue']['type']
-    p[0]['Code']=[{'inst_type':'ASGN', 'src1':p[1]['PassedValue'], 'src2':{}, 'dest':{'tempID': newTemp, 'type':ty}}]
-    p[0]['PassedValue'] = {'tempID': newTemp, 'type':ty}
-    newTemp = newTemp + 1
-  else:
-    p[0] = p[1]
+  p[0] = p[1]  
+  #newTemp = newTemp + 1
 
 def p_andterm(p):
   'andterm : andterm AND equalterm'
@@ -963,7 +957,7 @@ def p_ifstmt(p):
   code = []
   code += p[3]['Code']
   temp = {}
-  if 'tempID' not in p[3]['PassedValue'].keys():
+  if 'constant' in p[3]['PassedValue'].keys():
     code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
     temp = {'tempID':newTemp, 'type':p[3]['type']}
   else:
@@ -1035,7 +1029,7 @@ def p_whilestmt(p):
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}})
   code += p[3]['Code']
   temp = {}
-  if 'tempID' not in p[3]['PassedValue'].keys():
+  if 'constant' in p[3]['PassedValue'].keys():
     code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
     temp = {'tempID':newTemp, 'type':p[3]['type']}
   else:
