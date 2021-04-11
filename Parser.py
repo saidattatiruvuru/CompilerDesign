@@ -1,5 +1,8 @@
 import ply.yacc as yacc
 from Lexer import tokens
+import json
+
+
 lineno = 0
 # symbol table
 table = []
@@ -12,6 +15,123 @@ mem_stack = [0]
 newTemp = 0
 #the number given to next Label
 newLabel = 0
+#the total code
+theCode = []
+#the live, nextuse thingy
+codeStatus = []
+
+#the reverse traversal history
+revHist = {}
+# Status: L/NL
+# Nextuse: int/-1
+
+
+#the function to set the live and next use fields
+def reverseTraverse():
+  
+  global codeStatus
+  global revHist
+  global theCode
+  
+  l = len(theCode)
+
+  for i in range(l-1, -1 , -1):
+    result = {}
+
+    #the ignored cases
+    if theCode[i]['inst_type'] in ['LABEL', 'JUMP', 'ERROR','FUNCALL'] :
+      codeStatus.append(result)
+      continue
+
+    # the args of a function
+    elif theCode[i]['inst_type'] == 'ARGS':
+      result['dest']=[]
+      for item in theCode[i]['dest']:
+        itemstr= json.dumps(sorted(item.items()))
+        if 'constant' in item.keys():
+          result['dest'].append({})
+        else:
+          if itemstr in revHist.keys():
+            result['dest'].append({'NextUse':revHist[itemstr], 'Status':'NL'})
+            del(revHist[itemstr])
+          else:
+            result['dest'].append({'NextUse':-1, 'Status':'NL'})
+          if 'identifier' in item.keys() and result['dest'][-1]['NextUse'] != -1:
+            result['dest'][-1]['Status']= 'L'
+
+
+    # the cases where only the destination matters
+    elif theCode[i]['inst_type'] in ['PRINT', 'RETURN'] :
+      temp = theCode[i]['dest']
+      tempstr = json.dumps(sorted(temp.items()))
+      if temp != {}:
+        if 'value' not in temp.keys():
+          if tempstr in revHist.keys():
+            result['dest']={'NextUse':revHist[tempstr], 'Status':'NL'}
+          else:
+            result['dest']={'NextUse':-1, 'Status':'NL'}
+          revHist[tempstr] = i
+          
+          if 'identifier' in temp.keys() and result['dest']['NextUse'] != -1:
+            result['dest']['Status']= 'L'
+
+    # all the other cases
+    # the sources must be added/updated to the history dict
+    
+    else:
+
+      # the IF0 IFEQL IF1 are cases where only the sources matter
+      # remove the dest from History dict for the other instructions
+      if theCode[i]['inst_type'] not in ['IF0', 'IFEQL', 'IF1'] :
+        temp = theCode[i]['dest']
+        tempstr = json.dumps(sorted(temp.items()))
+        if temp != {}:          
+          if tempstr in revHist.keys():
+            result['dest']={'NextUse':revHist[tempstr], 'Status':'NL'}
+            del(revHist[tempstr])
+          else:
+            result['dest']={'NextUse':-1, 'Status':'NL'}       
+          if 'identifier' in temp.keys() and result['dest']['NextUse'] != -1:
+              result['dest']['Status']= 'L'
+
+      temp = theCode[i]['src1']      
+      tempstr = json.dumps(sorted(temp.items()))
+      if 'constant' not in temp.keys():
+        if tempstr in revHist.keys():
+          result['src1']={'NextUse':revHist[tempstr], 'Status':'NL'}
+        else:
+          result['src1']={'NextUse':-1, 'Status':'NL'}
+        revHist[tempstr] = i
+
+        if 'identifier' in temp.keys() and result['src1']['NextUse'] != -1:
+          result['src1']['Status']= 'L'
+      
+      temp = theCode[i]['src2']
+      tempstr = json.dumps(sorted(temp.items()))
+      if temp != {}:
+        if 'constant' not in temp.keys():
+          if tempstr in revHist.keys():
+            result['src2']={'NextUse':revHist[tempstr], 'Status':'NL'}
+          else:
+            result['src2']={'NextUse':-1, 'Status':'NL'}
+          revHist[tempstr] = i
+
+          if 'identifier' in temp.keys() and result['src2']['NextUse'] != -1:
+            result['src2']['Status']= 'L'
+
+      
+
+    codeStatus.append(result)
+
+
+
+
+
+
+
+
+
+
 
 #returns reference to the latest scope entry of the variable with identifier 'a', if exists. else returns [False,None]
 def checkid(a):
@@ -234,8 +354,23 @@ def type_conv_log(p,q,r):
 def p_final(p):
   'S : prgm'
   p[0] = p[1]
-  for i in p[0]['Code']:
+
+  global theCode
+  global codeStatus
+  theCode = p[0]['Code']
+
+  reverseTraverse()
+
+  for i in theCode:
     print(i)
+
+  print('(---------------------------------------------------------)')
+  print(' #########################################################')
+  print('(---------------------------------------------------------)')
+  l = len(codeStatus)
+  for i in range(l-1, -1,-1):
+    print(str(l-i) + '   ' + str(codeStatus[i]) )
+  #call the analyser here
 
 def p_prgm(p):
   'prgm : prgm stmt'
