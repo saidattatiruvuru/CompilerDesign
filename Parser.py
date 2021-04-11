@@ -1285,9 +1285,12 @@ parser = yacc.yacc()
 
 s ='''
   int i, j = 0;
-  float c = 4.5;
-  i = j*c + 4/5;
-  print(i);
+  while(i<2)
+  {
+    j = j+1;
+    i = i+1;
+    print(i,j);
+  }
 '''
 
 ''' 
