@@ -19,14 +19,60 @@ newLabel = 0
 theCode = []
 #the live, nextuse thingy
 codeStatus = []
-
-#the reverse traversal history
-revHist = {}
 # Status: L/NL
 # Nextuse: int/-1
 
+#the reverse traversal history
+revHist = {}
+#table to store lable and destination
+l_table = {}
+
+# List to store header of each basic block
+block_header = []
+
+# Global list to store each basic block
+basic_blocks = []
+
+def labelTable():
+  global theCode
+  global l_table
+  global block_header
+  
+  l = len(theCode)
+  for i in range(l):
+    if theCode[i]['inst_type'] == 'LABEL':
+      l_table[theCode[i]['dest']['Label']] = i
+  block_header = [0]
+  for i in range(l):
+    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1']:
+      n = theCode[i]['dest']['Label']
+      if l_table[n] not in block_header:
+        block_header.append(l_table[n])
+      m = i + 1
+      if m < l and m not in block_header:
+        block_header.append(m)
+  block_header.sort()
+
+def basicblock_gen():
+  global basic_blocks
+  global theCode
+  global block_header
+  l = len(block_header)
+  for i in range(l):
+    n = block_header[i]
+    m = len(theCode)
+    if i +1 < l:
+      m = block_header[i+1]
+    ba_block = []
+    for j in range(n,m):
+      ba_block.append(theCode[j])
+    basic_blocks.append(ba_block)
+
+
+
 
 #the function to set the live and next use fields
+
 def reverseTraverse():
   
   global codeStatus
@@ -121,7 +167,7 @@ def reverseTraverse():
 
       
 
-    codeStatus.append(result)
+    codeStatus+=[result]
 
 
 
@@ -357,19 +403,35 @@ def p_final(p):
 
   global theCode
   global codeStatus
-  theCode = p[0]['Code']
+  theCode += p[0]['Code']
 
   reverseTraverse()
-
+  labelTable()
+  basicblock_gen()
   for i in theCode:
     print(i)
 
   print('(---------------------------------------------------------)')
-  print(' #########################################################')
+  print(' ######################THE CODE########################')
   print('(---------------------------------------------------------)')
   l = len(codeStatus)
-  for i in range(l-1, -1,-1):
+  for i in range(l):
     print(str(l-i) + '   ' + str(codeStatus[i]) )
+  print('(---------------------------------------------------------)')
+  print(' ###################BLOCK HEADER############################')
+  print('(---------------------------------------------------------)')
+
+  for i in block_header:
+    print(i)
+  
+  print('(---------------------------------------------------------)')
+  print(' ###################BASIC BLOCKS##########################')
+  print('(---------------------------------------------------------)')
+
+  for i in basic_blocks:
+    for j in i:
+      print(j)
+    print("-----------END-------------")
   #call the analyser here
 
 def p_prgm(p):
@@ -388,7 +450,9 @@ def p_lastprgm(p):
 
 def p_stmts(p):
   'stmt : funcdef'
-  p[0] = p[1]
+  global theCode
+  theCode += p[1]['Code']
+  p[0] = {'Code':[]}
 
 def p_stmt_funccall(p):
   'stmt : funccall SEMICOLON'
@@ -1021,7 +1085,7 @@ def p_funccall(p):
     p[0] = {'PassedValue':{} , 'Code':{}}
     #p[0] = {'func': p[1], 'argvalues': p[3]}
     p[0]['Code'] = p[3]['Code']
-    p[0]['Code'].append({'inst_type':'FUNCALL', 'src1':curr_mem , 'src2':p[3]['PassedValue'], 'dest':p[1]})
+    p[0]['Code'].append({'inst_type':'FUNCALL', 'src1':curr_mem , 'src2':p[3]['PassedValue'], 'dest':{"Label":p[1]}})
     p[0]['PassedValue']['type'] = res[2]
     p[0]['PassedValue']['funcReturn'] = 0
 
