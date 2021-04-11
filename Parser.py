@@ -337,7 +337,7 @@ def p_funcdef(p):
   global newTemp
   code = []
   if res == False:
-    table[p[4]].update({'identifier': p[3], 'returntype':p[2], 'arguments':p[6]})
+    table[p[4][0]].update({'identifier': p[3], 'returntype':p[2], 'arguments':p[6]})
     code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : p[3]}})
     code.append({'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': p[6]})
     code += p[9]['Code']
@@ -346,13 +346,15 @@ def p_funcdef(p):
     p_error(str(p[3]) + " Function already Exist ")
     code.append({'inst_type': 'ERROR',  'src1': {}, 'src2':{} , 'dest':{}})
   p[0]['Code'] = code
+  newTemp = p[4][1]
   
 
 def p_fundefy(p):
   'funcdefy : '
   global lineno
+  global newTemp
   table.append({'lineno':lineno})
-  p[0] = len(table) - 1
+  p[0] = [len(table) - 1, newTemp]
   #lineno += 1
   table.append({'lineno':lineno, 'subtable':[]})
   scopestack.append(table[-1]['subtable'])
@@ -410,6 +412,7 @@ def p_typeargval(p):
 def p_expr(p):
   'expr : expr OR andterm'
   global newTemp
+  p[0] = {'PassedValue' : {} }
   res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
@@ -452,11 +455,11 @@ def p_expr_or(p):
 def p_andterm(p):
   'andterm : andterm AND equalterm'
   global newTemp
+  p[0] = {'PassedValue' : {} }
   res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
   val2 = res[2] 
-  p[0] = {'PassedValue' : {} }
   p[0]['PassedValue'].update(res[3])
   value = None
   if val1 != None and val2 != None:
@@ -494,6 +497,7 @@ def p_andterm_or(p):
 def p_equaltermval(p):
   'equalterm : equalterm LOG relopterm'
   global newTemp
+  p[0] = {'PassedValue' : {} }
   res = type_conv_log(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
   ty = res[0]
   val1 = res[1]
@@ -608,7 +612,7 @@ def p_relopterm(p):
       p[0]['Code'].append({'inst_type':'SLT', 'src1': p[1]['PassedValue'] ,
                                               'src2': p[3]['PassedValue'] , 
                                               'dest': resValue})
-    else:
+    elif p[2] == '>':
       p[0]['Code'].append({'inst_type':'SGT', 'src1': p[1]['PassedValue'] ,
                                               'src2': p[3]['PassedValue'] , 
                                               'dest': resValue})
@@ -684,8 +688,6 @@ def p_multerm(p):
   #type checking and conversion
   p[0] = {'PassedValue' : {} }
   res = type_conversion(p[0]['PassedValue'],p[1]['PassedValue'],p[3]['PassedValue'])
-  print('*****')
-  print(res)
   ty = res[0]
   val1 = res[1]
   val2 = res[2]
@@ -881,14 +883,12 @@ def p_funccall(p):
     p[0] = {}
     p_error(str(p[1])+ " does not match signature")
   else:
-    p[0] = {'PassedValue':[] , 'Code':[]}
+    p[0] = {'PassedValue':{} , 'Code':{}}
     #p[0] = {'func': p[1], 'argvalues': p[3]}
     p[0]['Code'] = p[3]['Code']
     p[0]['Code'].append({'inst_type':'FUNCALL', 'src1':curr_mem , 'src2':p[3]['PassedValue'], 'dest':p[1]})
-    p[0]['type'] = res[2]
-    
-    
-
+    p[0]['PassedValue']['type'] = res[2]
+    p[0]['PassedValue']['funcReturn'] = 0
 
 def p_nullargs(p):
   'nullargs : args'
@@ -949,7 +949,7 @@ def p_arg_or4(p):
 def p_ifstmt(p):
   'ifstmt  : IF LCB expr RCB LFB ifbegin stmt2 RFB ifend elsepart'
   p[0] = {}
-  global newLabel
+  global newLabel, newTemp
   l1 = newLabel 
   l2 = newLabel + 1
   l3 = newLabel + 2
@@ -971,15 +971,18 @@ def p_ifstmt(p):
   code += p[10]['Code']
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}})
   p[0]['Code'] = code
+  newTemp = p[6]
 
 def p_ifbegin(p):
   'ifbegin : '
-  global lineno
+  global lineno, newTemp
   lineno += 1
   currenttable = scopestack[-1]
   currenttable.append({'lineno':lineno, 'subtable':[]})
   scopestack.append(currenttable[-1]['subtable'])
   mem_stack.append(curr_mem)
+  #capturing the temp vars that in the prev scope of if
+  p[0] = newTemp
 
 def p_ifend(p):
   'ifend : '
@@ -992,6 +995,8 @@ def p_elsepart(p):
   'elsepart : ELSE LFB elsebegin stmt2 RFB elseend'
   p[0] = {}
   p[0]['Code'] = p[4]['Code']
+  global newTemp
+  newTemp = p[3]
 
 
 def p_elsebegin(p):
@@ -1002,6 +1007,8 @@ def p_elsebegin(p):
   currenttable.append({'lineno':lineno, 'subtable':[]})
   scopestack.append(currenttable[-1]['subtable'])
   mem_stack.append(curr_mem)
+  #capturing the temp vars that in the prev scope of if
+  p[0] = newTemp
 
 def p_elseend(p):
   'elseend : '
@@ -1130,19 +1137,19 @@ def p_continuestmt(p):
   p[0]['Code'] = [{'inst_type':'CONTINUE', 'src1': {}, 'src2': {}, 'dest': {}}]
 
 def p_declare(p):
-  'declare : type vars SEMICOLON'
+  'declare : decbegin type vars SEMICOLON'
   p[0] = {}
   global lineno
-  global curr_mem
+  global curr_mem, newTemp
   currenttable = scopestack[-1]
   code = []
-  for i in p[2]:
+  for i in p[3]:
     if i == {}:
       continue
     if checkid_in_scope(i['identifier']):
       p_error("Multiple Declaration of " + i["identifier"] )
       continue
-    i["type"] = p[1]
+    i["type"] = p[2]
     i["lineno"] = lineno
     i["size"] =  i["size"]*4
     i["start_addr"] = curr_mem
@@ -1165,6 +1172,12 @@ def p_declare(p):
     currenttable.append(i)
   p[0]['Code'] = code
   #print(currenttable)
+  newTemp = p[1]
+
+def p_decbegin(p):
+  'decbegin :'
+  global newTemp
+  p[0] = newTemp
 
 def p_type(p):
   '''type : FLOAT 
@@ -1283,7 +1296,7 @@ parser = yacc.yacc()
 #   int swe, sru;
 # '''
 
-s ='''
+'''s =
   int i, j = 0;
   while(i<2)
   {
@@ -1334,8 +1347,7 @@ while(i<n)
 
 '''
 
-''' s = 
-function int fibo(int n) {
+s = ''' function int fibo(int n) {
 	int first = 0, second = 1;
 	int i = 0;
 	while(i < n) {
@@ -1351,15 +1363,15 @@ int n = input(int);
 int ans = fibo(n);
 print(n, "th fibonacci:", ans);
 float f = input(float);
-float result = 0;
+//float result = 0;
 if(f < 0 ) {
-	result = 2 * (f <= -1 && f >= -3);
+	float result = 2 * (f <= -1 && f >= -3);
 	if(result == 2) {
 		print("\nYay!");
 	}
 }
 else {
-	result = -2 * (f || 1);
+	float result = -2 * (f || 1);
 	if(result == -2) {
 		print("\nHurray");
 	}
