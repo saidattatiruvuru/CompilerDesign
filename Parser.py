@@ -85,13 +85,13 @@ def reverseTraverse():
     result = {}
 
     #the ignored cases
-    if theCode[i]['inst_type'] in ['LABEL', 'JUMP', 'ERROR','FUNCALL'] :
+    if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF'] :
       codeStatus.append(result)
       continue
 
     # the args of a function
     elif theCode[i]['inst_type'] == 'ARGS':
-      result['dest']=[]
+      result['dest'] = []
       for item in theCode[i]['dest']:
         itemstr= json.dumps(sorted(item.items()))
         if 'constant' in item.keys():
@@ -142,7 +142,7 @@ def reverseTraverse():
 
       temp = theCode[i]['src1']      
       tempstr = json.dumps(sorted(temp.items()))
-      if 'constant' not in temp.keys():
+      if temp != {} and 'constant' not in temp.keys():
         if tempstr in revHist.keys():
           result['src1']={'NextUse':revHist[tempstr], 'Status':'NL'}
         else:
@@ -170,10 +170,16 @@ def reverseTraverse():
     codeStatus+=[result]
 
 
+'''
+l1:
+...
 
+l2:
+...
+goto l2
 
-
-
+goto l1
+'''
 
 
 
@@ -315,6 +321,8 @@ def checkarrayid(a , isLhs = False ):
 #checks if function with identifier 'funcid' exists
 def checkfuncdef(funcid):
   deffound = False
+  if funcid == 'main':
+    return True
   for i in table:
     if 'identifier' in i.keys():
       if i['identifier'] == funcid:
@@ -403,6 +411,7 @@ def p_final(p):
 
   global theCode
   global codeStatus
+  theCode.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'main'}})
   theCode += p[0]['Code']
 
   reverseTraverse()
@@ -425,6 +434,7 @@ def p_final(p):
     print(i)
   
   print('(---------------------------------------------------------)')
+  print(revHist)
   print(' ###################BASIC BLOCKS##########################')
   print('(---------------------------------------------------------)')
 
@@ -1546,7 +1556,8 @@ while(i<n)
 
 '''
 
-s = ''' function int fibo(int n) {
+s = '''
+function int fibo(int n) {
 	int first = 0, second = 1;
 	int i = 0;
 	while(i < n) {
@@ -1579,6 +1590,7 @@ else {
 '''
 result = parser.parse(s)
 #print(result)
+codeStatus.reverse()
 for i in table:
   print(i)
 
