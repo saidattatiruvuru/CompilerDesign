@@ -419,7 +419,7 @@ def p_final(p):
   basicblock_gen()
   for i in theCode:
     print(i)
-
+""" 
   print('(---------------------------------------------------------)')
   print(' ######################THE CODE########################')
   print('(---------------------------------------------------------)')
@@ -442,7 +442,7 @@ def p_final(p):
     for j in i:
       print(j)
     print("-----------END-------------")
-  #call the analyser here
+  #call the analyser here """
 
 def p_prgm(p):
   'prgm : prgm stmt'

@@ -67,7 +67,8 @@ def get_reg(isInt):
     return [index, shudSpill]
     
 def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp var
-    print('spill')
+    print('spill', end="  ")
+    print(reg)
 
 
 def getassem(code, src1, src2, dest): # give assembly code 
@@ -143,8 +144,9 @@ print(len(codeStatus))
 
 for i in range(len(theCode)):
     print(theCode[i])
+
     if codeStatus[i] == {}:
-        if theCode[i]['inst_type'] == 'GOTO':
+        if theCode[i]['inst_type'] in ['GOTO', 'EOF']:
             for var in var_modified.keys():
                 spill(var_modified[var])
             getassem(theCode[i], -1, -1, -1)
@@ -184,7 +186,6 @@ for i in range(len(theCode)):
         print(var_modified)
         for var in var_modified.keys():
             spill(var_modified[var])
-
     reg_src = {}
     reg_dest = []
     dest = 'dest'
@@ -198,6 +199,7 @@ for i in range(len(theCode)):
                     result = get_reg(False)
                     if result[1]:
                         spill([result[0], 'float'])
+                    if freg_to_var[result[0]] != {}:
                         keystr = json.dumps(sorted(freg_to_var[result[0]].items()))
                         if keystr in var_modified.keys():
                             del var_modified[keystr]
@@ -222,6 +224,7 @@ for i in range(len(theCode)):
                         result = get_reg(True)
                         if result[1]:
                             spill([result[0], 'int'])
+                        if reg_to_var[result[0]] != {}:
                             keystr = json.dumps(sorted(reg_to_var[result[0]].items()))
                             if keystr in var_modified.keys():
                                 del var_modified[keystr]
@@ -239,6 +242,7 @@ for i in range(len(theCode)):
                     result = get_reg(True)
                     if result[1]:
                         spill([result[0], 'int'])
+                    if reg_to_var[result[0]] != {}:
                         keystr = json.dumps(sorted(reg_to_var[result[0]].items()))
                         if keystr in var_modified.keys():
                             del var_modified[keystr]
@@ -263,6 +267,7 @@ for i in range(len(theCode)):
                         result = get_reg(False)
                         if result[1]:
                             spill([result[0], 'float'])
+                        if freg_to_var[result[0]] != {}:
                             keystr = json.dumps(sorted(freg_to_var[result[0]].items()))
                             if keystr in var_modified.keys():
                                 del var_modified[keystr]
@@ -299,13 +304,23 @@ for i in range(len(theCode)):
                 reg_dest = [result[0], theCode[i][dest]['type']]
                 if result[1]:
                     spill(reg_dest)
+                if treg_to_var[result[0]] != {}:
+                    keystr = json.dumps(sorted(treg_to_var[result[0]].items()))
+                    if keystr in var_modified.keys():
+                        del var_modified[keystr]
+                    del tvar_to_reg[keystr]
                 tvar_to_reg[tempstr] = {
                     'reg': result[0],
                     'status': codeStatus[i][dest],
                     'isTemp': 'tempID' in theCode[i][dest]
                 }                
                 treg_to_var[reg_dest[0]] = theCode[i][dest]
-            var_modified[tempstr] = reg_dest
+            if 'identifier' in theCode[i][dest].keys():
+                
+                var_modified[tempstr] = reg_dest
+                print("var modified + ", end=" ")
+                print(var_modified)
+                print("______________________")
         else:
             isDestList = True
             count = 0
@@ -323,9 +338,15 @@ for i in range(len(theCode)):
                     treg_to_var = reg_to_var
                     tnum = num_int_reg
                 result = get_reg(arg['type'] == 'int')
+                print(result)
                 reg_dest = [result[0], arg['type']]
                 if result[1]:
                     spill(reg_dest)
+                if treg_to_var[result[0]] != {}:
+                    keystr = json.dumps(sorted(treg_to_var[result[0]].items()))
+                    if keystr in var_modified.keys():
+                        del var_modified[keystr]
+                    del tvar_to_reg[keystr]
                 tvar_to_reg[tempstr] = {
                     'reg': result[0],
                     'status': codeStatus[i][dest][count],
@@ -338,7 +359,12 @@ for i in range(len(theCode)):
     if not isDestList:
         getassem(theCode[i], reg_src['src1'], reg_src['src2'], reg_dest)
 
-    if theCode[i]['inst_type'] in ['IF0', 'IFEQL', 'IF1']:
+    if theCode[i]['inst_type'] in ['IF0', 'IFEQL', 'IF1', 'RETURN']:
+        print("***********")
+        for j in var_to_reg.keys():
+            print(j, end="  :  ")
+            print(var_to_reg[j])
+        print("***********")
         for var in var_modified.keys():
             treg_to_var = {}
             tvar_to_reg = {}
@@ -350,8 +376,20 @@ for i in range(len(theCode)):
                 tvar_to_reg = var_to_freg
             treg_to_var[var_modified[var][0]] = {}
             del tvar_to_reg[var]
-        var_modified = {}   
-    
-    
-    
+        var_modified = {}  
+    elif i+1 in block_header:
+        for var in var_modified.keys():
+            treg_to_var = {}
+            tvar_to_reg = {}
+            if var_modified[var][1] == 'int':
+                treg_to_var = reg_to_var
+                tvar_to_reg = var_to_reg
+            else:
+                treg_to_var = freg_to_var
+                tvar_to_reg = var_to_freg
+            spill(var_modified[var])
+            treg_to_var[var_modified[var][0]] = {}
+            del tvar_to_reg[var]
+        var_modified = {}  
+
 
