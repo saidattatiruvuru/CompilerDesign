@@ -85,8 +85,8 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
         treg_to_var = freg_to_var
         treg = float_reg
         inst = 's.s '
-    if 'tempID' not in treg_to_var.keys():
-        print("addi  $a3, $k0 , " + str(treg_to_var['start_addr']))
+    if 'tempID' not in treg_to_var[reg[0]].keys():
+        print("addi  $a3, $k0 , " + str(treg_to_var[reg[0]]['start_addr']))
         print(inst + treg[reg[0]]+ ", 0($a3)")
 
 labelnum = 0
