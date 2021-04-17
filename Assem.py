@@ -7,6 +7,20 @@ freg_to_var = {}
 var_to_reg = {}
 var_to_freg = {}
 # var can be identifier as well as temp variable
+# t0 -t9, s0-s7
+#register map to qtspim registers
+int_reg = {}
+float_reg = {}
+for i in range(18):
+    if i in range(0,10):
+        int_reg[i] = "$t" + str(i)
+    if i in range(10, 18):
+        int_reg[i] = "$s" + str(i-10)
+
+for i in range(32):
+    float_reg[i] = "$f" + str(i)
+
+
 def initialise():
     for i in range(0, num_int_reg):
         reg_to_var[i] = {}
@@ -55,11 +69,58 @@ def get_reg(isInt):
 def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp var
     print('spill')
 
+
 def getassem(code, src1, src2, dest): # give assembly code 
     print('getassem')
     print(src1, end="  ")
     print(src2, end="  ")
     print(dest, end="\n======\n")
+    if code['inst_type'] == 'NOT':
+        if src1[1] == 'int':
+            print("li "+ int_reg[dest[0]] + ", 1")
+            print("sub "+ int_reg[dest[0]] + ", " + int_reg[dest[0]] + " , " + int_reg[src1[0]])
+        elif src[1] == 'float':
+            print("li.s "+ float_reg[dest[0]] + " ,1.0")
+            print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[dest[0]] + " , " + float_reg[src1[0]])
+
+    elif code['inst_type'] == 'SUB':
+        if src1[1] == 'int':
+            print("sub "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src[1] == 'float':
+            print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+    elif code['inst_type'] == 'DIV':
+        if src1[1] == 'int':
+            print("div "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src[1] == 'float':
+            print("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+    elif code['inst_type'] == 'STORE':
+        if 'tempID' in code['dest'].keys():
+                 print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
+                    if src1[1] == 'int':
+                        print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+                    elif src1[1] == 'float':
+                        print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+        if 'identifier' in code['dest'].keys():
+            if src1[1] == 'int':
+                print("sw " + int_reg[src1[0]]+ ", " + int_reg[dest[0]])
+            elif src1[1] == 'float':
+                print("s.s " + float_reg[src1[0]]+ ", " + float_reg[dest[0]])
+
+    elif code['inst_type'] == 'INPUT':
+    elif code['inst_type'] == "SLT":
+        if src1[1] == 'int':
+            print("slt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src[1] == 'float':
+            print("c.lt.s " + float_reg[])
+            print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+    elif code['inst_type'] == "OR":   
+            
+
+
+# sw r2, 0()
+# lw r1, 0(t1) 
+
+
 
 def convert(toreg, fromreg): # convert stmt from one type to another
     print('convert')
@@ -79,6 +140,7 @@ initialise()
 print('===== ASSEMBLY ======')
 print(len(theCode))
 print(len(codeStatus))
+
 for i in range(len(theCode)):
     print(theCode[i])
     if codeStatus[i] == {}:
