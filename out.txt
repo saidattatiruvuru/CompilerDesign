@@ -1,0 +1,607 @@
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'fibo'}}
+{'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0}]}
+{'inst_type': 'DECLARE', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0}}
+{'inst_type': 'DECLARE', 'src1': {'constant': 1, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}}
+{'inst_type': 'DECLARE', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 8}}
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L1'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L0'}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'ADD', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 12}}
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': '\n', 'type': 'string'}}
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 12}}
+{'inst_type': 'STORE', 'src1': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}, 'src2': {}, 'dest': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0}}
+{'inst_type': 'STORE', 'src1': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 12}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L1'}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'SLT', 'src1': {'tempID': 0, 'type': 'int'}, 'src2': {'tempID': 1, 'type': 'int'}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 0}, 'src2': {}, 'dest': {'Label': 'L0'}}
+{'inst_type': 'RETURN', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}}
+{'inst_type': 'EOF', 'src1': {}, 'src2': {}, 'dest': {}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'main'}}
+{'inst_type': 'INPUT', 'src1': {}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'inst_type': 'DECLARE', 'src1': {'tempID': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}}
+{'inst_type': 'FUNCALL', 'src1': 4, 'src2': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}], 'dest': {'Label': 'fibo'}}
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'funcReturn': 0}, 'src2': {}, 'dest': {'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}}
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}}
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': 'th fibonacci:', 'type': 'string'}}
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}}
+{'inst_type': 'INPUT', 'src1': {}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'float'}}
+{'inst_type': 'DECLARE', 'src1': {'tempID': 0, 'type': 'float'}, 'src2': {}, 'dest': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'float'}}
+{'inst_type': 'ASGN', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'SLT', 'src1': {'tempID': 0, 'type': 'float'}, 'src2': {'tempID': 1, 'type': 'int'}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 0}, 'src2': {}, 'dest': {'Label': 'L8'}}
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L9'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L8'}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'float'}}
+{'inst_type': 'ASGN', 'src1': {'constant': -1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'SGT', 'src1': {'tempID': 1, 'type': 'float'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'NOT', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+{'inst_type': 'ASGN', 'src1': {'constant': -3, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'inst_type': 'SLT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'NOT', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'AND', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {'type': 'int', 'tempID': 2}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'ASGN', 'src1': {'constant': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'MUL', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {'type': 'int', 'tempID': 1}, 'dest': {'tempID': 1, 'type': {'type': 'int'}}}
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 15, 'start_addr': 12}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 15, 'start_addr': 12}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'float'}}
+{'inst_type': 'ASGN', 'src1': {'constant': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'SGT', 'src1': {'tempID': 1, 'type': 'float'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'SLT', 'src1': {'tempID': 1, 'type': 'float'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'inst_type': 'OR', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'NOT', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'Label': 'L2'}}
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L3'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L2'}}
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': '\nYay!', 'type': 'string'}}
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L4'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L3'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L4'}}
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L10'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L9'}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+{'inst_type': 'ASGN', 'src1': {'constant': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'inst_type': 'OR', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'ASGN', 'src1': {'constant': -2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'inst_type': 'MUL', 'src1': {'tempID': 3, 'type': 'int'}, 'src2': {'type': 'int', 'tempID': 2}, 'dest': {'tempID': 2, 'type': {'type': 'int'}}}
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'tempID': 2}, 'src2': {}, 'dest': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 20, 'start_addr': 12}}
+{'inst_type': 'ASGN', 'src1': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 20, 'start_addr': 12}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+{'inst_type': 'ASGN', 'src1': {'constant': -2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'inst_type': 'SGT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'inst_type': 'SLT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 4, 'type': 'int'}}
+{'inst_type': 'OR', 'src1': {'tempID': 3, 'type': 'int'}, 'src2': {'tempID': 4, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'NOT', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 2}, 'src2': {}, 'dest': {'Label': 'L5'}}
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L6'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L5'}}
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': '\nHurray', 'type': 'string'}}
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L7'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L6'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L7'}}
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L10'}}
+{'lineno': 0, 'identifier': 'fibo', 'returntype': 'int', 'arguments': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0}]}
+{'lineno': 0, 'subtable': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0}, {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0}, {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}, {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 8}, {'lineno': 3, 'subtable': [{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 12}]}]}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}
+{'lineno': 15, 'subtable': [{'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 15, 'start_addr': 12}, {'lineno': 17, 'subtable': []}]}
+{'lineno': 20, 'subtable': [{'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 20, 'start_addr': 12}, {'lineno': 22, 'subtable': []}]}
+===== ASSEMBLY ======
+85
+85
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'fibo'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0}]}
+{'dest': [{'NextUse': 17, 'Status': 'L'}]}
+[0, False]
+load_arg
+{'inst_type': 'DECLARE', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0}}
+{'dest': {'NextUse': 7, 'Status': 'L'}}
+var modified +  {'[["dimension", []], ["identifier", "first"], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int']}
+______________________
+getassem
+[]  []  [1, 'int']
+======
+{'inst_type': 'DECLARE', 'src1': {'constant': 1, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}}
+{'dest': {'NextUse': 8, 'Status': 'L'}}
+var modified +  {'[["dimension", []], ["identifier", "first"], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int'], '[["dimension", []], ["identifier", "second"], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]': [2, 'int']}
+______________________
+getassem
+[]  []  [2, 'int']
+======
+{'inst_type': 'DECLARE', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 8}}
+{'dest': {'NextUse': 16, 'Status': 'L'}}
+var modified +  {'[["dimension", []], ["identifier", "first"], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int'], '[["dimension", []], ["identifier", "second"], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]': [2, 'int'], '[["dimension", []], ["identifier", "i"], ["lineno", 1], ["size", 4], ["start_addr", 8], ["type", "int"]]': [3, 'int']}
+______________________
+getassem
+[]  []  [3, 'int']
+======
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L1'}}
+spill  [1, 'int']
+spill  [2, 'int']
+spill  [3, 'int']
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L0'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 9, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[1, 'int']  []  [2, 'int']
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 9, 'Status': 'NL'}, 'src1': {'NextUse': 13, 'Status': 'L'}}
+getassem
+[3, 'int']  []  [4, 'int']
+======
+{'inst_type': 'ADD', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 10, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[2, 'int']  [4, 'int']  [2, 'int']
+======
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 12}}
+{'dest': {'NextUse': 12, 'Status': 'L'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "third"], ["lineno", 3], ["size", 4], ["start_addr", 12], ["type", "int"]]': [5, 'int']}
+______________________
+getassem
+[2, 'int']  []  [5, 'int']
+======
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': '\n', 'type': 'string'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 12}}
+{'dest': {'NextUse': 14, 'Status': 'L'}}
+var modified +  {'[["dimension", []], ["identifier", "third"], ["lineno", 3], ["size", 4], ["start_addr", 12], ["type", "int"]]': [5, 'int']}
+______________________
+getassem
+[]  []  [5, 'int']
+======
+{'inst_type': 'STORE', 'src1': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}, 'src2': {}, 'dest': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0}}
+{'dest': {'NextUse': -1, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "third"], ["lineno", 3], ["size", 4], ["start_addr", 12], ["type", "int"]]': [5, 'int'], '[["dimension", []], ["identifier", "first"], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int']}
+______________________
+getassem
+[3, 'int']  []  [1, 'int']
+======
+{'inst_type': 'STORE', 'src1': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 12}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}}
+{'dest': {'NextUse': 20, 'Status': 'L'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "third"], ["lineno", 3], ["size", 4], ["start_addr", 12], ["type", "int"]]': [5, 'int'], '[["dimension", []], ["identifier", "first"], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int'], '[["dimension", []], ["identifier", "second"], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]': [3, 'int']}
+______________________
+getassem
+[5, 'int']  []  [3, 'int']
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L1'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'dest': {'NextUse': 18, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[6, 'int']  []  [7, 'int']
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 18, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[0, 'int']  []  [2, 'int']
+======
+{'inst_type': 'SLT', 'src1': {'tempID': 0, 'type': 'int'}, 'src2': {'tempID': 1, 'type': 'int'}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'dest': {'NextUse': 19, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[7, 'int']  [2, 'int']  [7, 'int']
+======
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 0}, 'src2': {}, 'dest': {'Label': 'L0'}}
+{'[["dimension", []], ["identifier", "third"], ["lineno", 3], ["size", 4], ["start_addr", 12], ["type", "int"]]': [5, 'int'], '[["dimension", []], ["identifier", "first"], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int'], '[["dimension", []], ["identifier", "second"], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]': [3, 'int']}
+spill  [5, 'int']
+spill  [1, 'int']
+spill  [3, 'int']
+{'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[7, 'int']  []  []
+======
+***********
+[["dimension", []], ["identifier", "n"], ["lineno", 0], ["size", 4], ["type", "int"]]  :  {'reg': 0, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["dimension", []], ["identifier", "first"], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]  :  {'reg': 1, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 1], ["type", "int"]]  :  {'reg': 2, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["dimension", []], ["identifier", "second"], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]  :  {'reg': 3, 'status': {'NextUse': 20, 'Status': 'L'}, 'isTemp': False}
+[["tempID", 2], ["type", "int"]]  :  {'reg': 4, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["dimension", []], ["identifier", "third"], ["lineno", 3], ["size", 4], ["start_addr", 12], ["type", "int"]]  :  {'reg': 5, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["dimension", []], ["identifier", "i"], ["lineno", 1], ["size", 4], ["start_addr", 8], ["type", "int"]]  :  {'reg': 6, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "int"]]  :  {'reg': 7, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+***********
+{'inst_type': 'RETURN', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4}}
+{'dest': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "second"], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]': [1, 'int']}
+______________________
+getassem
+[]  []  [1, 'int']
+======
+***********
+[["dimension", []], ["identifier", "n"], ["lineno", 0], ["size", 4], ["type", "int"]]  :  {'reg': 0, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 1], ["type", "int"]]  :  {'reg': 2, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 2], ["type", "int"]]  :  {'reg': 4, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["dimension", []], ["identifier", "i"], ["lineno", 1], ["size", 4], ["start_addr", 8], ["type", "int"]]  :  {'reg': 6, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "int"]]  :  {'reg': 7, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["dimension", []], ["identifier", "second"], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]  :  {'reg': 1, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+***********
+{'inst_type': 'EOF', 'src1': {}, 'src2': {}, 'dest': {}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'main'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'INPUT', 'src1': {}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'dest': {'NextUse': 24, 'Status': 'NL'}}
+getassem
+[]  []  [7, 'int']
+======
+{'inst_type': 'DECLARE', 'src1': {'tempID': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}}
+{'dest': {'NextUse': 27, 'Status': 'L'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int']}
+______________________
+getassem
+[7, 'int']  []  [1, 'int']
+======
+{'inst_type': 'FUNCALL', 'src1': 4, 'src2': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}], 'dest': {'Label': 'fibo'}}
+store_args
+spill  [1, 'int']
+getassem
+-1  -1  -1
+======
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'funcReturn': 0}, 'src2': {}, 'dest': {'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}}
+{'dest': {'NextUse': 29, 'Status': 'L'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]': [1, 'int'], '[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]': [3, 'int']}
+______________________
+getassem
+[1, 'int']  []  [3, 'int']
+======
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}}
+{'dest': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]': [5, 'int'], '[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]': [3, 'int']}
+______________________
+getassem
+[]  []  [5, 'int']
+======
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': 'th fibonacci:', 'type': 'string'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}}
+{'dest': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]': [5, 'int'], '[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]': [3, 'int']}
+______________________
+getassem
+[]  []  [3, 'int']
+======
+{'inst_type': 'INPUT', 'src1': {}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'float'}}
+{'dest': {'NextUse': 31, 'Status': 'NL'}}
+getassem
+[]  []  [0, 'float']
+======
+{'inst_type': 'DECLARE', 'src1': {'tempID': 0, 'type': 'float'}, 'src2': {}, 'dest': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}}
+{'dest': {'NextUse': 32, 'Status': 'L'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+var modified +  {'[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]': [5, 'int'], '[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]': [3, 'int'], '[["dimension", []], ["identifier", "f"], ["lineno", 13], ["size", 4], ["start_addr", 8], ["type", "float"]]': [1, 'float']}
+______________________
+getassem
+[0, 'float']  []  [1, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'float'}}
+{'dest': {'NextUse': 34, 'Status': 'NL'}, 'src1': {'NextUse': 38, 'Status': 'L'}}
+getassem
+[1, 'float']  []  [0, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 34, 'Status': 'NL'}}
+getassem
+[]  []  [2, 'int']
+======
+{'inst_type': 'SLT', 'src1': {'tempID': 0, 'type': 'float'}, 'src2': {'tempID': 1, 'type': 'int'}, 'dest': {'tempID': 0, 'type': 'int'}}
+{'dest': {'NextUse': 35, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+convert
+getassem
+[8, 'int']  [2, 'int']  [7, 'int']
+======
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 0}, 'src2': {}, 'dest': {'Label': 'L8'}}
+{'[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]': [5, 'int'], '[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]': [3, 'int'], '[["dimension", []], ["identifier", "f"], ["lineno", 13], ["size", 4], ["start_addr", 8], ["type", "float"]]': [1, 'float']}
+spill  [5, 'int']
+spill  [3, 'int']
+spill  [1, 'float']
+{'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[7, 'int']  []  []
+======
+***********
+[["dimension", []], ["identifier", "n"], ["lineno", 0], ["size", 4], ["type", "int"]]  :  {'reg': 0, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 1], ["type", "int"]]  :  {'reg': 2, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 2], ["type", "int"]]  :  {'reg': 4, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["dimension", []], ["identifier", "i"], ["lineno", 1], ["size", 4], ["start_addr", 8], ["type", "int"]]  :  {'reg': 6, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "int"]]  :  {'reg': 7, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["funcReturn", 0], ["type", "int"]]  :  {'reg': 1, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]  :  {'reg': 3, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]  :  {'reg': 5, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "float"]]  :  {'reg': 8, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+***********
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L9'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L8'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'float'}}
+{'dest': {'NextUse': 40, 'Status': 'NL'}, 'src1': {'NextUse': 42, 'Status': 'L'}}
+getassem
+[1, 'float']  []  [2, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': -1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 40, 'Status': 'NL'}}
+getassem
+[]  []  [4, 'int']
+======
+{'inst_type': 'SGT', 'src1': {'tempID': 1, 'type': 'float'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 41, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+convert
+getassem
+[3, 'int']  [4, 'int']  [2, 'int']
+======
+{'inst_type': 'NOT', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 46, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[2, 'int']  []  [2, 'int']
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+{'dest': {'NextUse': 44, 'Status': 'NL'}, 'src1': {'NextUse': 65, 'Status': 'L'}}
+getassem
+[1, 'float']  []  [3, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': -3, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'dest': {'NextUse': 44, 'Status': 'NL'}}
+getassem
+[]  []  [5, 'int']
+======
+{'inst_type': 'SLT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 45, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+convert
+getassem
+[9, 'int']  [5, 'int']  [4, 'int']
+======
+{'inst_type': 'NOT', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 46, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[4, 'int']  []  [4, 'int']
+======
+{'inst_type': 'AND', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {'type': 'int', 'tempID': 2}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 48, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[2, 'int']  [4, 'int']  [2, 'int']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 48, 'Status': 'NL'}}
+getassem
+[]  []  [4, 'int']
+======
+{'inst_type': 'MUL', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {'type': 'int', 'tempID': 1}, 'dest': {'tempID': 1, 'type': {'type': 'int'}}}
+{'dest': {'NextUse': -1, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': 49, 'Status': 'NL'}}
+getassem
+[4, 'int']  [2, 'int']  [4, {'type': 'int'}]
+======
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 15, 'start_addr': 12}}
+{'dest': {'NextUse': 50, 'Status': 'L'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+convert
+var modified +  {'[["dimension", []], ["identifier", "result"], ["lineno", 15], ["size", 4], ["start_addr", 12], ["type", "float"]]': [5, 'float']}
+______________________
+getassem
+[4, 'float']  []  [5, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 15, 'start_addr': 12}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'float'}}
+{'dest': {'NextUse': 52, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[5, 'float']  []  [2, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 52, 'Status': 'NL'}}
+getassem
+[]  []  [10, 'int']
+======
+{'inst_type': 'SGT', 'src1': {'tempID': 1, 'type': 'float'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 53, 'Status': 'NL'}, 'src1': {'NextUse': 53, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+convert
+getassem
+[11, 'int']  [10, 'int']  [10, 'int']
+======
+{'inst_type': 'SLT', 'src1': {'tempID': 1, 'type': 'float'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'dest': {'NextUse': 54, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': 54, 'Status': 'NL'}}
+convert
+getassem
+[12, 'int']  [10, 'int']  [5, 'int']
+======
+{'inst_type': 'OR', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 55, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[10, 'int']  [5, 'int']  [2, 'int']
+======
+{'inst_type': 'NOT', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+{'dest': {'NextUse': 56, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[2, 'int']  []  [2, 'int']
+======
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'Label': 'L2'}}
+{'[["dimension", []], ["identifier", "result"], ["lineno", 15], ["size", 4], ["start_addr", 12], ["type", "float"]]': [5, 'float']}
+spill  [5, 'float']
+{'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[2, 'int']  []  []
+======
+***********
+[["dimension", []], ["identifier", "n"], ["lineno", 0], ["size", 4], ["type", "int"]]  :  {'reg': 0, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 1], ["type", "int"]]  :  {'reg': 2, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["dimension", []], ["identifier", "i"], ["lineno", 1], ["size", 4], ["start_addr", 8], ["type", "int"]]  :  {'reg': 6, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "int"]]  :  {'reg': 7, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["funcReturn", 0], ["type", "int"]]  :  {'reg': 1, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "float"]]  :  {'reg': 8, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 1], ["type", "float"]]  :  {'reg': 12, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 3], ["type", "int"]]  :  {'reg': 5, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 2], ["type", "float"]]  :  {'reg': 9, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 1], ["type", {"type": "int"}]]  :  {'reg': 4, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 2], ["type", "int"]]  :  {'reg': 10, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+***********
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L3'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L2'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': '\nYay!', 'type': 'string'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L4'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L3'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L4'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L10'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L9'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+{'dest': {'NextUse': 67, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[1, 'float']  []  [3, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'dest': {'NextUse': 67, 'Status': 'NL'}}
+getassem
+[]  []  [5, 'int']
+======
+{'inst_type': 'OR', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 69, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+convert
+getassem
+[13, 'int']  [5, 'int']  [10, 'int']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': -2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'dest': {'NextUse': 69, 'Status': 'NL'}}
+getassem
+[]  []  [5, 'int']
+======
+{'inst_type': 'MUL', 'src1': {'tempID': 3, 'type': 'int'}, 'src2': {'type': 'int', 'tempID': 2}, 'dest': {'tempID': 2, 'type': {'type': 'int'}}}
+{'dest': {'NextUse': -1, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': 70, 'Status': 'NL'}}
+getassem
+[5, 'int']  [10, 'int']  [5, {'type': 'int'}]
+======
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'tempID': 2}, 'src2': {}, 'dest': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 20, 'start_addr': 12}}
+{'dest': {'NextUse': 71, 'Status': 'L'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+convert
+var modified +  {'[["dimension", []], ["identifier", "result"], ["lineno", 20], ["size", 4], ["start_addr", 12], ["type", "float"]]': [6, 'float']}
+______________________
+getassem
+[5, 'float']  []  [6, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 20, 'start_addr': 12}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+{'dest': {'NextUse': 73, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[6, 'float']  []  [3, 'float']
+======
+{'inst_type': 'ASGN', 'src1': {'constant': -2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'dest': {'NextUse': 73, 'Status': 'NL'}}
+getassem
+[]  []  [14, 'int']
+======
+{'inst_type': 'SGT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 3, 'type': 'int'}}
+{'dest': {'NextUse': 74, 'Status': 'NL'}, 'src1': {'NextUse': 74, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+convert
+getassem
+[15, 'int']  [14, 'int']  [14, 'int']
+======
+{'inst_type': 'SLT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 4, 'type': 'int'}}
+{'dest': {'NextUse': 75, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': 75, 'Status': 'NL'}}
+convert
+getassem
+[16, 'int']  [14, 'int']  [17, 'int']
+======
+{'inst_type': 'OR', 'src1': {'tempID': 3, 'type': 'int'}, 'src2': {'tempID': 4, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 76, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}, 'src2': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[14, 'int']  [17, 'int']  [10, 'int']
+======
+{'inst_type': 'NOT', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+{'dest': {'NextUse': 77, 'Status': 'NL'}, 'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[10, 'int']  []  [10, 'int']
+======
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 2}, 'src2': {}, 'dest': {'Label': 'L5'}}
+{'[["dimension", []], ["identifier", "result"], ["lineno", 20], ["size", 4], ["start_addr", 12], ["type", "float"]]': [6, 'float']}
+spill  [6, 'float']
+{'src1': {'NextUse': -1, 'Status': 'NL'}}
+getassem
+[10, 'int']  []  []
+======
+***********
+[["dimension", []], ["identifier", "n"], ["lineno", 0], ["size", 4], ["type", "int"]]  :  {'reg': 0, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 1], ["type", "int"]]  :  {'reg': 2, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["dimension", []], ["identifier", "i"], ["lineno", 1], ["size", 4], ["start_addr", 8], ["type", "int"]]  :  {'reg': 6, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "int"]]  :  {'reg': 7, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["funcReturn", 0], ["type", "int"]]  :  {'reg': 1, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': False}
+[["tempID", 0], ["type", "float"]]  :  {'reg': 8, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 1], ["type", "float"]]  :  {'reg': 12, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 2], ["type", "float"]]  :  {'reg': 16, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 1], ["type", {"type": "int"}]]  :  {'reg': 4, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 2], ["type", "int"]]  :  {'reg': 10, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 2], ["type", {"type": "int"}]]  :  {'reg': 5, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 3], ["type", "int"]]  :  {'reg': 14, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+[["tempID", 4], ["type", "int"]]  :  {'reg': 17, 'status': {'NextUse': -1, 'Status': 'NL'}, 'isTemp': True}
+***********
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L6'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L5'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': '\nHurray', 'type': 'string'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L7'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L6'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L7'}}
+getassem
+-1  -1  -1
+======
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L10'}}
+getassem
+-1  -1  -1
+======
