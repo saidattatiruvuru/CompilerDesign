@@ -538,6 +538,13 @@ def p_stmtelt_breakstmt(p):
   'stmtelt : breakstmt'
   p[0] = p[1]
 
+# funcall args a,b,c,0
+# 60, 64, 68
+# lw r1, a
+# sw a, 60
+# sw b, 64
+# sw c, 68 
+# goto label
 
 def p_funcdef(p):
   'funcdef : FUNCTION type IDENTIFIER funcdefy LCB nulltypeargsx RCB LFB stmt2 RFB fundefexit'

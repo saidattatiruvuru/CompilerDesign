@@ -1,5 +1,5 @@
 from Parser import *
-
+#f0 for input, f0 is zero reegister, f0 is for return
 num_int_reg = 18
 num_float_reg = 32
 reg_to_var = {}
@@ -17,7 +17,7 @@ for i in range(18):
     if i in range(10, 18):
         int_reg[i] = "$s" + str(i-10)
 
-for i in range(32):
+for i in range(1, 32):
     float_reg[i] = "$f" + str(i)
 
 
@@ -70,8 +70,9 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
     print('spill', end="  ")
     print(reg)
 
-
+labelnum = 0
 def getassem(code, src1, src2, dest): # give assembly code 
+    global labelnum
     print('getassem')
     print(src1, end="  ")
     print(src2, end="  ")
@@ -108,13 +109,69 @@ def getassem(code, src1, src2, dest): # give assembly code
                 print("s.s " + float_reg[src1[0]]+ ", " + float_reg[dest[0]])
 
     elif code['inst_type'] == 'INPUT':
+        if dest[1] == 'int':
+            print("li $v0, 5")
+            print("syscall")
+            print('move '+ int_reg['dest']+", $v0")
+        if dest[1] == 'float':
+            print("li $v0, 6")
+            print("syscall")
+            print('mov.s '+ float_reg['dest']+", $f0")
     elif code['inst_type'] == "SLT":
         if src1[1] == 'int':
             print("slt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src[1] == 'float':
-            print("c.lt.s " + float_reg[])
-            print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
-    elif code['inst_type'] == "OR":   
+            print("c.lt.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
+            print("bc1t _x"+ str(labelnum))
+            
+            print("li " + int_reg[dest[0]] + ", 0")
+            print("j _x" + str(labelnum+1))
+            print("_x"+str(labelnum)+":")
+            print("li " + int_reg[dest[0]] + ", 1")
+            print("_x"+str(labelnum+1)+":")
+            labelnum +=2
+    elif code['inst_type'] == "SGT":
+        if src1[1] == 'int':
+            print("sgt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src[1] == 'float':
+            print("c.le.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
+            print("bc1f _x"+ str(labelnum))
+            print("li " + int_reg[dest[0]] + ", 0")
+            print("j _x" + str(labelnum+1))
+            print("_x"+str(labelnum)+":")
+            print("li " + int_reg[dest[0]] + ", 1")
+            print("_x"+str(labelnum+1)+":")
+            labelnum +=2
+    elif code['inst_type'] == "FUNCALL":
+        print("jal "+ code['dest']['Label'])
+    elif code['inst_type'] == "GOTO":
+        print("j "+ code['dest']['Label'])
+    elif code['inst_type'] == "OR":
+        if src1[1] == 'int':
+            print("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src[1] == 'float':
+            print('li $f0, 0')
+            print("li " + int_reg[dest[0]] + ", 0")
+            print("c.eq.s " + float_reg[src1[0]]+", $f0")
+            print("bc1f _x"+ str(labelnum))
+            print("c.eq.s " + float_reg[src2[0]]+", $f0")
+            print("bc1f _x"+ str(labelnum))
+            print("j _x" + str(labelnum+1))
+            print("_x"+str(labelnum)+":")
+            print("li " + int_reg[dest[0]] + ", 1")
+            print("_x"+str(labelnum+1)+":")
+            labelnum+=2
+    elif code['inst_type'] == "RETURN":
+        if dest[1] == 'int':
+            print('move $v0, ' + int_reg[dest[0]])
+            print('jr $ra')
+        elif dest[1] == 'float':
+            print('mov.s $f0, ' + float_reg[dest[0]])
+            print('jr $ra')
+    
+    
+
+
             
 
 
