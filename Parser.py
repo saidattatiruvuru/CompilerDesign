@@ -22,6 +22,8 @@ codeStatus = []
 # Status: L/NL
 # Nextuse: int/-1
 
+loopLabelStack= []
+
 #the reverse traversal history
 revHist = {}
 #table to store lable and destination
@@ -85,7 +87,7 @@ def reverseTraverse():
     result = {}
 
     #the ignored cases
-    if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF'] :
+    if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF', 'BREAK', 'CONTINUE'] :
       codeStatus.append(result)
       continue
 
@@ -130,6 +132,8 @@ def reverseTraverse():
       # remove the dest from History dict for the other instructions
       if theCode[i]['inst_type'] not in ['IF0', 'IFEQL', 'IF1'] :
         temp = theCode[i]['dest']
+        print('temp', end='  ')
+        print(temp)
         tempstr = json.dumps(sorted(temp.items()))
         if temp != {}:          
           if tempstr in revHist.keys():
@@ -1167,8 +1171,8 @@ def p_ifstmt(p):
   code += p[3]['Code']
   temp = {}
   if 'constant' in p[3]['PassedValue'].keys():
-    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
-    temp = {'tempID':newTemp, 'type':p[3]['type']}
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['PassedValue']['type']}})
+    temp = {'tempID':newTemp, 'type':p[3]['PassedValue']['type']}
   else:
     temp = p[3]['PassedValue']
   code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
@@ -1237,20 +1241,27 @@ def p_whilestmt(p):
   global newLabel
   l1 = newLabel
   l2 = newLabel + 1
-  newLabel += 2
+  l3 = newLabel + 2
+  newLabel += 3
   code = []
   code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)}})
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}})
+  for line in p[7]['Code']:
+    if line['inst_type'] == 'BREAK' and line['dest'] == {}:
+      line.update({'dest': {'Label': 'L' +str(l3)}})
+    elif line['inst_type'] == 'CONTINUE' and line['dest'] == {}:
+      line.update({'dest': {'Label': 'L'+str(l2)}})
   code += p[7]['Code']
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}})
   code += p[3]['Code']
   temp = {}
   if 'constant' in p[3]['PassedValue'].keys():
-    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
-    temp = {'tempID':newTemp, 'type':p[3]['type']}
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['PassedValue']['type']}})
+    temp = {'tempID':newTemp, 'type':p[3]['PassedValue']['type']}
   else:
     temp = p[3]['PassedValue']
   code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}})
   p[0]['Code'] = code
 
 def p_whilebegin(p):
@@ -1556,7 +1567,7 @@ while(i<n)
 
 '''
 
-s = '''
+'''
 function int fibo(int n) {
 	int first = 0, second = 1;
 	int i = 0;
@@ -1588,9 +1599,31 @@ else {
 }
 
 '''
+s = '''
+  while(1) {
+    int hello = 0;
+    int ho = 9;
+    while(ho) {
+      print("hi");
+      break;
+    }
+    while(hello) {
+      continue;
+    }
+    if (0 == 1) {
+      break;
+    }
+    continue;
+  }
+'''
+
 result = parser.parse(s)
 #print(result)
 codeStatus.reverse()
+print("THE CODE THE CODE THE CODE")
+for line in theCode:
+  print(line)
+print("THE CODE THE CODE THE CODE")
 for i in table:
   print(i)
 

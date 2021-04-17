@@ -84,7 +84,7 @@ for i in range(len(theCode)):
     print(theCode[i])
 
     if codeStatus[i] == {}:
-        if theCode[i]['inst_type'] in ['GOTO', 'EOF']:
+        if theCode[i]['inst_type'] in ['GOTO', 'EOF', 'BREAK', 'CONTINUE']:
             for var in var_modified.keys():
                 spill(var_modified[var])
             getassem(theCode[i], -1, -1, -1)
