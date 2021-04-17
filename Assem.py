@@ -1,7 +1,7 @@
 from Parser import *
 
 num_int_reg = 18
-num_float_reg = 32
+num_float_reg = 31
 reg_to_var = {}
 freg_to_var = {}
 var_to_reg = {}
@@ -14,10 +14,10 @@ float_reg = {}
 for i in range(18):
     if i in range(0,10):
         int_reg[i] = "$t" + str(i)
-    if i in range(10, 18):
+    if i in range(10, num_int_reg):
         int_reg[i] = "$s" + str(i-10)
 
-for i in range(32):
+for i in range(num_float_reg):
     float_reg[i] = "$f" + str(i)
 
 
@@ -69,6 +69,20 @@ def get_reg(isInt):
 def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp var
     print('spill', end="  ")
     print(reg)
+    treg_to_var = {}
+    treg = {}
+    inst = ""
+    if reg[1] == 'int':
+        treg_to_var = reg_to_var
+        treg = int_reg
+        inst = 'sw '
+    else:
+        treg_to_var = freg_to_var
+        treg = float_reg
+        inst = 's.s '
+    if 'tempID' not in treg_to_var.keys():
+        print("addi  $a3, $k0 , " + str(treg_to_var['start_addr']))
+        print(inst + treg[reg[0]]+ ", 0($a3)")
 
 
 def getassem(code, src1, src2, dest): # give assembly code 
@@ -96,11 +110,11 @@ def getassem(code, src1, src2, dest): # give assembly code
             print("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     elif code['inst_type'] == 'STORE':
         if 'tempID' in code['dest'].keys():
-                 print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
-                    if src1[1] == 'int':
-                        print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
-                    elif src1[1] == 'float':
-                        print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+            print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
+            if src1[1] == 'int':
+                print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+            elif src1[1] == 'float':
+                print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
         if 'identifier' in code['dest'].keys():
             if src1[1] == 'int':
                 print("sw " + int_reg[src1[0]]+ ", " + int_reg[dest[0]])
@@ -121,19 +135,87 @@ def getassem(code, src1, src2, dest): # give assembly code
 # sw r2, 0()
 # lw r1, 0(t1) 
 
-
+# Convert Integer to Float
+# mtc1 IntReg, FRsrc
+# cvt.s.w FRdest, FRsrc	
+# Convert Float to Integer
+# cvt.w.s FRdest, FRsrc
+# mfc1 IntReg, FRdest    -- YES ALWAYS INT FIRST
 
 def convert(toreg, fromreg): # convert stmt from one type to another
     print('convert')
+    if toreg[1] == 'int':
+        print('cvt.w.s $f31, ' + float_reg[fromreg[0]])
+        print('mfc1 ' + int_reg[toreg[0]] + ' , $f31')
+    else:
+        print('mtc1 ' + int_reg[fromreg[0]] + ' , $f31')
+        print('cvt.w.s ' + float_reg[toreg[0]] + ' , $f31')
+
+
 
 def load(reg, var): # just load stmt from addr of var accoridng to type of reg
-    print('load') 
+    print('load')
+    if reg[1] == 'int':
+        print("addi  $a3, $k0, " + str(reg_to_var['start_addr']))
+        print("lw " + int_reg[reg[0]]+ ", 0($a3)")
+    else:
+        print("addi  $a3, $k0, " + str(freg_to_var['start_addr']))
+        print("lw.s " + float_reg[reg[0]]+ ", 0($a3)")
+                
+    
 
-def store_args(code): # initialize a0, a1 and store args in just before funccall, currmem is in src1 of code
+def store_args(code): # initialize a0, a1 and store args in just before funcall, currmem is in src1 of code
     print('store_args')
+    print('li $a0, ' + str(code['src1']))
+    print('li $a3, ' + str(code['src1']))
+    print('add  $a3, $k0, $a3')
+    print('li $a1, ' + str(len(code['src2'])))
+    for arg in code['src2']:
+        if 'constant' in arg.keys():
+            if arg['type'] == 'int':
+                print('li $a2, ' + str(arg['constant']))
+                print('sw $a2, 0($a3)')
+            else:
+                print('li.s $f31, ' + str(arg['constant']))
+                print('s.s $f31, 0($a3)')
+        elif 'tempID' in arg.keys():
+            keystr = json.dumps(sorted(arg.items()))
+            if arg['type'] == 'int':
+                reg = var_to_reg[keystr]
+                print('sw ' + int_reg[reg] + ', 0($a3)')
+            else:
+                reg = var_to_freg[keystr]
+                print('s.s ' + float_reg[reg] + ', 0($a3)')
+        else: # identifier
+            keystr = json.dumps(sorted(arg.items()))
+            if arg['type'] == 'int':
+                if keystr not in var_to_reg.keys():
+                    print("addi  $a2, $k0, " + str(arg['start_addr']))
+                    print('lw $a2, 0($a2)')
+                    print('sw $a2, 0($a3)')
+                else:
+                    reg = var_to_reg[keystr]
+                    print('sw ' + int_reg[reg] + ', 0($a3)')               
+            else:
+                if keystr not in var_to_freg.keys():
+                    print("addi  $a2, $k0, " + str(arg['start_addr']))
+                    print('lw.s $f31, 0($a2)')
+                    print('s.s $f31, 0($a3)')
+                else:
+                    reg = var_to_freg[keystr]
+                    print('s.s ' + float_reg[reg] + ', 0($a3)')
+        print('addi $a3, $a3, 4')
+
 
 def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
     print('load_arg')
+    if count == 0:
+        print('add $a3, $k0, $a0')    
+    if reg[1] == 'int':
+        print('lw ' + int_reg[reg[0]] + ', 0($a3)')
+    else:
+        print('lw.s ' + float_reg[reg[0]] + ', 0($a3)')
+    print('addi $a3, $a3, 4')
 
 
 var_modified = {} # variable modified but not stored back, so they need storing back, same structure as var_to_reg
