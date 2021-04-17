@@ -46,13 +46,14 @@ def labelTable():
       l_table[theCode[i]['dest']['Label']] = i
   block_header = [0]
   for i in range(l):
-    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1']:
+    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE']:
       n = theCode[i]['dest']['Label']
       if l_table[n] not in block_header:
         block_header.append(l_table[n])
       m = i + 1
-      if m < l and m not in block_header:
+      if m < l+1 and m not in block_header:
         block_header.append(m)
+  
   block_header.sort()
 
 def basicblock_gen():
@@ -86,6 +87,8 @@ def reverseTraverse():
   for i in range(l-1, -1 , -1):
     result = {}
 
+    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE','GOTO', 'EOF', 'RETURN']:
+      revHist.clear()
     #the ignored cases
     if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF', 'BREAK', 'CONTINUE'] :
       codeStatus.append(result)
@@ -542,6 +545,13 @@ def p_stmtelt_breakstmt(p):
   'stmtelt : breakstmt'
   p[0] = p[1]
 
+# funcall args a,b,c,0
+# 60, 64, 68
+# lw r1, a
+# sw a, 60
+# sw b, 64
+# sw c, 68 
+# goto label
 
 def p_funcdef(p):
   'funcdef : FUNCTION type IDENTIFIER funcdefy LCB nulltypeargsx RCB LFB stmt2 RFB fundefexit'
@@ -1263,6 +1273,11 @@ def p_whilestmt(p):
   code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}})
   p[0]['Code'] = code
+
+
+
+
+
 
 def p_whilebegin(p):
   'whilebegin : '

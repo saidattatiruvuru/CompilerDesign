@@ -1,7 +1,9 @@
 from Parser import *
-
+import json
+#f0 for input, f0 is zero reegister, f0 is for return
+#f12 is for syscall
 num_int_reg = 18
-num_float_reg = 31
+num_float_reg = 30
 reg_to_var = {}
 freg_to_var = {}
 var_to_reg = {}
@@ -17,8 +19,11 @@ for i in range(18):
     if i in range(10, num_int_reg):
         int_reg[i] = "$s" + str(i-10)
 
-for i in range(num_float_reg):
-    float_reg[i] = "$f" + str(i)
+for i in range(11):
+    #f0 and f12 are reserved
+    float_reg[i] = "$f" + str(i+1)
+for i in range(11, num_float_reg):
+    float_reg[i] = "$f" + str(i+2)
 
 
 def initialise():
@@ -84,8 +89,13 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
         print("addi  $a3, $k0 , " + str(treg_to_var['start_addr']))
         print(inst + treg[reg[0]]+ ", 0($a3)")
 
-
+labelnum = 0
+stringnum = 0
+theStrings = []
 def getassem(code, src1, src2, dest): # give assembly code 
+    global labelnum
+    global stringnum
+    global theStrings
     print('getassem')
     print(src1, end="  ")
     print(src2, end="  ")
@@ -122,14 +132,94 @@ def getassem(code, src1, src2, dest): # give assembly code
                 print("s.s " + float_reg[src1[0]]+ ", " + float_reg[dest[0]])
 
     elif code['inst_type'] == 'INPUT':
+        if dest[1] == 'int':
+            print("li $v0, 5")
+            print("syscall")
+            print('move '+ int_reg[dest[0]]+", $v0")
+        if dest[1] == 'float':
+            print("li $v0, 6")
+            print("syscall")
+            print('mov.s '+ float_reg[dest[0]]+", $f0")
+
     elif code['inst_type'] == "SLT":
         if src1[1] == 'int':
             print("slt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src[1] == 'float':
-            print("c.lt.s " + float_reg[])
-            print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
-    elif code['inst_type'] == "OR":   
-            
+            print("c.lt.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
+            print("bc1t _x"+ str(labelnum))            
+            print("li " + int_reg[dest[0]] + ", 0")
+            print("j _x" + str(labelnum+1))
+            print("_x"+str(labelnum)+":")
+            print("li " + int_reg[dest[0]] + ", 1")
+            print("_x"+str(labelnum+1)+":")
+            labelnum +=2
+
+    elif code['inst_type'] == "SGT":
+        if src1[1] == 'int':
+            print("sgt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src[1] == 'float':
+            print("c.le.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
+            print("bc1f _x"+ str(labelnum))
+            print("li " + int_reg[dest[0]] + ", 0")
+            print("j _x" + str(labelnum+1))
+            print("_x"+str(labelnum)+":")
+            print("li " + int_reg[dest[0]] + ", 1")
+            print("_x"+str(labelnum+1)+":")
+            labelnum +=2
+    elif code['inst_type'] == "FUNCALL":
+        print("jal "+ code['dest']['Label'])
+
+    elif code['inst_type'] == "GOTO":
+        print("j "+ code['dest']['Label'])
+
+    elif code['inst_type'] == "OR":
+        if src1[1] == 'int':
+            print("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src[1] == 'float':
+            print('li $f0, 0')
+            print("li " + int_reg[dest[0]] + ", 0")
+            print("c.eq.s " + float_reg[src1[0]]+", $f0")
+            print("bc1f _x"+ str(labelnum))
+            print("c.eq.s " + float_reg[src2[0]]+", $f0")
+            print("bc1f _x"+ str(labelnum))
+            print("j _x" + str(labelnum+1))
+            print("_x"+str(labelnum)+":")
+            print("li " + int_reg[dest[0]] + ", 1")
+            print("_x"+str(labelnum+1)+":")
+            labelnum+=2
+
+    elif code['inst_type'] == "RETURN":
+        if dest[1] == 'int':
+            print('move $v0, ' + int_reg[dest[0]])
+            print('jr $ra')
+        elif dest[1] == 'float':
+            print('mov.s $f0, ' + float_reg[dest[0]])
+            print('jr $ra')
+
+    elif code['inst_type'] == "BREAK":
+        print("j "+ code['dest']['Label'])
+
+    elif code['inst_type'] == "CONTINUE":
+        print("j "+ code['dest']['Label'])
+
+    elif code['inst_type'] == "PRINT":
+        if 'value' in code['dest'].keys():
+            temp = "_str" + str(stringnum) + ": .asciiz \"" + code['dest']['value'] + " \n\""
+            theStrings.append(temp)
+            print("li $v0, 4")
+            print("la $a0, _str" + str(stringnum))
+            print("syscall")
+            stringnum += 1
+        elif dest[1] == 'int':
+            print("li $v0, 1")
+            print("move $a0, " + int_reg[dest[0]])
+            print("syscall")
+        elif dest[1] == 'float':
+            print("li $v0, 2")
+            print("mov.s $f12, " + float_reg[dest[0]])
+            print("syscall")
+
+
 
 
 # sw r2, 0()
