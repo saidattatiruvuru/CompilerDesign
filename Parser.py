@@ -44,13 +44,14 @@ def labelTable():
       l_table[theCode[i]['dest']['Label']] = i
   block_header = [0]
   for i in range(l):
-    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1']:
+    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE']:
       n = theCode[i]['dest']['Label']
       if l_table[n] not in block_header:
         block_header.append(l_table[n])
       m = i + 1
-      if m < l and m not in block_header:
+      if m < l+1 and m not in block_header:
         block_header.append(m)
+  
   block_header.sort()
 
 def basicblock_gen():
@@ -84,6 +85,8 @@ def reverseTraverse():
   for i in range(l-1, -1 , -1):
     result = {}
 
+    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE','GOTO', 'EOF', 'RETURN']:
+      revHist.clear()
     #the ignored cases
     if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF'] :
       codeStatus.append(result)
@@ -1244,7 +1247,8 @@ def p_whilestmt(p):
   global newLabel
   l1 = newLabel
   l2 = newLabel + 1
-  newLabel += 2
+  l3 = newLabel + 2
+  newLabel += 3
   code = []
   code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)}})
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}})
@@ -1258,7 +1262,18 @@ def p_whilestmt(p):
   else:
     temp = p[3]['PassedValue']
   code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}})
+  for i in range(len(code)):
+    if code[i]['inst_type'] == 'BREAK' and code[i]['dest'] == {} :
+      code[i]['dest'] = {'Label' : 'L'+str(l3)}
+    elif code[i]['inst_type'] == 'CONTINUE' and code[i]['dest'] == {} :
+      code[i]['dest'] = {'Label' : 'L'+str(l2)}
   p[0]['Code'] = code
+
+
+
+
+
 
 def p_whilebegin(p):
   'whilebegin : '
