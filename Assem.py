@@ -2,8 +2,13 @@ from Parser import *
 import json
 #f0 for input, f0 is zero reegister, f0 is for return
 #f12 is for syscall
-num_int_reg = 18
-num_float_reg = 30
+num_int_reg = 17
+# s7 for 1
+# $zero is 0
+num_float_reg = 27
+# f31 is for our convenient use
+# f29 is 1
+# f30 is 0
 reg_to_var = {}
 freg_to_var = {}
 var_to_reg = {}
@@ -31,6 +36,7 @@ def initialise():
         reg_to_var[i] = {}
     for i in range(0, num_float_reg):
         freg_to_var[i] = {}
+    
 
 def get_reg(isInt):
     treg_to_var = {} 
@@ -104,19 +110,19 @@ def getassem(code, src1, src2, dest): # give assembly code
         if src1[1] == 'int':
             print("li "+ int_reg[dest[0]] + ", 1")
             print("sub "+ int_reg[dest[0]] + ", " + int_reg[dest[0]] + " , " + int_reg[src1[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("li.s "+ float_reg[dest[0]] + " ,1.0")
             print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[dest[0]] + " , " + float_reg[src1[0]])
 
     elif code['inst_type'] == 'SUB':
         if src1[1] == 'int':
             print("sub "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     elif code['inst_type'] == 'DIV':
         if src1[1] == 'int':
             print("div "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     elif code['inst_type'] == 'STORE':
         if 'tempID' in code['dest'].keys():
@@ -144,7 +150,7 @@ def getassem(code, src1, src2, dest): # give assembly code
     elif code['inst_type'] == "SLT":
         if src1[1] == 'int':
             print("slt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("c.lt.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
             print("bc1t _x"+ str(labelnum))            
             print("li " + int_reg[dest[0]] + ", 0")
@@ -157,7 +163,7 @@ def getassem(code, src1, src2, dest): # give assembly code
     elif code['inst_type'] == "SGT":
         if src1[1] == 'int':
             print("sgt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("c.le.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
             print("bc1f _x"+ str(labelnum))
             print("li " + int_reg[dest[0]] + ", 0")
@@ -175,7 +181,7 @@ def getassem(code, src1, src2, dest): # give assembly code
     elif code['inst_type'] == "OR":
         if src1[1] == 'int':
             print("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print('li $f0, 0')
             print("li " + int_reg[dest[0]] + ", 0")
             print("c.eq.s " + float_reg[src1[0]]+", $f0")
@@ -218,6 +224,66 @@ def getassem(code, src1, src2, dest): # give assembly code
             print("li $v0, 2")
             print("mov.s $f12, " + float_reg[dest[0]])
             print("syscall")
+    
+    elif code['inst_type'] in ["ASGN", 'DECLARE']:
+        if 'constant' in code['src1'].keys():
+            if dest[1] == 'int':
+                print("li " + int_reg[dest[0]] +  ", " + str(code['src1']['constant']))
+            elif dest[1] == 'float':
+                print("li.s " + float_reg[dest[0]] +  ", " + str(code['src1']['constant']))
+        elif code['src1'] != {}:
+            if dest[1] == 'int':
+                print("move " + int_reg[src1[0]] +  ", " + int_reg[dest[0]])
+            elif dest[1] == 'float':
+                print("mov.s " + float_reg[src1[0]] +  ", " + float_reg[dest[0]])
+    
+    elif code['inst_type'] == 'ADD':
+        if dest[1] == 'int':
+            print("add "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif dest[1] == 'float':
+            print("add.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+    
+    elif code['inst_type'] == 'MUL':
+        if dest[1] == 'int':
+            print("mul "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif dest[1] == 'float':
+            print("mul.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+
+    elif code['inst_type'] == 'IF0':
+        if src1[1] == 'int':
+            print('beqz ' + int_reg[src1[0]] + ', ' + code['dest']['Label'])
+        else:
+            print('c.eq.s ' + float_reg[src1[0]] + ', $f30')
+            print('bc1t ' + code['dest']['Label'])
+
+    elif code['inst_type'] == 'IF1':
+        if src1[1] == 'int':
+            print('beq ' + int_reg[src1[0]] + ', $s7, ' + code['dest']['Label'])
+        else:
+            print('c.eq.s ' + float_reg[src1[0]] + ', $f31')
+            print('bc1t ' + code['dest']['Label'])
+
+    elif code['inst_type'] == 'LABEL':
+        if code['dest']['Label'] == 'main':
+            print('main:')
+            print('li $s7, 1')
+            print('li.s $f29, 1')
+            print('li.s $f30, 0')
+        else:
+            print(code['dest']['Label'] + ':')
+
+    elif code['inst_type'] == 'ARRAYVAL':
+        print("add  $a3, $k0 , " + str(code['src1']['start_addr']))
+        print('add  $a3, $a3 , ' + int_reg[src2[0]])
+        if dest[1] == 'int':
+            print('lw ' + int_reg[dest[0]] + ', 0($a3)')
+        else:
+            print("lw.s " + float_reg[dest[0]]+ ", 0($a3)")
+
+    elif code['inst_type'] == 'EOF':
+        print('jr $ra')
+
+        
 
 
 
@@ -310,6 +376,7 @@ def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
 
 var_modified = {} # variable modified but not stored back, so they need storing back, same structure as var_to_reg
 initialise()
+
 print('===== ASSEMBLY ======')
 print(len(theCode))
 print(len(codeStatus))
@@ -493,7 +560,7 @@ for i in range(len(theCode)):
                 print("var modified + ", end=" ")
                 print(var_modified)
                 print("______________________")
-        else:
+        else: # ARGS inst
             isDestList = True
             count = 0
             for arg in theCode[i]['dest']:

@@ -270,7 +270,7 @@ def checkarrayid(a , isLhs = False ):
           curType = j['type']
           cumProduct = {'tempID' : newTemp + 1, 'type' : curType}
           curIndex = {'tempID' : newTemp + 2, 'type' : curType}
-          resultTemp = {'tempID' : newTemp + 3, 'type' : curType}
+          resultTemp = {'tempID' : newTemp + 3, 'type' : 'int'}
           #T1 = 1 cum pro
           code.append({'inst_type':'ASGN' , 'src1': {'constant': 4 , 'type':'int'} , 'src2':{}, 'dest':cumProduct})
           #T3 = 0 fin
@@ -309,13 +309,15 @@ def checkarrayid(a , isLhs = False ):
           if flag == 1:
             found = True
             #t0 = a [ t3 ]
+            typeToPass = 'int'
             if(isLhs):
               #send the address of the array element
-              code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':{'constant':j['start_addr'], 'type':'int'} , 'dest':{'tempID': newTemp, 'type': j['type']}})
+              code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':{'constant':j['start_addr'], 'type':'int'} , 'dest':{'tempID': newTemp, 'type': 'int'}})
             else:
               #send the value of the array element
               code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': j['type']}})
-            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': j['type']}}
+              typeToPass = j['type']
+            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': typeToPass}}
             #advancing into next temporary
             newTemp = newTemp + 1
           break     
