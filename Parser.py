@@ -320,7 +320,7 @@ def checkarrayid(a , isLhs = False ):
               #send the value of the array element
               code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': j['type']}})
               typeToPass = j['type']
-            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': typeToPass}}
+            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': typeToPass, 'array':j }}
             #advancing into next temporary
             newTemp = newTemp + 1
           break     
@@ -568,31 +568,28 @@ def p_funcdef(p):
     table[p[4][0]].update({'identifier': p[3], 'returntype':p[2], 'arguments':p[6]})
     code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : p[3]}})
     code.append({'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': p[6]})
-    rel_addr = 4 * len(p[6])
     local_var = p[6]
     for line in p[9]['Code']:
       for var in local_var:
         if 'identifier' in line['src1'].keys():
           if line['src1']['identifier'] == var['identifier'] and line['src1']['lineno'] == var['lineno']:
-            line['scr1'].update({'start_addr': var['start_addr'], 'inside': True})
+            line['scr1'].update({'inside': True})
           if line['src2']['identifier'] == var['identifier'] and line['src2']['lineno'] == var['lineno']:
-            line['scr2'].update({'start_addr': var['start_addr'], 'inside': True})
+            line['scr2'].update({'inside': True})
           if line['dest']['identifier'] == var['identifier'] and line['dest']['lineno'] == var['lineno']:
-            line['dest'].update({'start_addr': var['start_addr'], 'inside': True})
+            line['dest'].update({'inside': True})
       if line['inst_type'] == 'DECLARE':
-        line['dest'].update({'start_addr':rel_addr, 'inside': True})
-        rel_addr += 4
+        line['dest'].update({'inside': True})
         local_var.append(line['dest'])
     code += p[9]['Code']
     code += p[11]['Code']
   else:
     p_error(str(p[3]) + " Function already Exist ")
     code.append({'inst_type': 'ERROR',  'src1': {}, 'src2':{} , 'dest':{}})
-  
-  
-
   p[0]['Code'] = code
   newTemp = p[4][1]
+  curr_mem = 
+
   
 def p_type2(p):
   'type2 : type'
@@ -632,6 +629,9 @@ def p_nulltypeargsx(p):
     i.update({'start_addr' : rel_addr})
     rel_addr += 4
     currenttable.append(i)
+  global curr_mem
+  curr_mem = rel_addr
+
 
 def p_nulltypeargs(p):
   'nulltypeargs : typeargs'
