@@ -124,9 +124,9 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
         inst = 's.s '
     if 'tempID' not in treg_to_var[reg[0]].keys():
         if 'inside' in treg_to_var[reg[0]].keys():
-            print(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k1)")
+            theInstrs.append(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k1)")
         else:
-            print(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k0)")
+            theInstrs.append(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k0)")
 
 
 
@@ -136,203 +136,204 @@ def getassem(code, src1, src2, dest): # give assembly code
     global theStrings
     if code['inst_type'] == 'NOT':
         if src1[1] == 'int':
-            print("li "+ int_reg[dest[0]] + ", 1")
-            print("sub "+ int_reg[dest[0]] + ", " + int_reg[dest[0]] + " , " + int_reg[src1[0]])
+            theInstrs.append("li "+ int_reg[dest[0]] + ", 1")
+            theInstrs.append("sub "+ int_reg[dest[0]] + ", " + int_reg[dest[0]] + " , " + int_reg[src1[0]])
         elif src1[1] == 'float':
-            print("li.s "+ float_reg[dest[0]] + " ,1.0")
-            print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[dest[0]] + " , " + float_reg[src1[0]])
+            theInstrs.append("li.s "+ float_reg[dest[0]] + " ,1.0")
+            theInstrs.append("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[dest[0]] + " , " + float_reg[src1[0]])
 
     elif code['inst_type'] == 'SUB':
         if src1[1] == 'int':
-            print("sub "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("sub "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src1[1] == 'float':
-            print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+            theInstrs.append("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     elif code['inst_type'] == 'DIV':
         if src1[1] == 'int':
-            print("div "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("div "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src1[1] == 'float':
-            print("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+            theInstrs.append("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
 
     elif code['inst_type'] == 'STORE':
         if 'funcReturn' in code['src1']:
             if src[1] == 'int':
-                print("move " + int_reg[dest[0]] + ", $v0")
+                theInstrs.append("move " + int_reg[dest[0]] + ", $v0")
             if src[1] == 'float':
-                print("mov.s "+  float_reg[src1[0]]+ ", $f0")
+                theInstrs.append("mov.s "+  float_reg[src1[0]]+ ", $f0")
         if 'tempID' in code['dest'].keys():
             if 'inside' in code['dest']['array'].keys():
-                print("add "+ int_reg[dest[0]] + ", $k1 , " + int_reg[dest[0]])   
+                theInstrs.append("add "+ int_reg[dest[0]] + ", $k1 , " + int_reg[dest[0]])   
             else:
-                print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
+                theInstrs.append("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
             if src1[1] == 'int':
-                print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+                theInstrs.append("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
             elif src1[1] == 'float':
-                print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+                theInstrs.append("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
         elif 'identifier' in code['dest'].keys():
             if 'constant' not in code['src1'].keys():
                 if src1[1] == 'int':
-                    print("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
+                    theInstrs.append("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
                 elif src1[1] == 'float':
-                    print("mov.s " + float_reg[dest[0]]+ ", " + float_reg[src1[0]])
+                    theInstrs.append("mov.s " + float_reg[dest[0]]+ ", " + float_reg[src1[0]])
             else:
                 if dest[1] == 'int':
-                    print("li " + int_reg[dest[0]] + ", "  + str(code['src1']['constant']) )
+                    theInstrs.append("li " + int_reg[dest[0]] + ", "  + str(code['src1']['constant']) )
                 elif dest[1] == 'float':
-                    print("li.s " + float_reg[dest[0]]+ ", " + str(code['src1']['constant']) )
+                    theInstrs.append("li.s " + float_reg[dest[0]]+ ", " + str(code['src1']['constant']) )
 
 
     elif code['inst_type'] == 'INPUT':
         if dest[1] == 'int':
-            print("li $v0, 5")
-            print("syscall")
-            print('move '+ int_reg[dest[0]]+", $v0")
+            theInstrs.append("li $v0, 5")
+            theInstrs.append("syscall")
+            theInstrs.append('move '+ int_reg[dest[0]]+", $v0")
         if dest[1] == 'float':
-            print("li $v0, 6")
-            print("syscall")
-            print('mov.s '+ float_reg[dest[0]]+", $f0")
+            theInstrs.append("li $v0, 6")
+            theInstrs.append("syscall")
+            theInstrs.append('mov.s '+ float_reg[dest[0]]+", $f0")
 
     elif code['inst_type'] == "SLT":
         if src1[1] == 'int':
-            print("slt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("slt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src1[1] == 'float':
-            print("c.lt.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
-            print("bc1t _x"+ str(labelnum))            
-            print("li " + int_reg[dest[0]] + ", 0")
-            print("j _x" + str(labelnum+1))
-            print("_x"+str(labelnum)+":")
-            print("li " + int_reg[dest[0]] + ", 1")
-            print("_x"+str(labelnum+1)+":")
+            theInstrs.append("c.lt.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
+            theInstrs.append("bc1t _x"+ str(labelnum))            
+            theInstrs.append("li " + int_reg[dest[0]] + ", 0")
+            theInstrs.append("j _x" + str(labelnum+1))
+            theInstrs.append("_x"+str(labelnum)+":")
+            theInstrs.append("li " + int_reg[dest[0]] + ", 1")
+            theInstrs.append("_x"+str(labelnum+1)+":")
             labelnum +=2
 
     elif code['inst_type'] == "SGT":
         if src1[1] == 'int':
-            print("sgt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("sgt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src1[1] == 'float':
-            print("c.le.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
-            print("bc1f _x"+ str(labelnum))
-            print("li " + int_reg[dest[0]] + ", 0")
-            print("j _x" + str(labelnum+1))
-            print("_x"+str(labelnum)+":")
-            print("li " + int_reg[dest[0]] + ", 1")
-            print("_x"+str(labelnum+1)+":")
+            theInstrs.append("c.le.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
+            theInstrs.append("bc1f _x"+ str(labelnum))
+            theInstrs.append("li " + int_reg[dest[0]] + ", 0")
+            theInstrs.append("j _x" + str(labelnum+1))
+            theInstrs.append("_x"+str(labelnum)+":")
+            theInstrs.append("li " + int_reg[dest[0]] + ", 1")
+            theInstrs.append("_x"+str(labelnum+1)+":")
             labelnum +=2
     elif code['inst_type'] == "FUNCALL":
-        print("jal "+ code['dest']['Label'])
+        theInstrs.append("jal "+ code['dest']['Label'])
 
     elif code['inst_type'] == "GOTO":
-        print("j "+ code['dest']['Label'])
+        theInstrs.append("j "+ code['dest']['Label'])
 
     elif code['inst_type'] == "OR":
         if src1[1] == 'int':
-            print("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src1[1] == 'float':
-            print('li $f0, 0')
-            print("li " + int_reg[dest[0]] + ", 0")
-            print("c.eq.s " + float_reg[src1[0]]+", $f0")
-            print("bc1f _x"+ str(labelnum))
-            print("c.eq.s " + float_reg[src2[0]]+", $f0")
-            print("bc1f _x"+ str(labelnum))
-            print("j _x" + str(labelnum+1))
-            print("_x"+str(labelnum)+":")
-            print("li " + int_reg[dest[0]] + ", 1")
-            print("_x"+str(labelnum+1)+":")
+            theInstrs.append('li $f0, 0')
+            theInstrs.append("li " + int_reg[dest[0]] + ", 0")
+            theInstrs.append("c.eq.s " + float_reg[src1[0]]+", $f0")
+            theInstrs.append("bc1f _x"+ str(labelnum))
+            theInstrs.append("c.eq.s " + float_reg[src2[0]]+", $f0")
+            theInstrs.append("bc1f _x"+ str(labelnum))
+            theInstrs.append("j _x" + str(labelnum+1))
+            theInstrs.append("_x"+str(labelnum)+":")
+            theInstrs.append("li " + int_reg[dest[0]] + ", 1")
+            theInstrs.append("_x"+str(labelnum+1)+":")
             labelnum+=2
 
     elif code['inst_type'] == "RETURN":
         if code['src1'] == {}:
-            print('move $v0, $zero')
-            print('li.s $f0, 0.0')
+            theInstrs.append('move $v0, $zero')
+            theInstrs.append('li.s $f0, 0.0')
         elif src1[1] == 'int':
-            print('move $v0, ' + int_reg[src1[0]])
-            print('jr $ra')
+            theInstrs.append('move $v0, ' + int_reg[src1[0]])
+            theInstrs.append('jr $ra')
         elif src1[1] == 'float':
-            print('mov.s $f0, ' + float_reg[src1[0]])
+            theInstrs.append('mov.s $f0, ' + float_reg[src1[0]])
             
-        print('jr $ra')
+        theInstrs.append('jr $ra')
 
     elif code['inst_type'] == "BREAK":
-        print("j "+ code['dest']['Label'])
+        theInstrs.append("j "+ code['dest']['Label'])
 
     elif code['inst_type'] == "CONTINUE":
-        print("j "+ code['dest']['Label'])
+        theInstrs.append("j "+ code['dest']['Label'])
 
     elif code['inst_type'] == "PRINT":
         if 'value' in code['src1'].keys():
             temp = "_str" + str(stringnum) + ": .asciiz \"" + code['src1']['value'] + " \""
             theStrings.append(temp)
-            print("li $v0, 4")
-            print("la $a0, _str" + str(stringnum))
-            print("syscall")
+            theInstrs.append("li $v0, 4")
+            theInstrs.append("la $a0, _str" + str(stringnum))
+            theInstrs.append("syscall")
             stringnum += 1
         elif src1[1] == 'int':
-            print("li $v0, 1")
-            print("move $a0, " + int_reg[src1[0]])
-            print("syscall")
+            theInstrs.append("li $v0, 1")
+            theInstrs.append("move $a0, " + int_reg[src1[0]])
+            theInstrs.append("syscall")
         elif src1[1] == 'float':
-            print("li $v0, 2")
-            print("mov.s $f12, " + float_reg[src1[0]])
-            print("syscall")
+            theInstrs.append("li $v0, 2")
+            theInstrs.append("mov.s $f12, " + float_reg[src1[0]])
+            theInstrs.append("syscall")
     
     elif code['inst_type'] in ["ASGN", 'DECLARE']:
         if 'constant' in code['src1'].keys():
             if dest[1] == 'int':
-                print("li " + int_reg[dest[0]] +  ", " + str(code['src1']['constant']))
+                theInstrs.append("li " + int_reg[dest[0]] +  ", " + str(code['src1']['constant']))
             elif dest[1] == 'float':
-                print("li.s " + float_reg[dest[0]] +  ", " + str(code['src1']['constant']))
+                theInstrs.append("li.s " + float_reg[dest[0]] +  ", " + str(code['src1']['constant']))
         elif code['src1'] != {} and src1 != []:
             if dest[1] == 'int':
-                print("move " + int_reg[dest[0]] +  ", " + int_reg[src1[0]] )
+                theInstrs.append("move " + int_reg[dest[0]] +  ", " + int_reg[src1[0]] )
             elif dest[1] == 'float':
-                print("mov.s " + float_reg[dest[0]] +  ", " +  float_reg[src1[0]])
+                theInstrs.append("mov.s " + float_reg[dest[0]] +  ", " +  float_reg[src1[0]])
     
     elif code['inst_type'] == 'ADD':
         if dest[1] == 'int':
-            print("add "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("add "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif dest[1] == 'float':
-            print("add.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+            theInstrs.append("add.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     
     elif code['inst_type'] == 'MUL':
         if dest[1] == 'int':
-            print("mul "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("mul "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif dest[1] == 'float':
-            print("mul.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+            theInstrs.append("mul.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
 
     elif code['inst_type'] == 'IF0':
         if src1[1] == 'int':
-            print('beqz ' + int_reg[src1[0]] + ', ' + code['dest']['Label'])
+            theInstrs.append('beqz ' + int_reg[src1[0]] + ', ' + code['dest']['Label'])
         else:
-            print('c.eq.s ' + float_reg[src1[0]] + ', $f30')
-            print('bc1t ' + code['dest']['Label'])
+            theInstrs.append('c.eq.s ' + float_reg[src1[0]] + ', $f30')
+            theInstrs.append('bc1t ' + code['dest']['Label'])
 
     elif code['inst_type'] == 'IF1':
         if src1[1] == 'int':
-            print('beq ' + int_reg[src1[0]] + ', $s7, ' + code['dest']['Label'])
+            theInstrs.append('beq ' + int_reg[src1[0]] + ', $s7, ' + code['dest']['Label'])
         else:
-            print('c.eq.s ' + float_reg[src1[0]] + ', $f31')
-            print('bc1t ' + code['dest']['Label'])
+            theInstrs.append('c.eq.s ' + float_reg[src1[0]] + ', $f31')
+            theInstrs.append('bc1t ' + code['dest']['Label'])
 
     elif code['inst_type'] == 'LABEL':
         if code['dest']['Label'] == 'main':
-            print('main:')
-            print('li $s7, 1')
-            print('li.s $f29, 1')
-            print('li.s $f30, 0')
+            theInstrs.append('main:')
+            theInstrs.append('la $k0, _dataStart')
+            theInstrs.append('li $s7, 1')
+            theInstrs.append('li.s $f29, 1.0')
+            theInstrs.append('li.s $f30, 0.0')
         else:
-            print(code['dest']['Label'] + ':')
+            theInstrs.append(code['dest']['Label'] + ':')
 
     elif code['inst_type'] == 'ARRAYVAL':
         if 'inside' in code['src1'].keys():
-            print("addi  $a3, $k1 , " + str(code['src1']['start_addr']))
+            theInstrs.append("addi  $a3, $k1 , " + str(code['src1']['start_addr']))
         else:
-            print("addi  $a3, $k0 , " + str(code['src1']['start_addr']))
-        print('add  $a3, $a3 , ' + int_reg[src2[0]])
+            theInstrs.append("addi  $a3, $k0 , " + str(code['src1']['start_addr']))
+        theInstrs.append('add  $a3, $a3 , ' + int_reg[src2[0]])
         if dest[1] == 'int':
-            print('lw ' + int_reg[dest[0]] + ', 0($a3)')
+            theInstrs.append('lw ' + int_reg[dest[0]] + ', 0($a3)')
         else:
-            print("lw.s " + float_reg[dest[0]]+ ", 0($a3)")
+            theInstrs.append("lw.s " + float_reg[dest[0]]+ ", 0($a3)")
 
     elif code['inst_type'] == 'EOF':
-        print('jr $ra')
+        theInstrs.append('jr $ra')
 
      
 # sw r2, 0()
@@ -347,11 +348,11 @@ def getassem(code, src1, src2, dest): # give assembly code
 
 def convert(toreg, fromreg): # convert stmt from one type to another
     if toreg[1] == 'int':
-        print('cvt.w.s $f31, ' + float_reg[fromreg[0]])
-        print('mfc1 ' + int_reg[toreg[0]] + ' , $f31')
+        theInstrs.append('cvt.w.s $f31, ' + float_reg[fromreg[0]])
+        theInstrs.append('mfc1 ' + int_reg[toreg[0]] + ' , $f31')
     else:
-        print('mtc1 ' + int_reg[fromreg[0]] + ' , $f31')
-        print('cvt.w.s ' + float_reg[toreg[0]] + ' , $f31')
+        theInstrs.append('mtc1 ' + int_reg[fromreg[0]] + ' , $f31')
+        theInstrs.append('cvt.w.s ' + float_reg[toreg[0]] + ' , $f31')
 
 
 
@@ -359,68 +360,68 @@ def load(reg, var): # just load stmt from addr of var accoridng to type of reg
     if 'identifier' in var.keys():
         if reg[1] == 'int':
             if 'inside' in var.keys():
-                print("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+                theInstrs.append("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
             else:
-                print("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
+                theInstrs.append("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
         else:
             if 'inside' in var.keys():
-                print("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+                theInstrs.append("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
             else:
-                print("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
+                theInstrs.append("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
                     
     
 
 def store_args(code): # initialize a0, a1 and store args in just before funcall, currmem is in src1 of code
 
-    print('li $k1, ' + str(code['src1']))
-    print('add $k1, $k1, $k0')
-    print('move $a3, $k1')
-    print('li $a1, ' + str(len(code['src2'])))
+    theInstrs.append('li $k1, ' + str(code['src1']))
+    theInstrs.append('add $k1, $k1, $k0')
+    theInstrs.append('move $a3, $k1')
+    theInstrs.append('li $a1, ' + str(len(code['src2'])))
     for arg in code['src2']:
         if 'constant' in arg.keys():
             if arg['type'] == 'int':
-                print('li $a2, ' + str(arg['constant']))
-                print('sw $a2, 0($a3)')
+                theInstrs.append('li $a2, ' + str(arg['constant']))
+                theInstrs.append('sw $a2, 0($a3)')
             else:
-                print('li.s $f31, ' + str(arg['constant']))
-                print('s.s $f31, 0($a3)')
+                theInstrs.append('li.s $f31, ' + str(arg['constant']))
+                theInstrs.append('s.s $f31, 0($a3)')
         elif 'tempID' in arg.keys():
             keystr = json.dumps(sorted(arg.items()))
             if arg['type'] == 'int':
                 reg = var_to_reg[keystr]
-                print('sw ' + int_reg[reg['reg']]+ ', 0($a3)')
+                theInstrs.append('sw ' + int_reg[reg['reg']]+ ', 0($a3)')
             else:
                 reg = var_to_freg[keystr]
-                print('s.s ' + float_reg[reg['reg']]+ ', 0($a3)')
+                theInstrs.append('s.s ' + float_reg[reg['reg']]+ ', 0($a3)')
         else: # identifier
             keystr = json.dumps(sorted(arg.items()))
             if arg['type'] == 'int':
                 if keystr not in var_to_reg.keys():
-                    print("addi  $a2, $k0, " + str(arg['start_addr']))
-                    print('lw $a2, 0($a2)')
-                    print('sw $a2, 0($a3)')
+                    theInstrs.append("addi  $a2, $k0, " + str(arg['start_addr']))
+                    theInstrs.append('lw $a2, 0($a2)')
+                    theInstrs.append('sw $a2, 0($a3)')
                 else:
                     reg = var_to_reg[keystr]
-                    print('sw ' + int_reg[reg['reg']]+ ', 0($a3)')               
+                    theInstrs.append('sw ' + int_reg[reg['reg']]+ ', 0($a3)')               
             else:
                 if keystr not in var_to_freg.keys():
-                    print("addi  $a2, $k0, " + str(arg['start_addr']))
-                    print('lw.s $f31, 0($a2)')
-                    print('s.s $f31, 0($a3)')
+                    theInstrs.append("addi  $a2, $k0, " + str(arg['start_addr']))
+                    theInstrs.append('lw.s $f31, 0($a2)')
+                    theInstrs.append('s.s $f31, 0($a3)')
                 else:
                     reg = var_to_freg[keystr]
-                    print('s.s ' + float_reg[reg['reg']]+ ', 0($a3)')
-        print('addi $a3, $a3, 4')
+                    theInstrs.append('s.s ' + float_reg[reg['reg']]+ ', 0($a3)')
+        theInstrs.append('addi $a3, $a3, 4')
 
 
 def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
     if count == 0:
-        print('move $a3, $k1')    
+        theInstrs.append('move $a3, $k1')    
     if reg[1] == 'int':
-        print('lw ' + int_reg[reg[0]] + ', 0($a3)')
+        theInstrs.append('lw ' + int_reg[reg[0]] + ', 0($a3)')
     else:
-        print('lw.s ' + float_reg[reg[0]] + ', 0($a3)')
-    print('addi $a3, $a3, 4')
+        theInstrs.append('lw.s ' + float_reg[reg[0]] + ', 0($a3)')
+    theInstrs.append('addi $a3, $a3, 4')
 
 
 var_modified = {} # variable modified but not stored back, so they need storing back, same structure as var_to_reg
@@ -430,8 +431,10 @@ first_initialise()
 #print(blockHeader)
 
 for i in range(len(theCode)):
-    """print("___________________")
+    """
+    print("___________________")
     print(theCode[i])
+    
     c = 0
     for i2 in var_to_reg:
         print(i2)
@@ -661,11 +664,11 @@ for i in range(len(theCode)):
         initialise()
         #print("hi and start of block")
 
-theStrings.append('_dataStart: .space ' + str(max_mem))
+theStrings.append('_dataStart: .space 4096')
 theStrings.append('.text ' )
 theStrings.append('.globl main ' )
 theStrings += theInstrs
-
+theStrings.append('jr $ra')
 f = open('Result.asm' , 'w')
 
 for line in theStrings:

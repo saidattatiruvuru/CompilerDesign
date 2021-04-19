@@ -88,8 +88,8 @@ def reverseTraverse():
   for i in range(l-1, -1 , -1):
     result = {}
 
-    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE','GOTO', 'EOF', 'RETURN']:
-      revHist.clear()
+    #if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE','GOTO', 'EOF', 'RETURN']:
+      #revHist.clear()
     #the ignored cases
     if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF', 'BREAK', 'CONTINUE']:
       codeStatus.append(result)
@@ -1076,11 +1076,12 @@ def p_singleterm_or5(p):
   'singleterm : arrayid'
   result = checkarrayid(p[1]) 
   p[0] = {}
+  p[0]['Code'] = []
   if result[0] == False:
     p_error(result[1])   
   else:
     p[0]= result[2]
-  p[0]['Code'] = []
+  
   
 
 #def p_singleterm_or6(p):
