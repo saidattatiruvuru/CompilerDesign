@@ -230,7 +230,7 @@ def getassem(code, src1, src2, dest): # give assembly code
 
     elif code['inst_type'] == "PRINT":
         if 'value' in code['src1'].keys():
-            temp = "_str" + str(stringnum) + ": .asciiz \"" + code['src1']['value'] + " \\n\""
+            temp = "_str" + str(stringnum) + ": .asciiz \"" + code['src1']['value'] + " \""
             theStrings.append(temp)
             print("li $v0, 4")
             print("la $a0, _str" + str(stringnum))
@@ -298,6 +298,7 @@ def getassem(code, src1, src2, dest): # give assembly code
         if 'inside' in code['src1'].keys():
             print("addi  $a3, $k1 , " + str(code['src1']['start_addr']))
         else:
+            print(code)
             print("addi  $a3, $k0 , " + str(code['src1']['start_addr']))
         print('add  $a3, $a3 , ' + int_reg[src2[0]])
         if dest[1] == 'int':
