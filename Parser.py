@@ -142,7 +142,7 @@ def reverseTraverse():
 
       temp = theCode[i]['src1']      
       tempstr = json.dumps(sorted(temp.items()))
-      if temp != {} and 'constant' not in temp.keys():
+      if temp != {} and 'constant' not in temp.keys() and theCode[i]["inst_type"] != "ARRAYVAL":
         if tempstr in revHist.keys():
           result['src1']={'NextUse':revHist[tempstr], 'Status':'NL'}
         else:
@@ -1074,7 +1074,7 @@ def p_rhs_or2(p):
   p[0] = {}
   global newTemp
   p[0]['Code'] = p[1]['Code']   # {'value' : somvalue, 'stmttype' : 'funccall', 'type' : sometype}
-  p[0]['PassedValue'] = {'tempID':newTemp , 'type':p[1]['type']}
+  p[0]['PassedValue'] = {'tempID':newTemp , 'type':p[1]['type'], 'funcReturn':p[1]['PassedValue']['funcReturn']}
   newTemp = newTemp+1
   #print("heeeeerrrrrreeeee")
 

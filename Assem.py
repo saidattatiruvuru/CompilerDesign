@@ -69,7 +69,9 @@ def get_reg(isInt):
 def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp var
     print('spill', end="  ")
     print(reg)
-
+#la $t1, arr
+#add $t2, $t1, 4
+#la $t4, $
 labelnum = 0
 def getassem(code, src1, src2, dest): # give assembly code 
     global labelnum
@@ -104,9 +106,9 @@ def getassem(code, src1, src2, dest): # give assembly code
                         print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
         if 'identifier' in code['dest'].keys():
             if src1[1] == 'int':
-                print("sw " + int_reg[src1[0]]+ ", " + int_reg[dest[0]])
+                print("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
             elif src1[1] == 'float':
-                print("s.s " + float_reg[src1[0]]+ ", " + float_reg[dest[0]])
+                print("mov.s " + float_reg[dest[0]]+ ", " + float_reg[src1[0]])
 
     elif code['inst_type'] == 'INPUT':
         if dest[1] == 'int':
