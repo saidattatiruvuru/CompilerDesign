@@ -18,7 +18,7 @@ var_to_freg = {}
 #register map to qtspim registers
 int_reg = {}
 float_reg = {}
-for i in range(18):
+for i in range(num_int_reg):
     if i in range(0,10):
         int_reg[i] = "$t" + str(i)
     if i in range(10, num_int_reg):
