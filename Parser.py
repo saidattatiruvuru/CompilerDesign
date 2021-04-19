@@ -322,7 +322,7 @@ def checkarrayid(a , isLhs = False ):
               code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':sizeTemp , 'dest':{'tempID': newTemp, 'type': 'int'}})
             else:
               #send the value of the array element
-              code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': j['type']}})
+              code.append({'inst_type': 'ARRAYVAL' , 'src1': j , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': j['type']}})
               typeToPass = j['type']
             codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': typeToPass, 'array':j }}
             #advancing into next temporary
