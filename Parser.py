@@ -56,6 +56,7 @@ def labelTable():
         block_header.append(m)
   
   block_header.sort()
+  return block_header
 
 def basicblock_gen():
   global basic_blocks
@@ -71,7 +72,6 @@ def basicblock_gen():
     for j in range(n,m):
       ba_block.append(theCode[j])
     basic_blocks.append(ba_block)
-
 
 
 
@@ -137,6 +137,11 @@ def reverseTraverse():
       if theCode[i]['inst_type'] not in ['IF0', 'IFEQL', 'IF1' , 'PRINT', 'RETURN'] :
         temp = theCode[i]['dest']
         tempstr = json.dumps(sorted(temp.items()))
+        entry = theCode[i]['dest']
+        if 'array' in theCode[i]['dest'].keys():
+            entry = theCode[i]['dest'].copy()
+            del entry['array']
+            tempstr = json.dumps(sorted(entry.items()))
         if temp != {}:          
           if tempstr in revHist.keys():
             result['dest']={'NextUse':revHist[tempstr], 'Status':'NL'}
@@ -144,11 +149,16 @@ def reverseTraverse():
           else:
             result['dest']={'NextUse':-1, 'Status':'NL'}       
           if 'identifier' in temp.keys() and result['dest']['NextUse'] != -1:
-              result['dest']['Status']= 'L'
+            result['dest']['Status']= 'L'
 
       temp = theCode[i]['src1']
-      if temp != {} and 'constant' not in temp.keys() and 'funcReturn' not in temp.keys() and theCode[i]["inst_type"] != "ARRAYVAL":
+      if temp != {} and 'constant' not in temp.keys() and 'funcReturn' not in temp.keys() and 'value' not in temp.keys() and theCode[i]["inst_type"] != "ARRAYVAL":
         tempstr = json.dumps(sorted(temp.items()))
+        entry = theCode[i]['src1']
+        if 'array' in theCode[i]['src1'].keys():
+          entry = theCode[i]['src1'].copy()
+          del entry['array']
+          tempstr = json.dumps(sorted(entry.items()))
         if tempstr in revHist.keys():
           result['src1']={'NextUse':revHist[tempstr], 'Status':'NL'}
         else:
@@ -159,9 +169,15 @@ def reverseTraverse():
           result['src1']['Status']= 'L'
       
       temp = theCode[i]['src2']
+      
       if temp != {}:
         tempstr = json.dumps(sorted(temp.items()))
-        if 'constant' not in temp.keys() and 'funcReturn' not in temp.keys():
+        entry = theCode[i]['src2']
+        if 'array' in theCode[i]['src2'].keys():
+          entry = theCode[i]['src2'].copy()
+          del entry['array']
+          tempstr = json.dumps(sorted(entry.items()))
+        if 'constant' not in temp.keys() and 'funcReturn' not in temp.keys() and 'value' not in temp.keys():
           if tempstr in revHist.keys():
             result['src2']={'NextUse':revHist[tempstr], 'Status':'NL'}
           else:
@@ -284,11 +300,13 @@ def checkarrayid(a , isLhs = False ):
                 j = a['identifier'] + 'Array out of bound'
                 break
               #T2 = t1 * index //cur offset
-              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant': a['dimension'][k] , 'type':'int'}, 'dest':curIndex})
+              code.append({'inst_type':'ASGN' , 'src1': {'constant':a['dimension'][k] , 'type':'int'} , 'src2':{}, 'dest':sizeTemp})
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':sizeTemp, 'dest':curIndex})
               #T3 = t3 + t2
               code.append({'inst_type': 'ADD' , 'src1': curIndex , 'src2':resultTemp, 'dest':resultTemp})
               #T1 = t1 * dim
-              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant':j['dimension'][k] , 'type':'int'}, 'dest':cumProduct})
+              code.append({'inst_type':'ASGN' , 'src1': {'constant':j['dimension'][k] , 'type':'int'} , 'src2':{}, 'dest':sizeTemp})
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':sizeTemp, 'dest':cumProduct})
             
             elif type(a['dimension'][k]) == dict:
               #T4 = sgt i , dim (in newtemp+4)
@@ -427,13 +445,13 @@ def p_final(p):
   global codeStatus
   theCode.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'main'}})
   theCode += p[0]['Code']
-
-  reverseTraverse()
-  labelTable()
-  basicblock_gen()
 """ 
   print('(---------------------------------------------------------)')
-  print(' ######################THE CODE########################')
+  
+  
+  
+  
+  ' ######################THE CODE########################')
   print('(---------------------------------------------------------)')
   l = len(codeStatus)
   for i in range(l):
@@ -1631,17 +1649,9 @@ else {
 
 
 
-def FileParser(fileName):
-  s = ''
-  with open(fileName , 'r') as f:
-      s = f.read()
-
-  result = parser.parse(s)
-  #print(result)
-  codeStatus.reverse()
-  """ print("THE CODE THE CODE THE CODE")
-  for line in theCode:
-    print(line)
-  print("THE CODE THE CODE THE CODE")
-  for i in table:
-    print(i) """
+""" print("THE CODE THE CODE THE CODE")
+for line in theCode:
+  print(line)
+print("THE CODE THE CODE THE CODE")
+for i in table:
+  print(i) """

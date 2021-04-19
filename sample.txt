@@ -22,7 +22,6 @@ while(j<n)
 		int temp = arr[j];
 		arr[j] = arr[k];
 		arr[k] = temp;
-		arr[k] = 20;
 	}
 		
 	k= k+1;

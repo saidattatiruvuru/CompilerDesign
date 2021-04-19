@@ -1,15 +1,7 @@
-.data
-_str0: .asciiz "Array values "
-_str1: .asciiz "  "
-_str2: .asciiz "\n "
-_dataStart: .space 4096
-.text 
-.globl main 
 main:
-la $k0, _dataStart
 li $s7, 1
-li.s $f29, 1.0
-li.s $f30, 0.0
+li.s $f29, 1
+li.s $f30, 0
 li $t0, 0
 li $v0, 5
 syscall
@@ -151,7 +143,6 @@ li $t2, 0
 li $s1, 10
 sgt $s5, $t0 , $s1
 beqz $s5, L27
-
 L27:
 lw $t0, 44($k0)
 mul $s5, $s4 , $t0
@@ -179,4 +170,3 @@ move $s6, $t1
 slt $s2, $s2 , $s6
 beq $s2, $s7, L28
 L30:
-jr $ra

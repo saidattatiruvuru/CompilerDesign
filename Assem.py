@@ -38,15 +38,38 @@ theStrings = ['.data']
 theInstrs = []          #store each instruction here!
 
 #running the parser here!
-FileParser(sys.argv[1])
 
 
-def initialise():
+fileName = sys.argv[1]
+with open(fileName , 'r') as f:
+    s = f.read()
+result = parser.parse(s)
+#print(result)
+reverseTraverse()
+blockHeader = labelTable()
+basicblock_gen()
+codeStatus.reverse()
+
+
+def first_initialise():
+    global reg_to_var, freg_to_var, var_to_reg, var_to_freg
     for i in range(0, num_int_reg):
         reg_to_var[i] = {}
     for i in range(0, num_float_reg):
         freg_to_var[i] = {}
-    
+
+def initialise():
+    global reg_to_var, freg_to_var, var_to_reg, var_to_freg
+    for i in range(0, num_int_reg):
+        if 'tempID' not in reg_to_var[i].keys() and reg_to_var[i]!={}:
+            tempstr = json.dumps(sorted(reg_to_var[i].items()))
+            reg_to_var[i] = {}
+            del var_to_reg[tempstr]
+    for i in range(0, num_float_reg):
+        if 'tempID' not in freg_to_var[i].keys() and freg_to_var[i]!={}:
+            tempstr = json.dumps(sorted(freg_to_var[i].items()))
+            freg_to_var[i] = {}
+            del var_to_freg[tempstr]
 
 def get_reg(isInt):
     treg_to_var = {} 
@@ -146,10 +169,17 @@ def getassem(code, src1, src2, dest): # give assembly code
             elif src1[1] == 'float':
                 print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
         elif 'identifier' in code['dest'].keys():
-            if src1[1] == 'int':
-                print("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
-            elif src1[1] == 'float':
-                print("mov.s " + float_reg[dest[0]]+ ", " + float_reg[src1[0]])
+            if 'constant' not in code['src1'].keys():
+                if src1[1] == 'int':
+                    print("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
+                elif src1[1] == 'float':
+                    print("mov.s " + float_reg[dest[0]]+ ", " + float_reg[src1[0]])
+            else:
+                if dest[1] == 'int':
+                    print("li " + int_reg[dest[0]] + ", "  + str(code['src1']['constant']) )
+                elif dest[1] == 'float':
+                    print("li.s " + float_reg[dest[0]]+ ", " + str(code['src1']['constant']) )
+
 
     elif code['inst_type'] == 'INPUT':
         if dest[1] == 'int':
@@ -251,9 +281,9 @@ def getassem(code, src1, src2, dest): # give assembly code
                 print("li.s " + float_reg[dest[0]] +  ", " + str(code['src1']['constant']))
         elif code['src1'] != {} and src1 != []:
             if dest[1] == 'int':
-                print("move " + int_reg[src1[0]] +  ", " + int_reg[dest[0]])
+                print("move " + int_reg[dest[0]] +  ", " + int_reg[src1[0]] )
             elif dest[1] == 'float':
-                print("mov.s " + float_reg[src1[0]] +  ", " + float_reg[dest[0]])
+                print("mov.s " + float_reg[dest[0]] +  ", " +  float_reg[src1[0]])
     
     elif code['inst_type'] == 'ADD':
         if dest[1] == 'int':
@@ -294,7 +324,6 @@ def getassem(code, src1, src2, dest): # give assembly code
         if 'inside' in code['src1'].keys():
             print("addi  $a3, $k1 , " + str(code['src1']['start_addr']))
         else:
-            print(code)
             print("addi  $a3, $k0 , " + str(code['src1']['start_addr']))
         print('add  $a3, $a3 , ' + int_reg[src2[0]])
         if dest[1] == 'int':
@@ -327,17 +356,18 @@ def convert(toreg, fromreg): # convert stmt from one type to another
 
 
 def load(reg, var): # just load stmt from addr of var accoridng to type of reg
-    if reg[1] == 'int':
-        if 'inside' in reg_to_var[reg[0]].keys():
-            print("lw " + int_reg[reg[0]]+ ", "+ str(reg_to_var[reg[0]]['start_addr']) +"($k1)")
+    if 'identifier' in var.keys():
+        if reg[1] == 'int':
+            if 'inside' in var.keys():
+                print("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+            else:
+                print("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
         else:
-            print("lw " + int_reg[reg[0]]+ ", "+ str(reg_to_var[reg[0]]['start_addr']) +"($k0)")
-    else:
-        if 'inside' in freg_to_var[reg[0]].keys():
-            print("lw " + float_reg[reg[0]]+ ", "+ str(freg_to_var[reg[0]]['start_addr']) +"($k1)")
-        else:
-            print("lw " + float_reg[reg[0]]+ ", "+ str(freg_to_var[reg[0]]['start_addr']) +"($k0)")
-                
+            if 'inside' in var.keys():
+                print("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+            else:
+                print("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
+                    
     
 
 def store_args(code): # initialize a0, a1 and store args in just before funcall, currmem is in src1 of code
@@ -394,10 +424,13 @@ def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
 
 
 var_modified = {} # variable modified but not stored back, so they need storing back, same structure as var_to_reg
-initialise()
+first_initialise()
+
+#print("basic basic")
+#print(blockHeader)
 
 for i in range(len(theCode)):
-    print("**************")
+    """print("___________________")
     print(theCode[i])
     c = 0
     for i2 in var_to_reg:
@@ -410,41 +443,23 @@ for i in range(len(theCode)):
     print("__________________")
     print(len(var_to_reg))
     print(c)
-    print("******************************")
+    print("******************************") """
     if codeStatus[i] == {}:
-        if theCode[i]['inst_type'] in ['GOTO', 'EOF', 'BREAK', 'CONTINUE']:
+        if theCode[i]['inst_type'] in ['GOTO', 'EOF', 'BREAK', 'CONTINUE', 'LABEL']:
             for var in var_modified.keys():
                 spill(var_modified[var])
+            #print("hi and start of block3")
             getassem(theCode[i], -1, -1, -1)
-            for var in var_modified.keys():
-                treg_to_var = {}
-                tvar_to_reg = {}
-                if var_modified[var][1] == 'int':
-                    treg_to_var = reg_to_var
-                    tvar_to_reg = var_to_reg
-                else:
-                    treg_to_var = freg_to_var
-                    tvar_to_reg = var_to_freg
-                treg_to_var[var_modified[var][0]] = {}
-                del tvar_to_reg[var]
             var_modified = {}
+            initialise()
         elif theCode[i]['inst_type'] == 'FUNCALL':
             store_args(theCode[i])
             for var in var_modified.keys():
                 spill(var_modified[var])
             getassem(theCode[i], -1, -1, -1)
-            for var in var_modified.keys():
-                treg_to_var = {}
-                tvar_to_reg = {}
-                if var_modified[var][1] == 'int':
-                    treg_to_var = reg_to_var
-                    tvar_to_reg = var_to_reg
-                else:
-                    treg_to_var = freg_to_var
-                    tvar_to_reg = var_to_freg
-                treg_to_var[var_modified[var][0]] = {}
-                del tvar_to_reg[var]
             var_to_modified = {}
+            initialise()
+            #print("hi and start of block4")
         else:
             getassem(theCode[i], -1, -1, -1)
         continue
@@ -459,6 +474,11 @@ for i in range(len(theCode)):
         if src in codeStatus[i].keys():
             if theCode[i][src]['type'] != 'float':
                 tempstr = json.dumps(sorted(theCode[i][src].items()))
+                entry = theCode[i][src]
+                if 'array' in theCode[i][src].keys():
+                    entry = theCode[i][src].copy()
+                    del entry['array']
+                    tempstr = json.dumps(sorted(entry.items()))
                 if 'dest' in codeStatus[i] and theCode[i]['dest']['type'] == 'float':
                     result = get_reg(False)
                     if result[1]:
@@ -478,7 +498,7 @@ for i in range(len(theCode)):
                         convert(reg_src[src], [var_to_reg[tempstr]['reg'], 'int'])
                     else:
                         load(reg_src[src], theCode[i][src])
-                    freg_to_var[reg_src[src][0]] = theCode[i][src]
+                    freg_to_var[reg_src[src][0]] = entry
                 else: 
                     if tempstr in var_to_reg.keys():
                         reg_src.update({src: [var_to_reg[tempstr]['reg'], 'int']})
@@ -500,8 +520,14 @@ for i in range(len(theCode)):
                         }
                         reg_src.update({src: [result[0], 'int']}) 
                         reg_to_var[reg_src[src][0]] = theCode[i][src]
+                        load(reg_src[src], theCode[i][src])
             else: # if src is float 
                 tempstr = json.dumps(sorted(theCode[i][src].items()))
+                entry = theCode[i][src]
+                if 'array' in theCode[i][src].keys():
+                    entry = theCode[i][src].copy()
+                    del entry['array']
+                    tempstr = json.dumps(sorted(entry.items()))
                 if 'dest' in codeStatus[i] and theCode[i]['dest']['type'] == 'int':
                     result = get_reg(True)
                     if result[1]:
@@ -521,7 +547,7 @@ for i in range(len(theCode)):
                         convert(reg_src[src], [var_to_freg[tempstr]['reg'], 'float'])
                     else:
                         load(reg_src[src], theCode[i][src])
-                    reg_to_var[reg_src[src][0]] = theCode[i][src]
+                    reg_to_var[reg_src[src][0]] = entry
                 else: 
                     if tempstr in var_to_freg.keys():
                         reg_src.update({src: [var_to_freg[tempstr]['reg'], 'float']})  
@@ -542,15 +568,23 @@ for i in range(len(theCode)):
                             'isTemp': 'tempID' in theCode[i][src]
                         }
                         reg_src.update({src: [result[0], 'float']})  
-                        freg_to_var[reg_src[src][0]] = theCode[i][src]
+                        freg_to_var[reg_src[src][0]] = entry
+                        load(reg_src[src], theCode[i][src])
 
     isDestList = False
     if 'dest' in codeStatus[i].keys():
+        if theCode[i]['inst_type']=='DECLARE' and theCode[i]['src1'] == {}:
+            continue
         if type(codeStatus[i]['dest']) == dict:
             tvar_to_reg = {}
             treg_to_var = {}
             tnum = 0
             tempstr = json.dumps(sorted(theCode[i][dest].items()))
+            entry = theCode[i][dest]
+            if 'array' in theCode[i]['dest'].keys():
+                entry = theCode[i]['dest'].copy()
+                del entry['array']
+                tempstr = json.dumps(sorted(entry.items()))
             if theCode[i][dest]['type'] == 'float':
                 tvar_to_reg = var_to_freg
                 treg_to_var = freg_to_var
@@ -578,9 +612,8 @@ for i in range(len(theCode)):
                     'status': codeStatus[i][dest],
                     'isTemp': 'tempID' in theCode[i][dest]
                 }                
-                treg_to_var[reg_dest[0]] = theCode[i][dest]
+                treg_to_var[reg_dest[0]] = entry
             if 'identifier' in theCode[i][dest].keys():
-                
                 var_modified[tempstr] = reg_dest
         else: # ARGS inst
             isDestList = True
@@ -620,32 +653,13 @@ for i in range(len(theCode)):
         getassem(theCode[i], reg_src['src1'], reg_src['src2'], reg_dest)
 
     if theCode[i]['inst_type'] in ['IF0', 'IFEQL', 'IF1', 'RETURN']:
-        for var in var_modified.keys():
-            treg_to_var = {}
-            tvar_to_reg = {}
-            if var_modified[var][1] == 'int':
-                treg_to_var = reg_to_var
-                tvar_to_reg = var_to_reg
-            else:
-                treg_to_var = freg_to_var
-                tvar_to_reg = var_to_freg
-            treg_to_var[var_modified[var][0]] = {}
-            del tvar_to_reg[var]
         var_modified = {}  
-    elif i+1 in block_header:
-        for var in var_modified.keys():
-            treg_to_var = {}
-            tvar_to_reg = {}
-            if var_modified[var][1] == 'int':
-                treg_to_var = reg_to_var
-                tvar_to_reg = var_to_reg
-            else:
-                treg_to_var = freg_to_var
-                tvar_to_reg = var_to_freg
-            spill(var_modified[var])
-            treg_to_var[var_modified[var][0]] = {}
-            del tvar_to_reg[var]
+        initialise()
+        #print("hi and start of block1")
+    elif i+1 in blockHeader:
         var_modified = {}  
+        initialise()
+        #print("hi and start of block")
 
 theStrings.append('_dataStart: .space ' + str(max_mem))
 theStrings.append('.text ' )
