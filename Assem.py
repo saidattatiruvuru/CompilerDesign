@@ -88,9 +88,6 @@ def get_reg(isInt):
     return [index, shudSpill]
     
 def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp var
-    print('spill', end="  ")
-    print(reg)
-
     treg_to_var = {}
     treg = {}
     inst = ""
@@ -103,6 +100,8 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
         treg = float_reg
         inst = 's.s '
     if 'tempID' not in treg_to_var[reg[0]].keys():
+        print(treg_to_var[reg[0]])
+        print(reg[0])
         if 'inside' in treg_to_var[reg[0]].keys():
             print(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k1)")
         else:
@@ -114,10 +113,6 @@ def getassem(code, src1, src2, dest): # give assembly code
     global labelnum
     global stringnum
     global theStrings
-    print('getassem')
-    print(src1, end="  ")
-    print(src2, end="  ")
-    print(dest, end="\n======\n")
     if code['inst_type'] == 'NOT':
         if src1[1] == 'int':
             print("li "+ int_reg[dest[0]] + ", 1")
@@ -153,7 +148,6 @@ def getassem(code, src1, src2, dest): # give assembly code
             elif src1[1] == 'float':
                 print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
         elif 'identifier' in code['dest'].keys():
-            print(code)
             if src1[1] == 'int':
                 print("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
             elif src1[1] == 'float':
@@ -220,12 +214,11 @@ def getassem(code, src1, src2, dest): # give assembly code
         if code['src1'] == {}:
             print('move $v0, $zero')
             print('li.s $f0, 0.0')
-            
-        elif dest[1] == 'int':
-            print('move $v0, ' + int_reg[dest[0]])
+        elif src1[1] == 'int':
+            print('move $v0, ' + int_reg[src1[0]])
             print('jr $ra')
-        elif dest[1] == 'float':
-            print('mov.s $f0, ' + float_reg[dest[0]])
+        elif src1[1] == 'float':
+            print('mov.s $f0, ' + float_reg[src1[0]])
             
         print('jr $ra')
 
@@ -258,7 +251,7 @@ def getassem(code, src1, src2, dest): # give assembly code
                 print("li " + int_reg[dest[0]] +  ", " + str(code['src1']['constant']))
             elif dest[1] == 'float':
                 print("li.s " + float_reg[dest[0]] +  ", " + str(code['src1']['constant']))
-        elif code['src1'] != {}:
+        elif code['src1'] != {} and src1 != []:
             if dest[1] == 'int':
                 print("move " + int_reg[src1[0]] +  ", " + int_reg[dest[0]])
             elif dest[1] == 'float':
@@ -300,6 +293,8 @@ def getassem(code, src1, src2, dest): # give assembly code
             print(code['dest']['Label'] + ':')
 
     elif code['inst_type'] == 'ARRAYVAL':
+        print(code)
+        print("________________")
         if 'inside' in code['src1'].keys():
             print("addi  $a3, $k1 , " + str(code['src1']['start_addr']))
         else:
@@ -366,10 +361,10 @@ def store_args(code): # initialize a0, a1 and store args in just before funcall,
             keystr = json.dumps(sorted(arg.items()))
             if arg['type'] == 'int':
                 reg = var_to_reg[keystr]
-                print('sw ' + int_reg[reg] + ', 0($a3)')
+                print('sw ' + int_reg[reg['reg']]+ ', 0($a3)')
             else:
                 reg = var_to_freg[keystr]
-                print('s.s ' + float_reg[reg] + ', 0($a3)')
+                print('s.s ' + float_reg[reg['reg']]+ ', 0($a3)')
         else: # identifier
             keystr = json.dumps(sorted(arg.items()))
             if arg['type'] == 'int':
@@ -379,7 +374,7 @@ def store_args(code): # initialize a0, a1 and store args in just before funcall,
                     print('sw $a2, 0($a3)')
                 else:
                     reg = var_to_reg[keystr]
-                    print('sw ' + int_reg[reg] + ', 0($a3)')               
+                    print('sw ' + int_reg[reg['reg']]+ ', 0($a3)')               
             else:
                 if keystr not in var_to_freg.keys():
                     print("addi  $a2, $k0, " + str(arg['start_addr']))
@@ -387,7 +382,7 @@ def store_args(code): # initialize a0, a1 and store args in just before funcall,
                     print('s.s $f31, 0($a3)')
                 else:
                     reg = var_to_freg[keystr]
-                    print('s.s ' + float_reg[reg] + ', 0($a3)')
+                    print('s.s ' + float_reg[reg['reg']]+ ', 0($a3)')
         print('addi $a3, $a3, 4')
 
 
@@ -404,12 +399,8 @@ def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
 var_modified = {} # variable modified but not stored back, so they need storing back, same structure as var_to_reg
 initialise()
 
-print('===== ASSEMBLY ======')
-print(len(theCode))
-print(len(codeStatus))
-
 for i in range(len(theCode)):
-    print(theCode[i])
+    #print(theCode[i])
 
     if codeStatus[i] == {}:
         if theCode[i]['inst_type'] in ['GOTO', 'EOF', 'BREAK', 'CONTINUE']:
@@ -449,13 +440,11 @@ for i in range(len(theCode)):
             getassem(theCode[i], -1, -1, -1)
         continue
     if theCode[i]['inst_type'] in ['IF0', 'IFEQL', 'IF1']:
-        print(var_modified)
         for var in var_modified.keys():
             spill(var_modified[var])
     reg_src = {}
     reg_dest = []
     dest = 'dest'
-    print(codeStatus[i])
     for src in ['src1', 'src2']:
         reg_src[src] = []
         if src in codeStatus[i].keys():
@@ -584,9 +573,6 @@ for i in range(len(theCode)):
             if 'identifier' in theCode[i][dest].keys():
                 
                 var_modified[tempstr] = reg_dest
-                print("var modified + ", end=" ")
-                print(var_modified)
-                print("______________________")
         else: # ARGS inst
             isDestList = True
             count = 0
@@ -604,7 +590,6 @@ for i in range(len(theCode)):
                     treg_to_var = reg_to_var
                     tnum = num_int_reg
                 result = get_reg(arg['type'] == 'int')
-                print(result)
                 reg_dest = [result[0], arg['type']]
                 if result[1]:
                     spill(reg_dest)
@@ -626,11 +611,6 @@ for i in range(len(theCode)):
         getassem(theCode[i], reg_src['src1'], reg_src['src2'], reg_dest)
 
     if theCode[i]['inst_type'] in ['IF0', 'IFEQL', 'IF1', 'RETURN']:
-        print("***********")
-        for j in var_to_reg.keys():
-            print(j, end="  :  ")
-            print(var_to_reg[j])
-        print("***********")
         for var in var_modified.keys():
             treg_to_var = {}
             tvar_to_reg = {}

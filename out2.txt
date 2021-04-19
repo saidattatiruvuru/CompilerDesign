@@ -1,0 +1,52 @@
+fibo:
+move $a3, $k1
+lw $t0, 0($a3)
+addi $a3, $a3, 4
+li $t1, 0
+move $t1, $t2
+li $t3, 1
+move $t3, $t4
+li $t1, 0
+move $t1, $t5
+sw $t2, 4($k1)
+sw $t4, 8($k1)
+sw $t5, 12($k1)
+j L1
+L0:
+move $t2, $t3
+move $t4, $t5
+add $t3, $t3 , $t5
+move $t3, $t6
+li $v0, 4
+la $a0, _str0
+syscall
+li $v0, 1
+move $a0, $t6
+syscall
+move $t2, $t4
+move $t4, $t6
+L1:
+move $t8, $t1
+move $t0, $t3
+slt $t1, $t1 , $t3
+sw $t6, 16($k1)
+sw $t2, 4($k1)
+sw $t4, 8($k1)
+beq $t1, $s7, L0
+L2:
+move $v0, $t2
+jr $ra
+jr $ra
+jr $ra
+main:
+li $s7, 1
+li.s $f29, 1
+li.s $f30, 0
+li $v0, 5
+syscall
+move $t1, $v0
+move $t1, $t4
+li $k1, 4
+add $k1, $k1, $k0
+move $a3, $k1
+li $a1, 1

@@ -91,7 +91,7 @@ def reverseTraverse():
     if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE','GOTO', 'EOF', 'RETURN']:
       revHist.clear()
     #the ignored cases
-    if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF', 'BREAK', 'CONTINUE'] :
+    if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF', 'BREAK', 'CONTINUE']:
       codeStatus.append(result)
       continue
 
@@ -136,8 +136,6 @@ def reverseTraverse():
       # remove the dest from History dict for the other instructions
       if theCode[i]['inst_type'] not in ['IF0', 'IFEQL', 'IF1' , 'PRINT', 'RETURN'] :
         temp = theCode[i]['dest']
-        print('temp', end='  ')
-        print(temp)
         tempstr = json.dumps(sorted(temp.items()))
         if temp != {}:          
           if tempstr in revHist.keys():
@@ -149,7 +147,7 @@ def reverseTraverse():
               result['dest']['Status']= 'L'
 
       temp = theCode[i]['src1']
-      if temp != {} and 'constant' not in temp.keys() and theCode[i]["inst_type"] != "ARRAYVAL":
+      if temp != {} and 'constant' not in temp.keys() and 'funcReturn' not in temp.keys() and theCode[i]["inst_type"] != "ARRAYVAL":
         tempstr = json.dumps(sorted(temp.items()))
         if tempstr in revHist.keys():
           result['src1']={'NextUse':revHist[tempstr], 'Status':'NL'}
@@ -163,7 +161,7 @@ def reverseTraverse():
       temp = theCode[i]['src2']
       if temp != {}:
         tempstr = json.dumps(sorted(temp.items()))
-        if 'constant' not in temp.keys():
+        if 'constant' not in temp.keys() and 'funcReturn' not in temp.keys():
           if tempstr in revHist.keys():
             result['src2']={'NextUse':revHist[tempstr], 'Status':'NL'}
           else:
@@ -433,8 +431,6 @@ def p_final(p):
   reverseTraverse()
   labelTable()
   basicblock_gen()
-  for i in theCode:
-    print(i)
 """ 
   print('(---------------------------------------------------------)')
   print(' ######################THE CODE########################')
@@ -572,7 +568,7 @@ def p_funcdef(p):
     table[p[4][0]].update({'identifier': p[3], 'returntype':p[2], 'arguments':p[6]})
     code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : p[3]}})
     code.append({'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': p[6]})
-    local_var = p[6]
+    local_var = p[6].copy()
     for line in p[9]['Code']:
       for var in local_var:
         if 'identifier' in line['src1'].keys():
@@ -1095,6 +1091,8 @@ def p_assign(p):
   p[0]= {'Code':[]}
   p[0]['Code'] = p[1]['Code'] + p[3]['Code']
   #STORE stores the src1 to the variable in dest or to the address in the temp in dest
+  print("checking")
+  print(p[3]['PassedValue'] )
   p[0]['Code'].append({'inst_type':'STORE', 'src1':p[3]['PassedValue'] , 'src2':{}, 'dest':p[1]['PassedValue']})
   #p[1].update({'valuedict' : p[3]})
 
@@ -1129,7 +1127,7 @@ def p_rhs_or2(p):
   p[0] = {}
   global newTemp
   p[0]['Code'] = p[1]['Code']   # {'value' : somvalue, 'stmttype' : 'funccall', 'type' : sometype}
-  p[0]['PassedValue'] = {'tempID':newTemp , 'type':p[1]['type'], 'funcReturn':p[1]['PassedValue']['funcReturn']}
+  p[0]['PassedValue'] = {'type':p[1]['type'], 'funcReturn':p[1]['PassedValue']['funcReturn']}
   newTemp = newTemp+1
   #print("heeeeerrrrrreeeee")
 
@@ -1642,19 +1640,13 @@ def FileParser(fileName):
   s = ''
   with open(fileName , 'r') as f:
       s = f.read()
-  print(s)
 
   result = parser.parse(s)
   #print(result)
   codeStatus.reverse()
-  print("THE CODE THE CODE THE CODE")
+  """ print("THE CODE THE CODE THE CODE")
   for line in theCode:
     print(line)
   print("THE CODE THE CODE THE CODE")
   for i in table:
-    print(i)
-
-
-
-#thisplace
-#code.append({'inst_type':, 'src1': , 'src2':, 'dest':})
+    print(i) """
