@@ -67,7 +67,7 @@ def t_COMMENT(t):
 t_ignore  = ' \t'
 
 def t_IDENTIFIER(t):
-  r'[a-zA_Z_]\w*'
+  r'[a-zA-Z]\w*'
   t.type = reserved.get(t.value,'IDENTIFIER') 
   return t
   

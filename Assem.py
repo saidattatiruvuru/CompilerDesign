@@ -201,18 +201,17 @@ def getassem(code, src1, src2, dest): # give assembly code
             labelnum+=2
 
     elif code['inst_type'] == "RETURN":
-        if dest[1] == 'int':
-            if code['dest'] == {}:
-                print('move $v0, $zero')
-            else:
+        if code['dest'] == {}:
+            print('move $v0, $zero')
+            print('li.s $f0, 0.0')
+            
+        elif dest[1] == 'int':
                 print('move $v0, ' + int_reg[dest[0]])
             print('jr $ra')
         elif dest[1] == 'float':
-            if code['dest'] == {}:
-                print('li.s $f0, 0.0')
-            else:
-                print('mov.s $f0, ' + float_reg[dest[0]])
-            print('jr $ra')
+            print('mov.s $f0, ' + float_reg[dest[0]])
+            
+        print('jr $ra')
 
     elif code['inst_type'] == "BREAK":
         print("j "+ code['dest']['Label'])

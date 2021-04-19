@@ -9,6 +9,7 @@ table = []
 scopestack = [table]
 # address of the allocatable memory
 curr_mem = 0
+max_mem = 0
 # scope for memory
 mem_stack = [0]
 #the number given to next temporary variable
@@ -112,19 +113,19 @@ def reverseTraverse():
 
 
     # the cases where only the destination matters
-    elif theCode[i]['inst_type'] in ['PRINT', 'RETURN'] :
-      temp = theCode[i]['dest']
-      tempstr = json.dumps(sorted(temp.items()))
-      if temp != {}:
-        if 'value' not in temp.keys():
-          if tempstr in revHist.keys():
-            result['dest']={'NextUse':revHist[tempstr], 'Status':'NL'}
-          else:
-            result['dest']={'NextUse':-1, 'Status':'NL'}
-          revHist[tempstr] = i
+    # elif theCode[i]['inst_type'] in ['PRINT', 'RETURN'] :
+    #   temp = theCode[i]['dest']
+    #   tempstr = json.dumps(sorted(temp.items()))
+    #   if temp != {}:
+    #     if 'value' not in temp.keys():
+    #       if tempstr in revHist.keys():
+    #         result['dest']={'NextUse':revHist[tempstr], 'Status':'NL'}
+    #       else:
+    #         result['dest']={'NextUse':-1, 'Status':'NL'}
+    #       revHist[tempstr] = i
           
-          if 'identifier' in temp.keys() and result['dest']['NextUse'] != -1:
-            result['dest']['Status']= 'L'
+    #       if 'identifier' in temp.keys() and result['dest']['NextUse'] != -1:
+    #         result['dest']['Status']= 'L'
 
     # all the other cases
     # the sources must be added/updated to the history dict
@@ -133,7 +134,7 @@ def reverseTraverse():
 
       # the IF0 IFEQL IF1 are cases where only the sources matter
       # remove the dest from History dict for the other instructions
-      if theCode[i]['inst_type'] not in ['IF0', 'IFEQL', 'IF1'] :
+      if theCode[i]['inst_type'] not in ['IF0', 'IFEQL', 'IF1' , 'PRINT', 'RETURN'] :
         temp = theCode[i]['dest']
         print('temp', end='  ')
         print(temp)
@@ -219,6 +220,8 @@ def checkid_in_scope(a):
   found = False
   j = None
   temptable = scopestack[-1]
+  if a == 'main':
+    return True #main cant be an identifier
   for j in temptable:
     if j is None:
         continue
@@ -1353,7 +1356,7 @@ def p_printable_or(p):
   res = checkid(p[1])
   p[0]['Code'] = []
   if res[0] == True:
-    p[0]['Code'].append({'inst_type':'PRINT', 'src1': {}, 'src2': {}, 'dest': res[1]})
+    p[0]['Code'].append({'inst_type':'PRINT', 'src1': res[1], 'src2': {}, 'dest': {}})
   else:
     p[0] = {}
     p[0]['Code'].append({'inst_type':'ERROR', 'src1': {}, 'src2': {}, 'dest': {}})
@@ -1366,7 +1369,7 @@ def p_printable_and(p):
   if res[0] == True:
     p[0]['Code'] = res[2]['Code']
     temp = res[2]['PassedValue']
-    p[0]['Code'].append({'inst_type':'PRINT', 'src1': {}, 'src2': {}, 'dest': temp})
+    p[0]['Code'].append({'inst_type':'PRINT', 'src1': temp, 'src2': {}, 'dest': {}})
   else:
     p[0] = {}
     p_error(p[1] + " Not Found")
@@ -1383,7 +1386,7 @@ def p_returnelt(p):
   p[0] = {}
   code = []
   code += p[1]['Code']
-  code.append({'inst_type':'RETURN', 'src1': {}, 'src2': {}, 'dest': p[1]['PassedValue']})
+  code.append({'inst_type':'RETURN', 'src1': p[1]['PassedValue'], 'src2': {}, 'dest': {}})
   p[0]['Code'] = code
 
 def p_returnelt_or(p):
@@ -1406,6 +1409,7 @@ def p_declare(p):
   p[0] = {}
   global lineno
   global curr_mem, newTemp
+  global max_mem
   currenttable = scopestack[-1]
   code = []
   for i in p[3]:
@@ -1419,6 +1423,8 @@ def p_declare(p):
     i["size"] =  i["size"]*4
     i["start_addr"] = curr_mem
     curr_mem += i["size"]
+    if max_mem < curr_mem:
+      max_mem = curr_mem
     act_value = None
     if 'valuedict' in i.keys():
       if 'value' in i['valuedict'].keys():
