@@ -211,7 +211,7 @@ def getassem(code, src1, src2, dest): # give assembly code
             print('li.s $f0, 0.0')
             
         elif dest[1] == 'int':
-                print('move $v0, ' + int_reg[dest[0]])
+            print('move $v0, ' + int_reg[dest[0]])
             print('jr $ra')
         elif dest[1] == 'float':
             print('mov.s $f0, ' + float_reg[dest[0]])

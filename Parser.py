@@ -573,9 +573,11 @@ def p_funcdef(p):
       for var in local_var:
         if 'identifier' in line['src1'].keys():
           if line['src1']['identifier'] == var['identifier'] and line['src1']['lineno'] == var['lineno']:
-            line['scr1'].update({'inside': True})
+            line['src1'].update({'inside': True})
+        if 'identifier' in line['src2'].keys():
           if line['src2']['identifier'] == var['identifier'] and line['src2']['lineno'] == var['lineno']:
-            line['scr2'].update({'inside': True})
+            line['src2'].update({'inside': True})
+        if 'identifier' in line['dest'].keys():
           if line['dest']['identifier'] == var['identifier'] and line['dest']['lineno'] == var['lineno']:
             line['dest'].update({'inside': True})
       if line['inst_type'] == 'DECLARE':
@@ -588,7 +590,6 @@ def p_funcdef(p):
     code.append({'inst_type': 'ERROR',  'src1': {}, 'src2':{} , 'dest':{}})
   p[0]['Code'] = code
   newTemp = p[4][1]
-  curr_mem = 
 
   
 def p_type2(p):
@@ -1617,14 +1618,12 @@ while(i<n)
 }
 
 '''
-
-'''
+s ='''
 function int fibo(int n) {
 	int first = 0, second = 1;
 	int i = 0;
 	while(i < n) {
 		int third = first + second;
-		print("\n", third);
 		first = second;
 		second = third;
 	}
@@ -1633,24 +1632,17 @@ function int fibo(int n) {
 
 int n = input(int);
 int ans = fibo(n);
-print(n, "th fibonacci:", ans);
 float f = input(float);
 //float result = 0;
 if(f < 0 ) {
 	float result = 2 * (f <= -1 && f >= -3);
-	if(result == 2) {
-		print("\nYay!");
-	}
 }
 else {
 	float result = -2 * (f || 1);
-	if(result == -2) {
-		print("\nHurray");
-	}
 }
 
 '''
-s = '''
+'''
   while(1) {
     int hello = 0;
     int ho = 9;
