@@ -126,6 +126,11 @@ def getassem(code, src1, src2, dest): # give assembly code
         elif src1[1] == 'float':
             print("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     elif code['inst_type'] == 'STORE':
+        if 'funcReturn' in code['src1']:
+            if src[1] == 'int':
+                print("move " + int_reg[dest[0]] + ", $v0")
+            if src[1] == 'float':
+                print("mov.s "+  float_reg[src1[0]]+ ", $f0")
         if 'tempID' in code['dest'].keys():
             print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
             if src1[1] == 'int':
@@ -197,10 +202,16 @@ def getassem(code, src1, src2, dest): # give assembly code
 
     elif code['inst_type'] == "RETURN":
         if dest[1] == 'int':
-            print('move $v0, ' + int_reg[dest[0]])
+            if code['dest'] == {}:
+                print('move $v0, $zero')
+            else:
+                print('move $v0, ' + int_reg[dest[0]])
             print('jr $ra')
         elif dest[1] == 'float':
-            print('mov.s $f0, ' + float_reg[dest[0]])
+            if code['dest'] == {}:
+                print('li.s $f0, 0.0')
+            else:
+                print('mov.s $f0, ' + float_reg[dest[0]])
             print('jr $ra')
 
     elif code['inst_type'] == "BREAK":

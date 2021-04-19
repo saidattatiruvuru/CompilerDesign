@@ -556,7 +556,7 @@ def p_stmtelt_breakstmt(p):
 # goto label
 
 def p_funcdef(p):
-  'funcdef : FUNCTION type IDENTIFIER funcdefy LCB nulltypeargsx RCB LFB stmt2 RFB fundefexit'
+  'funcdef : FUNCTION type2 IDENTIFIER funcdefy LCB nulltypeargsx RCB LFB stmt2 RFB fundefexit'
   p[0] = {}
   res = checkfuncdef(p[3])
   global newTemp
@@ -591,7 +591,14 @@ def p_funcdef(p):
   p[0]['Code'] = code
   newTemp = p[4][1]
   
+def p_type2(p):
+  'type2 : type'
+  p[0] = p[1]
 
+def p_type2_n(p):
+  'type2 :'
+  p[0] = ""
+  
 def p_fundefy(p):
   'funcdefy : '
   global lineno
