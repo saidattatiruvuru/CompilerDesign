@@ -1,5 +1,6 @@
 from Parser import *
 import json
+import sys 
 #f0 for input, f0 is zero reegister, f0 is for return
 #f12 is for syscall
 num_int_reg = 17
@@ -29,6 +30,15 @@ for i in range(11):
     float_reg[i] = "$f" + str(i+1)
 for i in range(11, num_float_reg):
     float_reg[i] = "$f" + str(i+2)
+
+
+labelnum = 0
+stringnum = 0
+theStrings = ['.data']
+theInstrs = []          #store each instruction here!
+
+#running the parser here!
+FileParser(sys.argv[1])
 
 
 def initialise():
@@ -96,9 +106,8 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
         print("addi  $a3, $k0 , " + str(treg_to_var[reg[0]]['start_addr']))
         print(inst + treg[reg[0]]+ ", 0($a3)")
 
-labelnum = 0
-stringnum = 0
-theStrings = []
+
+
 def getassem(code, src1, src2, dest): # give assembly code 
     global labelnum
     global stringnum
@@ -125,19 +134,21 @@ def getassem(code, src1, src2, dest): # give assembly code
             print("div "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src1[1] == 'float':
             print("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+
     elif code['inst_type'] == 'STORE':
         if 'funcReturn' in code['src1']:
             if src[1] == 'int':
                 print("move " + int_reg[dest[0]] + ", $v0")
             if src[1] == 'float':
                 print("mov.s "+  float_reg[src1[0]]+ ", $f0")
-        if 'tempID' in code['dest'].keys():
+        elif 'tempID' in code['dest'].keys():
             print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
             if src1[1] == 'int':
                 print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
             elif src1[1] == 'float':
                 print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
-        if 'identifier' in code['dest'].keys():
+        elif 'identifier' in code['dest'].keys():
+            print(code)
             if src1[1] == 'int':
                 print("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
             elif src1[1] == 'float':
@@ -201,15 +212,14 @@ def getassem(code, src1, src2, dest): # give assembly code
             labelnum+=2
 
     elif code['inst_type'] == "RETURN":
-        if code['dest'] == {}:
+        if code['src1'] == {}:
             print('move $v0, $zero')
             print('li.s $f0, 0.0')
             
-        elif dest[1] == 'int':
-                print('move $v0, ' + int_reg[dest[0]])
-            print('jr $ra')
-        elif dest[1] == 'float':
-            print('mov.s $f0, ' + float_reg[dest[0]])
+        elif src1[1] == 'int':
+            print('move $v0, ' + int_reg[src1[0]])
+        elif src1[1] == 'float':
+            print('mov.s $f0, ' + float_reg[src1[0]])
             
         print('jr $ra')
 
@@ -220,20 +230,20 @@ def getassem(code, src1, src2, dest): # give assembly code
         print("j "+ code['dest']['Label'])
 
     elif code['inst_type'] == "PRINT":
-        if 'value' in code['dest'].keys():
-            temp = "_str" + str(stringnum) + ": .asciiz \"" + code['dest']['value'] + " \n\""
+        if 'value' in code['src1'].keys():
+            temp = "_str" + str(stringnum) + ": .asciiz \"" + code['src1']['value'] + " \\n\""
             theStrings.append(temp)
             print("li $v0, 4")
             print("la $a0, _str" + str(stringnum))
             print("syscall")
             stringnum += 1
-        elif dest[1] == 'int':
+        elif src1[1] == 'int':
             print("li $v0, 1")
-            print("move $a0, " + int_reg[dest[0]])
+            print("move $a0, " + int_reg[src1[0]])
             print("syscall")
-        elif dest[1] == 'float':
+        elif src1[1] == 'float':
             print("li $v0, 2")
-            print("mov.s $f12, " + float_reg[dest[0]])
+            print("mov.s $f12, " + float_reg[src1[0]])
             print("syscall")
     
     elif code['inst_type'] in ["ASGN", 'DECLARE']:
@@ -641,5 +651,21 @@ for i in range(len(theCode)):
             treg_to_var[var_modified[var][0]] = {}
             del tvar_to_reg[var]
         var_modified = {}  
+
+theStrings.append('_dataStart: .space ' + str(max_mem))
+theStrings.append('.text ' )
+theStrings.append('.globl main ' )
+theStrings += theInstrs
+
+f = open('Result.asm' , 'w')
+
+for line in theStrings:
+    f.write(line)
+    f.write('\n')
+
+f.close()
+
+
+
 
 

@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 from Lexer import tokens
 import json
-
+ 
 
 lineno = 0
 # symbol table
@@ -148,9 +148,9 @@ def reverseTraverse():
           if 'identifier' in temp.keys() and result['dest']['NextUse'] != -1:
               result['dest']['Status']= 'L'
 
-      temp = theCode[i]['src1']      
-      tempstr = json.dumps(sorted(temp.items()))
+      temp = theCode[i]['src1']
       if temp != {} and 'constant' not in temp.keys() and theCode[i]["inst_type"] != "ARRAYVAL":
+        tempstr = json.dumps(sorted(temp.items()))
         if tempstr in revHist.keys():
           result['src1']={'NextUse':revHist[tempstr], 'Status':'NL'}
         else:
@@ -161,8 +161,8 @@ def reverseTraverse():
           result['src1']['Status']= 'L'
       
       temp = theCode[i]['src2']
-      tempstr = json.dumps(sorted(temp.items()))
       if temp != {}:
+        tempstr = json.dumps(sorted(temp.items()))
         if 'constant' not in temp.keys():
           if tempstr in revHist.keys():
             result['src2']={'NextUse':revHist[tempstr], 'Status':'NL'}
@@ -274,6 +274,7 @@ def checkarrayid(a , isLhs = False ):
           cumProduct = {'tempID' : newTemp + 1, 'type' : curType}
           curIndex = {'tempID' : newTemp + 2, 'type' : curType}
           resultTemp = {'tempID' : newTemp + 3, 'type' : 'int'}
+          sizeTemp = {'tempID' : newTemp + 4, 'type' : 'int'}
           #T1 = 1 cum pro
           code.append({'inst_type':'ASGN' , 'src1': {'constant': 4 , 'type':'int'} , 'src2':{}, 'dest':cumProduct})
           #T3 = 0 fin
@@ -289,11 +290,12 @@ def checkarrayid(a , isLhs = False ):
               #T3 = t3 + t2
               code.append({'inst_type': 'ADD' , 'src1': curIndex , 'src2':resultTemp, 'dest':resultTemp})
               #T1 = t1 * dim
-              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':j['dimension'][k], 'dest':cumProduct})
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant':j['dimension'][k] , 'type':'int'}, 'dest':cumProduct})
             
             elif type(a['dimension'][k]) == dict:
-              #T4 = sgt i , dim
-              code.append({'inst_type': 'SGT' , 'src1': a['dimension'][k], 'src2':j['dimension'][k] , 'dest':curIndex})
+              #T4 = sgt i , dim (in newtemp+4)
+              code.append({'inst_type':'ASGN' , 'src1': {'constant':j['dimension'][k] , 'type':'int'} , 'src2':{}, 'dest':sizeTemp})
+              code.append({'inst_type': 'SGT' , 'src1': a['dimension'][k] ,  'src2': sizeTemp , 'dest':curIndex})
               #IF0 T4 GOTO Lnext1
               #error
               #Lnext1:
@@ -303,11 +305,12 @@ def checkarrayid(a , isLhs = False ):
               code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(newLabel)}})
               newLabel = newLabel + 1
               #T2 = t1 * index //cur offset
-              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':{'constant': a['dimension'][k] , 'type':'int'}, 'dest':curIndex})
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':a['dimension'][k] , 'dest':curIndex})
               #T3 = t3 + t2
               code.append({'inst_type': 'ADD' , 'src1': curIndex , 'src2':resultTemp, 'dest':resultTemp})
               #T1 = t1 * dim
-              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':j['dimension'][k], 'dest':cumProduct})
+
+              code.append({'inst_type': 'MUL' , 'src1': cumProduct , 'src2':sizeTemp, 'dest':cumProduct})
 
           if flag == 1:
             found = True
@@ -315,7 +318,8 @@ def checkarrayid(a , isLhs = False ):
             typeToPass = 'int'
             if(isLhs):
               #send the address of the array element
-              code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':{'constant':j['start_addr'], 'type':'int'} , 'dest':{'tempID': newTemp, 'type': 'int'}})
+              code.append({'inst_type':'ASGN' , 'src1': {'constant':j['start_addr'] , 'type':'int'} , 'src2':{}, 'dest':sizeTemp})
+              code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':sizeTemp , 'dest':{'tempID': newTemp, 'type': 'int'}})
             else:
               #send the value of the array element
               code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': j['type']}})
@@ -680,9 +684,11 @@ def p_expr(p):
     if p[2] == '||':
       value = (int) (val1 or val2)
     #p[0]['Code']=[{'inst_type':'ASGN', 'src1':{'constant': value, 'type': ty}, 'src2':{}, 'dest':{'tempID': newTemp, 'type':ty}}]
-    p[0]['PassedValue'] = {'constant': value, 'type':ty}
+    valTemp = {'constant':value , 'type':'int'}
+    p[0]['PassedValue'] = {'tempID': newTemp, 'type':ty}
     p[0]['Code'] = []
-    #newTemp = newTemp + 1
+    p[0]['Code'].append({'inst_type':'ASGN', 'src1':valTemp, 'src2':{}, 'dest':p[0]['PassedValue']})
+    newTemp = newTemp + 1
   else:
     p[0].update({'Code':[]})
     p[0]['Code'] = p[1]['Code'] + p[3]['Code']
@@ -705,7 +711,15 @@ def p_expr_or(p):
   #print(p[1])
   #p[0] = exprfunc(p[0], p[1])
   #print(p[0])
-  p[0] = p[1]  
+  if 'constant' not in p[1]['PassedValue'].keys():
+    p[0] = p[1]  
+  else:
+    global newTemp
+    p[0]= {}
+    p[0]['PassedValue'] = {'tempID': newTemp, 'type':p[1]['PassedValue']['type']}
+    p[0]['Code'] = []
+    p[0]['Code'].append({'inst_type':'ASGN', 'src1':p[1]['PassedValue'], 'src2':{}, 'dest':p[0]['PassedValue']})
+    newTemp = newTemp + 1
   #newTemp = newTemp + 1
 
 def p_andterm(p):
@@ -1347,7 +1361,7 @@ def p_printable(p):
   'printable : STRING' 
   p[0] = {}
   code = []
-  code.append({'inst_type':'PRINT', 'src1': {}, 'src2': {}, 'dest': {'value': p[1], 'type': 'string'}})
+  code.append({'inst_type':'PRINT', 'src1': {'value': p[1], 'type': 'string'}, 'src2': {}, 'dest': {}})
   p[0]['Code'] = code
 
 def p_printable_or(p):
@@ -1577,46 +1591,7 @@ parser = yacc.yacc()
   }
 '''
 
-''' 
-// Sample Program of selection sort
-int n, arr[10];
-int i =0;
-n =  input(int);
-while(i<n)
-{
-	arr[i] = input(int);
-	i=i+1;
-}
-int j=0,k=0;
 
-// sorting the array
-
-while(j<n)
-{
-	k = j+ 1;
-	while(k<n)
-	{
-if(arr[j]<arr[k])
-		{
-			int temp = arr[j];
-			arr[j] = arr[k];
-			arr[k] = temp;
-		}
-		
-k= k+1;
-	}
-	j = j+1;
-}
-// printing the array
-
-i = 0;
-while(i<n)
-{
-	print("Array values", i , " ",arr[i], "\n");
-	i=i+1;
-}
-
-'''
 
 '''
 function int fibo(int n) {
@@ -1668,15 +1643,23 @@ s = '''
   }
 '''
 
-result = parser.parse(s)
-#print(result)
-codeStatus.reverse()
-print("THE CODE THE CODE THE CODE")
-for line in theCode:
-  print(line)
-print("THE CODE THE CODE THE CODE")
-for i in table:
-  print(i)
+
+
+def FileParser(fileName):
+  s = ''
+  with open(fileName , 'r') as f:
+      s = f.read()
+  print(s)
+
+  result = parser.parse(s)
+  #print(result)
+  codeStatus.reverse()
+  print("THE CODE THE CODE THE CODE")
+  for line in theCode:
+    print(line)
+  print("THE CODE THE CODE THE CODE")
+  for i in table:
+    print(i)
 
 
 
