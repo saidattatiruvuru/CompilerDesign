@@ -103,8 +103,10 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
         treg = float_reg
         inst = 's.s '
     if 'tempID' not in treg_to_var[reg[0]].keys():
-        print("addi  $a3, $k0 , " + str(treg_to_var[reg[0]]['start_addr']))
-        print(inst + treg[reg[0]]+ ", 0($a3)")
+        if 'inside' in treg_to_var[reg[0]].keys():
+            print(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k1)")
+        else:
+            print(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k0)")
 
 
 
@@ -141,8 +143,11 @@ def getassem(code, src1, src2, dest): # give assembly code
                 print("move " + int_reg[dest[0]] + ", $v0")
             if src[1] == 'float':
                 print("mov.s "+  float_reg[src1[0]]+ ", $f0")
-        elif 'tempID' in code['dest'].keys():
-            print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
+        if 'tempID' in code['dest'].keys():
+            if 'inside' in code['dest']['array'].keys():
+                print("add "+ int_reg[dest[0]] + ", $k1 , " + int_reg[dest[0]])   
+            else:
+                print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
             if src1[1] == 'int':
                 print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
             elif src1[1] == 'float':
@@ -216,10 +221,11 @@ def getassem(code, src1, src2, dest): # give assembly code
             print('move $v0, $zero')
             print('li.s $f0, 0.0')
             
-        elif src1[1] == 'int':
-            print('move $v0, ' + int_reg[src1[0]])
-        elif src1[1] == 'float':
-            print('mov.s $f0, ' + float_reg[src1[0]])
+        elif dest[1] == 'int':
+            print('move $v0, ' + int_reg[dest[0]])
+            print('jr $ra')
+        elif dest[1] == 'float':
+            print('mov.s $f0, ' + float_reg[dest[0]])
             
         print('jr $ra')
 
@@ -294,7 +300,10 @@ def getassem(code, src1, src2, dest): # give assembly code
             print(code['dest']['Label'] + ':')
 
     elif code['inst_type'] == 'ARRAYVAL':
-        print("add  $a3, $k0 , " + str(code['src1']['start_addr']))
+        if 'inside' in code['src1'].keys():
+            print("addi  $a3, $k1 , " + str(code['src1']['start_addr']))
+        else:
+            print("addi  $a3, $k0 , " + str(code['src1']['start_addr']))
         print('add  $a3, $a3 , ' + int_reg[src2[0]])
         if dest[1] == 'int':
             print('lw ' + int_reg[dest[0]] + ', 0($a3)')
@@ -304,11 +313,7 @@ def getassem(code, src1, src2, dest): # give assembly code
     elif code['inst_type'] == 'EOF':
         print('jr $ra')
 
-        
-
-
-
-
+     
 # sw r2, 0()
 # lw r1, 0(t1) 
 
@@ -320,7 +325,6 @@ def getassem(code, src1, src2, dest): # give assembly code
 # mfc1 IntReg, FRdest    -- YES ALWAYS INT FIRST
 
 def convert(toreg, fromreg): # convert stmt from one type to another
-    print('convert')
     if toreg[1] == 'int':
         print('cvt.w.s $f31, ' + float_reg[fromreg[0]])
         print('mfc1 ' + int_reg[toreg[0]] + ' , $f31')
@@ -331,21 +335,24 @@ def convert(toreg, fromreg): # convert stmt from one type to another
 
 
 def load(reg, var): # just load stmt from addr of var accoridng to type of reg
-    print('load')
     if reg[1] == 'int':
-        print("addi  $a3, $k0, " + str(reg_to_var['start_addr']))
-        print("lw " + int_reg[reg[0]]+ ", 0($a3)")
+        if 'inside' in reg_to_var[reg[0]].keys():
+            print("lw " + int_reg[reg[0]]+ ", "+ str(reg_to_var[reg[0]]['start_addr']) +"($k1)")
+        else:
+            print("lw " + int_reg[reg[0]]+ ", "+ str(reg_to_var[reg[0]]['start_addr']) +"($k0)")
     else:
-        print("addi  $a3, $k0, " + str(freg_to_var['start_addr']))
-        print("lw.s " + float_reg[reg[0]]+ ", 0($a3)")
+        if 'inside' in freg_to_var[reg[0]].keys():
+            print("lw " + float_reg[reg[0]]+ ", "+ str(freg_to_var[reg[0]]['start_addr']) +"($k1)")
+        else:
+            print("lw " + float_reg[reg[0]]+ ", "+ str(freg_to_var[reg[0]]['start_addr']) +"($k0)")
                 
     
 
 def store_args(code): # initialize a0, a1 and store args in just before funcall, currmem is in src1 of code
-    print('store_args')
-    print('li $a0, ' + str(code['src1']))
-    print('li $a3, ' + str(code['src1']))
-    print('add  $a3, $k0, $a3')
+
+    print('li $k1, ' + str(code['src1']))
+    print('add $k1, $k1, $k0')
+    print('move $a3, $k1')
     print('li $a1, ' + str(len(code['src2'])))
     for arg in code['src2']:
         if 'constant' in arg.keys():
@@ -385,9 +392,8 @@ def store_args(code): # initialize a0, a1 and store args in just before funcall,
 
 
 def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
-    print('load_arg')
     if count == 0:
-        print('add $a3, $k0, $a0')    
+        print('move $a3, $k1')    
     if reg[1] == 'int':
         print('lw ' + int_reg[reg[0]] + ', 0($a3)')
     else:
