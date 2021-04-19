@@ -22,6 +22,8 @@ codeStatus = []
 # Status: L/NL
 # Nextuse: int/-1
 
+loopLabelStack= []
+
 #the reverse traversal history
 revHist = {}
 #table to store lable and destination
@@ -44,13 +46,14 @@ def labelTable():
       l_table[theCode[i]['dest']['Label']] = i
   block_header = [0]
   for i in range(l):
-    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1']:
+    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE']:
       n = theCode[i]['dest']['Label']
       if l_table[n] not in block_header:
         block_header.append(l_table[n])
       m = i + 1
-      if m < l and m not in block_header:
+      if m < l+1 and m not in block_header:
         block_header.append(m)
+  
   block_header.sort()
 
 def basicblock_gen():
@@ -84,8 +87,10 @@ def reverseTraverse():
   for i in range(l-1, -1 , -1):
     result = {}
 
+    if theCode[i]['inst_type'] in ['FUNCALL','IF0', 'IFEQL', 'IF1' , 'BREAK', 'CONTINUE','GOTO', 'EOF', 'RETURN']:
+      revHist.clear()
     #the ignored cases
-    if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF'] :
+    if theCode[i]['inst_type'] in ['LABEL', 'GOTO', 'ERROR','FUNCALL', 'EOF', 'BREAK', 'CONTINUE'] :
       codeStatus.append(result)
       continue
 
@@ -130,6 +135,8 @@ def reverseTraverse():
       # remove the dest from History dict for the other instructions
       if theCode[i]['inst_type'] not in ['IF0', 'IFEQL', 'IF1'] :
         temp = theCode[i]['dest']
+        print('temp', end='  ')
+        print(temp)
         tempstr = json.dumps(sorted(temp.items()))
         if temp != {}:          
           if tempstr in revHist.keys():
@@ -263,7 +270,7 @@ def checkarrayid(a , isLhs = False ):
           curType = j['type']
           cumProduct = {'tempID' : newTemp + 1, 'type' : curType}
           curIndex = {'tempID' : newTemp + 2, 'type' : curType}
-          resultTemp = {'tempID' : newTemp + 3, 'type' : curType}
+          resultTemp = {'tempID' : newTemp + 3, 'type' : 'int'}
           #T1 = 1 cum pro
           code.append({'inst_type':'ASGN' , 'src1': {'constant': 4 , 'type':'int'} , 'src2':{}, 'dest':cumProduct})
           #T3 = 0 fin
@@ -302,13 +309,15 @@ def checkarrayid(a , isLhs = False ):
           if flag == 1:
             found = True
             #t0 = a [ t3 ]
+            typeToPass = 'int'
             if(isLhs):
               #send the address of the array element
-              code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':{'constant':j['start_addr'], 'type':'int'} , 'dest':{'tempID': newTemp, 'type': j['type']}})
+              code.append({'inst_type': 'ADD' , 'src1': resultTemp , 'src2':{'constant':j['start_addr'], 'type':'int'} , 'dest':{'tempID': newTemp, 'type': 'int'}})
             else:
               #send the value of the array element
               code.append({'inst_type': 'ARRAYVAL' , 'src1': a , 'src2':resultTemp, 'dest':{'tempID': newTemp, 'type': j['type']}})
-            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': j['type']}}
+              typeToPass = j['type']
+            codeblock = {'Code': code, 'PassedValue': {'tempID': newTemp, 'type': typeToPass}}
             #advancing into next temporary
             newTemp = newTemp + 1
           break     
@@ -556,11 +565,29 @@ def p_funcdef(p):
     table[p[4][0]].update({'identifier': p[3], 'returntype':p[2], 'arguments':p[6]})
     code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : p[3]}})
     code.append({'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': p[6]})
+    rel_addr = 4 * len(p[6])
+    local_var = p[6]
+    for line in p[9]['Code']:
+      for var in local_var:
+        if 'identifier' in line['src1'].keys():
+          if line['src1']['identifier'] == var['identifier'] and line['src1']['lineno'] == var['lineno']:
+            line['scr1'].update({'start_addr': var['start_addr'], 'inside': True})
+          if line['src2']['identifier'] == var['identifier'] and line['src2']['lineno'] == var['lineno']:
+            line['scr2'].update({'start_addr': var['start_addr'], 'inside': True})
+          if line['dest']['identifier'] == var['identifier'] and line['dest']['lineno'] == var['lineno']:
+            line['dest'].update({'start_addr': var['start_addr'], 'inside': True})
+      if line['inst_type'] == 'DECLARE':
+        line['dest'].update({'start_addr':rel_addr, 'inside': True})
+        rel_addr += 4
+        local_var.append(line['dest'])
     code += p[9]['Code']
     code += p[11]['Code']
   else:
     p_error(str(p[3]) + " Function already Exist ")
     code.append({'inst_type': 'ERROR',  'src1': {}, 'src2':{} , 'dest':{}})
+  
+  
+
   p[0]['Code'] = code
   newTemp = p[4][1]
   
@@ -590,7 +617,10 @@ def p_nulltypeargsx(p):
   'nulltypeargsx : nulltypeargs'
   currenttable = scopestack[-1]
   p[0] = p[1]
+  rel_addr = 0
   for i in p[1]:
+    i.update({'start_addr' : rel_addr})
+    rel_addr += 4
     currenttable.append(i)
 
 def p_nulltypeargs(p):
@@ -1174,8 +1204,8 @@ def p_ifstmt(p):
   code += p[3]['Code']
   temp = {}
   if 'constant' in p[3]['PassedValue'].keys():
-    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
-    temp = {'tempID':newTemp, 'type':p[3]['type']}
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['PassedValue']['type']}})
+    temp = {'tempID':newTemp, 'type':p[3]['PassedValue']['type']}
   else:
     temp = p[3]['PassedValue']
   code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
@@ -1244,21 +1274,33 @@ def p_whilestmt(p):
   global newLabel
   l1 = newLabel
   l2 = newLabel + 1
-  newLabel += 2
+  l3 = newLabel + 2
+  newLabel += 3
   code = []
   code.append({'inst_type':'GOTO','src1': {}, 'src2': {}, 'dest': {'Label' : 'L'+str(l2)}})
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l1)}})
+  for line in p[7]['Code']:
+    if line['inst_type'] == 'BREAK' and line['dest'] == {}:
+      line.update({'dest': {'Label': 'L' +str(l3)}})
+    elif line['inst_type'] == 'CONTINUE' and line['dest'] == {}:
+      line.update({'dest': {'Label': 'L'+str(l2)}})
   code += p[7]['Code']
   code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l2)}})
   code += p[3]['Code']
   temp = {}
   if 'constant' in p[3]['PassedValue'].keys():
-    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['type']}})
-    temp = {'tempID':newTemp, 'type':p[3]['type']}
+    code.append({'inst_type':'ASGN' , 'src1': {'constant': p[3]['PassedValue']['constant'] , 'type':p[3]['PassedValue']['type']} , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['PassedValue']['type']}})
+    temp = {'tempID':newTemp, 'type':p[3]['PassedValue']['type']}
   else:
     temp = p[3]['PassedValue']
   code.append({'inst_type': 'IF1' , 'src1': temp, 'src2': {} , 'dest':{'Label' : 'L'+str(l1)}})
+  code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(l3)}})
   p[0]['Code'] = code
+
+
+
+
+
 
 def p_whilebegin(p):
   'whilebegin : '
@@ -1563,7 +1605,7 @@ while(i<n)
 
 '''
 
-s = '''
+'''
 function int fibo(int n) {
 	int first = 0, second = 1;
 	int i = 0;
@@ -1595,9 +1637,31 @@ else {
 }
 
 '''
+s = '''
+  while(1) {
+    int hello = 0;
+    int ho = 9;
+    while(ho) {
+      print("hi");
+      break;
+    }
+    while(hello) {
+      continue;
+    }
+    if (0 == 1) {
+      break;
+    }
+    continue;
+  }
+'''
+
 result = parser.parse(s)
 #print(result)
 codeStatus.reverse()
+print("THE CODE THE CODE THE CODE")
+for line in theCode:
+  print(line)
+print("THE CODE THE CODE THE CODE")
 for i in table:
   print(i)
 

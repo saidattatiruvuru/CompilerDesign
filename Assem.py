@@ -1,7 +1,14 @@
 from Parser import *
+import json
 #f0 for input, f0 is zero reegister, f0 is for return
-num_int_reg = 18
-num_float_reg = 32
+#f12 is for syscall
+num_int_reg = 17
+# s7 for 1
+# $zero is 0
+num_float_reg = 27
+# f31 is for our convenient use
+# f29 is 1
+# f30 is 0
 reg_to_var = {}
 freg_to_var = {}
 var_to_reg = {}
@@ -11,14 +18,17 @@ var_to_freg = {}
 #register map to qtspim registers
 int_reg = {}
 float_reg = {}
-for i in range(18):
+for i in range(num_int_reg):
     if i in range(0,10):
         int_reg[i] = "$t" + str(i)
-    if i in range(10, 18):
+    if i in range(10, num_int_reg):
         int_reg[i] = "$s" + str(i-10)
 
-for i in range(1, 32):
-    float_reg[i] = "$f" + str(i)
+for i in range(11):
+    #f0 and f12 are reserved
+    float_reg[i] = "$f" + str(i+1)
+for i in range(11, num_float_reg):
+    float_reg[i] = "$f" + str(i+2)
 
 
 def initialise():
@@ -26,6 +36,7 @@ def initialise():
         reg_to_var[i] = {}
     for i in range(0, num_float_reg):
         freg_to_var[i] = {}
+    
 
 def get_reg(isInt):
     treg_to_var = {} 
@@ -69,12 +80,29 @@ def get_reg(isInt):
 def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp var
     print('spill', end="  ")
     print(reg)
-#la $t1, arr
-#add $t2, $t1, 4
-#la $t4, $
+
+    treg_to_var = {}
+    treg = {}
+    inst = ""
+    if reg[1] == 'int':
+        treg_to_var = reg_to_var
+        treg = int_reg
+        inst = 'sw '
+    else:
+        treg_to_var = freg_to_var
+        treg = float_reg
+        inst = 's.s '
+    if 'tempID' not in treg_to_var[reg[0]].keys():
+        print("addi  $a3, $k0 , " + str(treg_to_var[reg[0]]['start_addr']))
+        print(inst + treg[reg[0]]+ ", 0($a3)")
+
 labelnum = 0
+stringnum = 0
+theStrings = []
 def getassem(code, src1, src2, dest): # give assembly code 
     global labelnum
+    global stringnum
+    global theStrings
     print('getassem')
     print(src1, end="  ")
     print(src2, end="  ")
@@ -83,27 +111,27 @@ def getassem(code, src1, src2, dest): # give assembly code
         if src1[1] == 'int':
             print("li "+ int_reg[dest[0]] + ", 1")
             print("sub "+ int_reg[dest[0]] + ", " + int_reg[dest[0]] + " , " + int_reg[src1[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("li.s "+ float_reg[dest[0]] + " ,1.0")
             print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[dest[0]] + " , " + float_reg[src1[0]])
 
     elif code['inst_type'] == 'SUB':
         if src1[1] == 'int':
             print("sub "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     elif code['inst_type'] == 'DIV':
         if src1[1] == 'int':
             print("div "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
     elif code['inst_type'] == 'STORE':
         if 'tempID' in code['dest'].keys():
-                 print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
-                    if src1[1] == 'int':
-                        print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
-                    elif src1[1] == 'float':
-                        print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+            print("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
+            if src1[1] == 'int':
+                print("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+            elif src1[1] == 'float':
+                print("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
         if 'identifier' in code['dest'].keys():
             if src1[1] == 'int':
                 print("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
@@ -114,28 +142,29 @@ def getassem(code, src1, src2, dest): # give assembly code
         if dest[1] == 'int':
             print("li $v0, 5")
             print("syscall")
-            print('move '+ int_reg['dest']+", $v0")
+            print('move '+ int_reg[dest[0]]+", $v0")
         if dest[1] == 'float':
             print("li $v0, 6")
             print("syscall")
-            print('mov.s '+ float_reg['dest']+", $f0")
+            print('mov.s '+ float_reg[dest[0]]+", $f0")
+
     elif code['inst_type'] == "SLT":
         if src1[1] == 'int':
             print("slt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("c.lt.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
-            print("bc1t _x"+ str(labelnum))
-            
+            print("bc1t _x"+ str(labelnum))            
             print("li " + int_reg[dest[0]] + ", 0")
             print("j _x" + str(labelnum+1))
             print("_x"+str(labelnum)+":")
             print("li " + int_reg[dest[0]] + ", 1")
             print("_x"+str(labelnum+1)+":")
             labelnum +=2
+
     elif code['inst_type'] == "SGT":
         if src1[1] == 'int':
             print("sgt "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print("c.le.s " + float_reg[src1[0]]+", "+float_reg[src2[0]])
             print("bc1f _x"+ str(labelnum))
             print("li " + int_reg[dest[0]] + ", 0")
@@ -146,12 +175,14 @@ def getassem(code, src1, src2, dest): # give assembly code
             labelnum +=2
     elif code['inst_type'] == "FUNCALL":
         print("jal "+ code['dest']['Label'])
+
     elif code['inst_type'] == "GOTO":
         print("j "+ code['dest']['Label'])
+
     elif code['inst_type'] == "OR":
         if src1[1] == 'int':
             print("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
-        elif src[1] == 'float':
+        elif src1[1] == 'float':
             print('li $f0, 0')
             print("li " + int_reg[dest[0]] + ", 0")
             print("c.eq.s " + float_reg[src1[0]]+", $f0")
@@ -163,6 +194,7 @@ def getassem(code, src1, src2, dest): # give assembly code
             print("li " + int_reg[dest[0]] + ", 1")
             print("_x"+str(labelnum+1)+":")
             labelnum+=2
+
     elif code['inst_type'] == "RETURN":
         if dest[1] == 'int':
             print('move $v0, ' + int_reg[dest[0]])
@@ -170,33 +202,182 @@ def getassem(code, src1, src2, dest): # give assembly code
         elif dest[1] == 'float':
             print('mov.s $f0, ' + float_reg[dest[0]])
             print('jr $ra')
+
+    elif code['inst_type'] == "BREAK":
+        print("j "+ code['dest']['Label'])
+
+    elif code['inst_type'] == "CONTINUE":
+        print("j "+ code['dest']['Label'])
+
+    elif code['inst_type'] == "PRINT":
+        if 'value' in code['dest'].keys():
+            temp = "_str" + str(stringnum) + ": .asciiz \"" + code['dest']['value'] + " \n\""
+            theStrings.append(temp)
+            print("li $v0, 4")
+            print("la $a0, _str" + str(stringnum))
+            print("syscall")
+            stringnum += 1
+        elif dest[1] == 'int':
+            print("li $v0, 1")
+            print("move $a0, " + int_reg[dest[0]])
+            print("syscall")
+        elif dest[1] == 'float':
+            print("li $v0, 2")
+            print("mov.s $f12, " + float_reg[dest[0]])
+            print("syscall")
     
+    elif code['inst_type'] in ["ASGN", 'DECLARE']:
+        if 'constant' in code['src1'].keys():
+            if dest[1] == 'int':
+                print("li " + int_reg[dest[0]] +  ", " + str(code['src1']['constant']))
+            elif dest[1] == 'float':
+                print("li.s " + float_reg[dest[0]] +  ", " + str(code['src1']['constant']))
+        elif code['src1'] != {}:
+            if dest[1] == 'int':
+                print("move " + int_reg[src1[0]] +  ", " + int_reg[dest[0]])
+            elif dest[1] == 'float':
+                print("mov.s " + float_reg[src1[0]] +  ", " + float_reg[dest[0]])
     
+    elif code['inst_type'] == 'ADD':
+        if dest[1] == 'int':
+            print("add "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif dest[1] == 'float':
+            print("add.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+    
+    elif code['inst_type'] == 'MUL':
+        if dest[1] == 'int':
+            print("mul "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif dest[1] == 'float':
+            print("mul.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
+
+    elif code['inst_type'] == 'IF0':
+        if src1[1] == 'int':
+            print('beqz ' + int_reg[src1[0]] + ', ' + code['dest']['Label'])
+        else:
+            print('c.eq.s ' + float_reg[src1[0]] + ', $f30')
+            print('bc1t ' + code['dest']['Label'])
+
+    elif code['inst_type'] == 'IF1':
+        if src1[1] == 'int':
+            print('beq ' + int_reg[src1[0]] + ', $s7, ' + code['dest']['Label'])
+        else:
+            print('c.eq.s ' + float_reg[src1[0]] + ', $f31')
+            print('bc1t ' + code['dest']['Label'])
+
+    elif code['inst_type'] == 'LABEL':
+        if code['dest']['Label'] == 'main':
+            print('main:')
+            print('li $s7, 1')
+            print('li.s $f29, 1')
+            print('li.s $f30, 0')
+        else:
+            print(code['dest']['Label'] + ':')
+
+    elif code['inst_type'] == 'ARRAYVAL':
+        print("add  $a3, $k0 , " + str(code['src1']['start_addr']))
+        print('add  $a3, $a3 , ' + int_reg[src2[0]])
+        if dest[1] == 'int':
+            print('lw ' + int_reg[dest[0]] + ', 0($a3)')
+        else:
+            print("lw.s " + float_reg[dest[0]]+ ", 0($a3)")
+
+    elif code['inst_type'] == 'EOF':
+        print('jr $ra')
+
+        
 
 
-            
 
 
 # sw r2, 0()
 # lw r1, 0(t1) 
 
-
+# Convert Integer to Float
+# mtc1 IntReg, FRsrc
+# cvt.s.w FRdest, FRsrc	
+# Convert Float to Integer
+# cvt.w.s FRdest, FRsrc
+# mfc1 IntReg, FRdest    -- YES ALWAYS INT FIRST
 
 def convert(toreg, fromreg): # convert stmt from one type to another
     print('convert')
+    if toreg[1] == 'int':
+        print('cvt.w.s $f31, ' + float_reg[fromreg[0]])
+        print('mfc1 ' + int_reg[toreg[0]] + ' , $f31')
+    else:
+        print('mtc1 ' + int_reg[fromreg[0]] + ' , $f31')
+        print('cvt.w.s ' + float_reg[toreg[0]] + ' , $f31')
+
+
 
 def load(reg, var): # just load stmt from addr of var accoridng to type of reg
-    print('load') 
+    print('load')
+    if reg[1] == 'int':
+        print("addi  $a3, $k0, " + str(reg_to_var['start_addr']))
+        print("lw " + int_reg[reg[0]]+ ", 0($a3)")
+    else:
+        print("addi  $a3, $k0, " + str(freg_to_var['start_addr']))
+        print("lw.s " + float_reg[reg[0]]+ ", 0($a3)")
+                
+    
 
-def store_args(code): # initialize a0, a1 and store args in just before funccall, currmem is in src1 of code
+def store_args(code): # initialize a0, a1 and store args in just before funcall, currmem is in src1 of code
     print('store_args')
+    print('li $a0, ' + str(code['src1']))
+    print('li $a3, ' + str(code['src1']))
+    print('add  $a3, $k0, $a3')
+    print('li $a1, ' + str(len(code['src2'])))
+    for arg in code['src2']:
+        if 'constant' in arg.keys():
+            if arg['type'] == 'int':
+                print('li $a2, ' + str(arg['constant']))
+                print('sw $a2, 0($a3)')
+            else:
+                print('li.s $f31, ' + str(arg['constant']))
+                print('s.s $f31, 0($a3)')
+        elif 'tempID' in arg.keys():
+            keystr = json.dumps(sorted(arg.items()))
+            if arg['type'] == 'int':
+                reg = var_to_reg[keystr]
+                print('sw ' + int_reg[reg] + ', 0($a3)')
+            else:
+                reg = var_to_freg[keystr]
+                print('s.s ' + float_reg[reg] + ', 0($a3)')
+        else: # identifier
+            keystr = json.dumps(sorted(arg.items()))
+            if arg['type'] == 'int':
+                if keystr not in var_to_reg.keys():
+                    print("addi  $a2, $k0, " + str(arg['start_addr']))
+                    print('lw $a2, 0($a2)')
+                    print('sw $a2, 0($a3)')
+                else:
+                    reg = var_to_reg[keystr]
+                    print('sw ' + int_reg[reg] + ', 0($a3)')               
+            else:
+                if keystr not in var_to_freg.keys():
+                    print("addi  $a2, $k0, " + str(arg['start_addr']))
+                    print('lw.s $f31, 0($a2)')
+                    print('s.s $f31, 0($a3)')
+                else:
+                    reg = var_to_freg[keystr]
+                    print('s.s ' + float_reg[reg] + ', 0($a3)')
+        print('addi $a3, $a3, 4')
+
 
 def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
     print('load_arg')
+    if count == 0:
+        print('add $a3, $k0, $a0')    
+    if reg[1] == 'int':
+        print('lw ' + int_reg[reg[0]] + ', 0($a3)')
+    else:
+        print('lw.s ' + float_reg[reg[0]] + ', 0($a3)')
+    print('addi $a3, $a3, 4')
 
 
 var_modified = {} # variable modified but not stored back, so they need storing back, same structure as var_to_reg
 initialise()
+
 print('===== ASSEMBLY ======')
 print(len(theCode))
 print(len(codeStatus))
@@ -205,7 +386,7 @@ for i in range(len(theCode)):
     print(theCode[i])
 
     if codeStatus[i] == {}:
-        if theCode[i]['inst_type'] in ['GOTO', 'EOF']:
+        if theCode[i]['inst_type'] in ['GOTO', 'EOF', 'BREAK', 'CONTINUE']:
             for var in var_modified.keys():
                 spill(var_modified[var])
             getassem(theCode[i], -1, -1, -1)
@@ -380,7 +561,7 @@ for i in range(len(theCode)):
                 print("var modified + ", end=" ")
                 print(var_modified)
                 print("______________________")
-        else:
+        else: # ARGS inst
             isDestList = True
             count = 0
             for arg in theCode[i]['dest']:
