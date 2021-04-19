@@ -682,10 +682,10 @@ def p_expr(p):
       value = (int) (val1 or val2)
     #p[0]['Code']=[{'inst_type':'ASGN', 'src1':{'constant': value, 'type': ty}, 'src2':{}, 'dest':{'tempID': newTemp, 'type':ty}}]
     valTemp = {'constant':value , 'type':'int'}
-    p[0]['PassedValue'] = {'tempID': newTemp, 'type':ty}
+    p[0]['PassedValue'] = valTemp
     p[0]['Code'] = []
-    p[0]['Code'].append({'inst_type':'ASGN', 'src1':valTemp, 'src2':{}, 'dest':p[0]['PassedValue']})
-    newTemp = newTemp + 1
+    #p[0]['Code'].append({'inst_type':'ASGN', 'src1':valTemp, 'src2':{}, 'dest':p[0]['PassedValue']})
+    #newTemp = newTemp + 1
   else:
     p[0].update({'Code':[]})
     p[0]['Code'] = p[1]['Code'] + p[3]['Code']
@@ -708,16 +708,8 @@ def p_expr_or(p):
   #print(p[1])
   #p[0] = exprfunc(p[0], p[1])
   #print(p[0])
-  if 'constant' not in p[1]['PassedValue'].keys():
-    p[0] = p[1]  
-  else:
-    global newTemp
-    p[0]= {}
-    p[0]['PassedValue'] = {'tempID': newTemp, 'type':p[1]['PassedValue']['type']}
-    p[0]['Code'] = []
-    p[0]['Code'].append({'inst_type':'ASGN', 'src1':p[1]['PassedValue'], 'src2':{}, 'dest':p[0]['PassedValue']})
-    newTemp = newTemp + 1
-  #newTemp = newTemp + 1
+  p[0] = p[1]  
+  
 
 def p_andterm(p):
   'andterm : andterm AND equalterm'
@@ -1087,12 +1079,15 @@ def p_prefix_or(p):
 
 def p_assign(p):
   'assign : lhs ASSIGN rhs SEMICOLON'
+  global newTemp
   # must do type checking and type conversion if possible
   p[0]= {'Code':[]}
   p[0]['Code'] = p[1]['Code'] + p[3]['Code']
   #STORE stores the src1 to the variable in dest or to the address in the temp in dest
-  print("checking")
-  print(p[3]['PassedValue'] )
+  if 'tempID' in p[1]['PassedValue'] and 'constant' in p[3]['PassedValue']:
+    p[0]['Code'].append({'inst_type':'ASGN' , 'src1': p[3]['PassedValue'] , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['PassedValue']['type']}}) 
+    p[3]['PassedValue'] = {'tempID':newTemp, 'type':p[3]['PassedValue']['type']}
+    newTemp +=1
   p[0]['Code'].append({'inst_type':'STORE', 'src1':p[3]['PassedValue'] , 'src2':{}, 'dest':p[1]['PassedValue']})
   #p[1].update({'valuedict' : p[3]})
 

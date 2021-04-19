@@ -1,0 +1,2180 @@
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'fibo'}}
+__________________
+__________________
+0
+0
+******************************
+fibo:
+**************
+{'inst_type': 'ARGS', 'src1': {}, 'src2': {}, 'dest': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}]}
+__________________
+__________________
+0
+0
+******************************
+move $a3, $k1
+lw $t0, 0($a3)
+addi $a3, $a3, 4
+**************
+{'inst_type': 'DECLARE', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+__________________
+1
+1
+******************************
+li $t1, 0
+**************
+{'inst_type': 'DECLARE', 'src1': {'constant': 1, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+__________________
+2
+2
+******************************
+li $t2, 1
+**************
+{'inst_type': 'DECLARE', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+__________________
+3
+3
+******************************
+li $t3, 0
+**************
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L1'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+__________________
+4
+4
+******************************
+sw $t1, 4($k1)
+sw $t2, 8($k1)
+sw $t3, 12($k1)
+j L1
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L0'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+__________________
+1
+1
+******************************
+L0:
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+__________________
+1
+1
+******************************
+move $t1, $t2
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+__________________
+3
+3
+******************************
+move $t3, $t4
+**************
+{'inst_type': 'ADD', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+__________________
+5
+5
+******************************
+add $t2, $t2 , $t4
+**************
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+__________________
+5
+5
+******************************
+move $t2, $t5
+**************
+{'inst_type': 'PRINT', 'src1': {'value': '\\n', 'type': 'string'}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+__________________
+6
+6
+******************************
+li $v0, 4
+la $a0, _str0
+syscall
+**************
+{'inst_type': 'PRINT', 'src1': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+__________________
+7
+7
+******************************
+li $v0, 1
+move $a0, $t5
+syscall
+**************
+{'inst_type': 'STORE', 'src1': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}, 'src2': {}, 'dest': {'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+__________________
+7
+7
+******************************
+move $t1, $t3
+**************
+{'inst_type': 'STORE', 'src1': {'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}, 'src2': {}, 'dest': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+__________________
+7
+7
+******************************
+move $t3, $t5
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L1'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+__________________
+7
+7
+******************************
+L1:
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+__________________
+7
+7
+******************************
+move $t7, $t8
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+9
+9
+******************************
+move $t0, $t2
+**************
+{'inst_type': 'SLT', 'src1': {'tempID': 0, 'type': 'int'}, 'src2': {'tempID': 1, 'type': 'int'}, 'dest': {'tempID': 0, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+9
+9
+******************************
+slt $t8, $t8 , $t2
+**************
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 0}, 'src2': {}, 'dest': {'Label': 'L0'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "first"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["dimension", []], ["identifier", "third"], ["inside", true], ["lineno", 3], ["size", 4], ["start_addr", 16], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'first', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 4, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'third', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 3, 'start_addr': 16, 'inside': True}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+9
+9
+******************************
+sw $t5, 16($k1)
+sw $t1, 4($k1)
+sw $t3, 8($k1)
+beq $t8, $s7, L0
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L2'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+6
+6
+******************************
+L2:
+**************
+{'inst_type': 'RETURN', 'src1': {'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+6
+6
+******************************
+move $v0, $t1
+jr $ra
+jr $ra
+**************
+{'inst_type': 'EOF', 'src1': {}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+7
+7
+******************************
+jr $ra
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'main'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+7
+7
+******************************
+main:
+li $s7, 1
+li.s $f29, 1
+li.s $f30, 0
+**************
+{'inst_type': 'INPUT', 'src1': {}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+7
+7
+******************************
+li $v0, 5
+syscall
+move $t8, $v0
+**************
+{'inst_type': 'DECLARE', 'src1': {'tempID': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+7
+7
+******************************
+move $t8, $t3
+**************
+{'inst_type': 'FUNCALL', 'src1': 4, 'src2': [{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}], 'dest': {'Label': 'fibo'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+8
+8
+******************************
+li $k1, 4
+add $k1, $k1, $k0
+move $a3, $k1
+li $a1, 1
+sw $t3, 0($a3)
+addi $a3, $a3, 4
+sw $t3, 0($k0)
+jal fibo
+**************
+{'inst_type': 'DECLARE', 'src1': {'type': 'int', 'funcReturn': 0}, 'src2': {}, 'dest': {'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+7
+7
+******************************
+**************
+{'inst_type': 'PRINT', 'src1': {'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+8
+8
+******************************
+li $v0, 1
+move $a0, $t5
+syscall
+**************
+{'inst_type': 'PRINT', 'src1': {'value': 'th fibonacci:', 'type': 'string'}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+__________________
+9
+9
+******************************
+li $v0, 4
+la $a0, _str1
+syscall
+**************
+{'inst_type': 'PRINT', 'src1': {'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+__________________
+10
+10
+******************************
+li $v0, 1
+move $a0, $t3
+syscall
+**************
+{'inst_type': 'INPUT', 'src1': {}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'float'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+__________________
+10
+10
+******************************
+li $v0, 6
+syscall
+mov.s $f1, $f0
+**************
+{'inst_type': 'DECLARE', 'src1': {'tempID': 0, 'type': 'float'}, 'src2': {}, 'dest': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+__________________
+10
+10
+******************************
+mov.s $f1, $f2
+**************
+{'inst_type': 'DECLARE', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 14, 'start_addr': 12}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+__________________
+10
+10
+******************************
+li.s $f3, 0
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 0, 'type': 'float'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+__________________
+10
+10
+******************************
+mov.s $f2, $f1
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': 0, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+__________________
+10
+10
+******************************
+li $t2, 0
+**************
+{'inst_type': 'SLT', 'src1': {'tempID': 0, 'type': 'float'}, 'src2': {'tempID': 1, 'type': 'int'}, 'dest': {'tempID': 0, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+__________________
+10
+10
+******************************
+cvt.w.s $f31, $f1
+mfc1 $s0 , $f31
+slt $t8, $s0 , $t2
+**************
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 0}, 'src2': {}, 'dest': {'Label': 'L9'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["dimension", []], ["identifier", "ans"], ["lineno", 11], ["size", 4], ["start_addr", 4], ["type", "int"]]
+[["dimension", []], ["identifier", "n"], ["lineno", 10], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'identifier': 'ans', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 11, 'start_addr': 4}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+11
+11
+******************************
+sw $t3, 4($k0)
+sw $t3, 4($k0)
+s.s $f2, 8($k0)
+s.s $f3, 12($k0)
+beq $t8, $s7, L9
+**************
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L10'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+9
+10
+******************************
+j L10
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L9'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+9
+10
+******************************
+L9:
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'float'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+9
+10
+******************************
+mov.s $f2, $f3
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': -1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+9
+10
+******************************
+li $t4, -1
+**************
+{'inst_type': 'SGT', 'src1': {'tempID': 1, 'type': 'float'}, 'src2': {'tempID': 2, 'type': 'int'}, 'dest': {'tempID': 1, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+9
+10
+******************************
+cvt.w.s $f31, $f3
+mfc1 $t3 , $f31
+sgt $t2, $t3 , $t4
+**************
+{'inst_type': 'NOT', 'src1': {'tempID': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 1, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+10
+11
+******************************
+li $t2, 1
+sub $t2, $t2 , $t2
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+10
+11
+******************************
+mov.s $f2, $f4
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': -3, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+__________________
+10
+11
+******************************
+li $s1, -3
+**************
+{'inst_type': 'SLT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+__________________
+11
+12
+******************************
+cvt.w.s $f31, $f4
+mfc1 $s2 , $f31
+slt $t4, $s2 , $s1
+**************
+{'inst_type': 'NOT', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+li $t4, 1
+sub $t4, $t4 , $t4
+**************
+{'inst_type': 'AND', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {'type': 'int', 'tempID': 2}, 'dest': {'tempID': 1, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+li $t4, 2
+**************
+{'inst_type': 'MUL', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {'type': 'int', 'tempID': 1}, 'dest': {'tempID': 1, 'type': {'type': 'int'}}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 2, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+**************
+{'inst_type': 'STORE', 'src1': {'type': 'int', 'tempID': 1}, 'src2': {}, 'dest': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 14, 'start_addr': 12}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+mtc1 $t2 , $f31
+cvt.w.s $f5 , $f31
+mov.s $f6, $f5
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 14, 'start_addr': 12}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'float'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+mov.s $f6, $f4
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+li $s1, 2
+**************
+{'inst_type': 'SGT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 3, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+13
+******************************
+cvt.w.s $f31, $f4
+mfc1 $s3 , $f31
+sgt $s1, $s3 , $s1
+**************
+{'inst_type': 'SLT', 'src1': {'tempID': 2, 'type': 'float'}, 'src2': {'tempID': 3, 'type': 'int'}, 'dest': {'tempID': 4, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+__________________
+12
+14
+******************************
+cvt.w.s $f31, $f4
+mfc1 $s4 , $f31
+slt $s5, $s4 , $s1
+**************
+{'inst_type': 'OR', 'src1': {'tempID': 3, 'type': 'int'}, 'src2': {'tempID': 4, 'type': 'int'}, 'dest': {'tempID': 2, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+__________________
+13
+16
+******************************
+or $s6, $s1 , $s5
+**************
+{'inst_type': 'NOT', 'src1': {'tempID': 2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 2, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+li $s6, 1
+sub $s6, $s6 , $s6
+**************
+{'inst_type': 'IF1', 'src1': {'type': 'int', 'tempID': 2}, 'src2': {}, 'dest': {'Label': 'L3'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+s.s $f6, 12($k0)
+beq $s6, $s7, L3
+**************
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L4'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+j L4
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L3'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+L3:
+**************
+{'inst_type': 'PRINT', 'src1': {'value': '\\nYay!', 'type': 'string'}, 'src2': {}, 'dest': {}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 1], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'tempID': 1, 'type': 'float'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+li $v0, 4
+la $a0, _str2
+syscall
+**************
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L5'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+j L5
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L4'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+L4:
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L5'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+L5:
+**************
+{'inst_type': 'GOTO', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L11'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+j L11
+**************
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'L10'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+L10:
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'f', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 13, 'start_addr': 8}, 'src2': {}, 'dest': {'tempID': 3, 'type': 'float'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+mov.s $f2, $f6
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': 1, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 4, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+li $s5, 1
+**************
+{'inst_type': 'OR', 'src1': {'tempID': 3, 'type': 'float'}, 'src2': {'tempID': 4, 'type': 'int'}, 'dest': {'tempID': 3, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 1], ["type", {"type": "int"}]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 1, 'type': {'type': 'int'}}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+cvt.w.s $f31, $f6
+mfc1 $t4 , $f31
+or $s1, $t4 , $s5
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': -2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 4, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+[["tempID", 3], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 3, 'type': 'float'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+li $s5, -2
+**************
+{'inst_type': 'MUL', 'src1': {'tempID': 4, 'type': 'int'}, 'src2': {'type': 'int', 'tempID': 3}, 'dest': {'tempID': 3, 'type': {'type': 'int'}}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["type", "string"], ["value", "\\n"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+[["tempID", 3], ["type", "float"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 3, 'type': 'float'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'value': '\\n', 'type': 'string'}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+**************
+{'inst_type': 'STORE', 'src1': {'type': 'int', 'tempID': 3}, 'src2': {}, 'dest': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 14, 'start_addr': 12}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+[["tempID", 3], ["type", "float"]]
+[["tempID", 3], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 3, 'type': 'float'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'tempID': 3, 'type': {'type': 'int'}}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+mtc1 $s1 , $f31
+cvt.w.s $f7 , $f31
+mov.s $f8, $f7
+**************
+{'inst_type': 'ASGN', 'src1': {'identifier': 'result', 'dimension': [], 'size': 4, 'type': 'float', 'lineno': 14, 'start_addr': 12}, 'src2': {}, 'dest': {'tempID': 4, 'type': 'float'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+[["tempID", 3], ["type", "float"]]
+[["tempID", 3], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 3, 'type': 'float'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'tempID': 3, 'type': {'type': 'int'}}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+mov.s $f8, $f9
+**************
+{'inst_type': 'ASGN', 'src1': {'constant': -2, 'type': 'int'}, 'src2': {}, 'dest': {'tempID': 5, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+[["tempID", 3], ["type", "float"]]
+[["tempID", 3], ["type", {"type": "int"}]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 3, 'type': 'float'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'tempID': 3, 'type': {'type': 'int'}}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************
+li $t4, -2
+**************
+{'inst_type': 'SGT', 'src1': {'tempID': 4, 'type': 'float'}, 'src2': {'tempID': 5, 'type': 'int'}, 'dest': {'tempID': 5, 'type': 'int'}}
+[["dimension", []], ["identifier", "n"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 0], ["type", "int"]]
+[["tempID", 1], ["type", "int"]]
+[["dimension", []], ["identifier", "i"], ["inside", true], ["lineno", 1], ["size", 4], ["start_addr", 12], ["type", "int"]]
+[["tempID", 0], ["type", "int"]]
+[["dimension", []], ["identifier", "second"], ["inside", true], ["lineno", 0], ["size", 4], ["start_addr", 8], ["type", "int"]]
+[["type", "string"], ["value", "th fibonacci:"]]
+[["tempID", 0], ["type", "float"]]
+[["tempID", 3], ["type", "int"]]
+[["tempID", 2], ["type", "float"]]
+[["tempID", 4], ["type", "int"]]
+[["tempID", 2], ["type", "int"]]
+[["type", "string"], ["value", "\\nYay!"]]
+[["tempID", 3], ["type", {"type": "int"}]]
+[["tempID", 5], ["type", "int"]]
+__________________
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 0, 'inside': True}
+{'identifier': 'second', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 0, 'start_addr': 8, 'inside': True}
+{'tempID': 1, 'type': 'int'}
+{'value': '\\nYay!', 'type': 'string'}
+{'tempID': 5, 'type': 'int'}
+{'identifier': 'n', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 10, 'start_addr': 0}
+{'tempID': 3, 'type': {'type': 'int'}}
+{'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 12, 'inside': True}
+{'tempID': 0, 'type': 'int'}
+{'value': 'th fibonacci:', 'type': 'string'}
+{'tempID': 0, 'type': 'float'}
+{'tempID': 3, 'type': 'int'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 2, 'type': 'float'}
+{'tempID': 4, 'type': 'int'}
+{'tempID': 2, 'type': 'int'}
+__________________
+14
+17
+******************************

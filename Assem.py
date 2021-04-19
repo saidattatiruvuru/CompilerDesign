@@ -100,8 +100,6 @@ def spill(reg): # JUST store stmt from reg to corresponding if it is NOT temp va
         treg = float_reg
         inst = 's.s '
     if 'tempID' not in treg_to_var[reg[0]].keys():
-        print(treg_to_var[reg[0]])
-        print(reg[0])
         if 'inside' in treg_to_var[reg[0]].keys():
             print(inst + treg[reg[0]]+ ", "+str(treg_to_var[reg[0]]['start_addr'])+"($k1)")
         else:
@@ -293,8 +291,6 @@ def getassem(code, src1, src2, dest): # give assembly code
             print(code['dest']['Label'] + ':')
 
     elif code['inst_type'] == 'ARRAYVAL':
-        print(code)
-        print("________________")
         if 'inside' in code['src1'].keys():
             print("addi  $a3, $k1 , " + str(code['src1']['start_addr']))
         else:
@@ -401,8 +397,20 @@ var_modified = {} # variable modified but not stored back, so they need storing 
 initialise()
 
 for i in range(len(theCode)):
-    #print(theCode[i])
-
+    print("**************")
+    print(theCode[i])
+    c = 0
+    for i2 in var_to_reg:
+        print(i2)
+    print("__________________")
+    for i2 in reg_to_var :
+        if reg_to_var[i2]!={}:
+            c += 1
+            print(reg_to_var[i2])
+    print("__________________")
+    print(len(var_to_reg))
+    print(c)
+    print("******************************")
     if codeStatus[i] == {}:
         if theCode[i]['inst_type'] in ['GOTO', 'EOF', 'BREAK', 'CONTINUE']:
             for var in var_modified.keys():
