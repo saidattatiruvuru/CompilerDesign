@@ -1108,7 +1108,8 @@ def p_assign(p):
   p[0]= {'Code':[]}
   p[0]['Code'] = p[1]['Code'] + p[3]['Code']
   #STORE stores the src1 to the variable in dest or to the address in the temp in dest
-  if 'tempID' in p[1]['PassedValue'] and 'constant' in p[3]['PassedValue']:
+  if 'tempID' in p[1]['PassedValue'] or 'constant' in p[3]['PassedValue']:
+    print(p[3]['PassedValue'])
     p[0]['Code'].append({'inst_type':'ASGN' , 'src1': p[3]['PassedValue'] , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['PassedValue']['type']}}) 
     p[3]['PassedValue'] = {'tempID':newTemp, 'type':p[3]['PassedValue']['type']}
     newTemp +=1

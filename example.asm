@@ -1,18 +1,9 @@
 #.globl main 
 .text 
-func:	
-	add $t4, $t2, $t3	
-	sub $t5, $t2, $t3
-	move $a0, $t1
-	li $v0, 1  
-	syscall	
-	jr $ra
 main:
 	li $t1 , 8
-	jal func
-	move $a0, $t1
-	li $v0, 1  
-	syscall	
+	mtc1 $t1 , $f2
+	cvt.s.w $f3 , $f2
 	jr $ra
 .data
 value:	.word 25

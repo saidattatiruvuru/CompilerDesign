@@ -1,0 +1,16 @@
+int i = 3;
+int f = 7;
+//float f =5.5;
+int k = i && f;
+print(k,"\n");
+if(i && f)
+{
+	int j = f;
+	print(j,"\n");
+    print(f);
+}
+else{
+    int j = i || f;
+    print("here  ");
+	print(j,"\n");
+}
