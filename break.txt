@@ -1,0 +1,14 @@
+int i = 0;
+int j = 2;
+int n = input(int);
+while(i <= n){
+    print("i: ",i);
+    if(i == 2){
+        i = i + 1;
+        break;
+    }
+    j = j + i;
+    i = i + 1;
+    print("j: ",j);
+}
+print("done");

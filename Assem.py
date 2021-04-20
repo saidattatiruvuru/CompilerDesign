@@ -328,10 +328,10 @@ def getassem(code, src1, src2, dest): # give assembly code
 
     elif code['inst_type'] == 'IF1':
         if src1[1] == 'int':
-            theInstrs.append('beq ' + int_reg[src1[0]] + ', $s7, ' + code['dest']['Label'])
+            theInstrs.append('bne ' + int_reg[src1[0]] + ', $zero, ' + code['dest']['Label'])
         else:
-            theInstrs.append('c.eq.s ' + float_reg[src1[0]] + ', $f31')
-            theInstrs.append('bc1t ' + code['dest']['Label'])
+            theInstrs.append('c.eq.s ' + float_reg[src1[0]] + ', $f30')
+            theInstrs.append('bc1f ' + code['dest']['Label'])
 
     elif code['inst_type'] == 'LABEL':
         if code['dest']['Label'] == 'main':
@@ -473,7 +473,6 @@ for i in range(len(theCode)):
         if theCode[i]['inst_type'] in ['GOTO', 'EOF', 'BREAK', 'CONTINUE', 'LABEL']:
             for var in var_modified.keys():
                 spill(var_modified[var])
-            #print("hi and start of block3")
             getassem(theCode[i], -1, -1, -1)
             var_modified = {}
             initialise()
@@ -569,7 +568,7 @@ for i in range(len(theCode)):
                     }
                     reg_src.update({src : [result[0], 'int']})
                     if tempstr in var_to_reg.keys():
-                        convert(reg_src[src], [var_to_freg[tempstr]['reg'], 'float'])
+                        convert(reg_src[src], [var_to_reg[tempstr]['reg'], 'float'])
                     else:
                         load(reg_src[src], theCode[i][src])
                     reg_to_var[reg_src[src][0]] = entry
@@ -682,6 +681,8 @@ for i in range(len(theCode)):
         initialise()
         #print("hi and start of block1")
     elif i+1 in blockHeader:
+        for var in var_modified.keys():
+            spill(var_modified[var])
         var_modified = {}  
         initialise()
         #print("hi and start of block")
