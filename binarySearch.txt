@@ -1,0 +1,34 @@
+int n = 4;
+function binsrch(int src)
+{
+    int arr[5];
+    int i = 0;
+    print("enter sorted array of size 4 \n");
+    while(i<n)
+    {
+        arr[i] = input(int);
+        i = i+1;
+    }
+    int beg=0, end=n-1, mid;
+    while(beg<end)
+    {
+        mid= (beg+end)/2;
+        if(arr[mid] == src)
+        {
+            print("Found at ", mid);
+            return;
+        }
+        if(arr[mid]> src)
+        {
+            end = mid-1;
+        }
+        else
+        {
+            beg = mid+1;
+        }
+    }
+    print("Not found");
+}
+print("element to search ");
+int src = input(int);
+binsrch(src);
