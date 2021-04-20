@@ -1,4 +1,0 @@
-{'tempID': 4, 'type': 'int'}
-{'tempID': 15, 'type': 'int', 'array': {'identifier': 'arr', 'dimension': [10], 'size': 40, 'type': 'int', 'lineno': 0, 'start_addr': 4}}
-{'identifier': 'temp', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 12, 'start_addr': 56}
-{'constant': 0, 'type': 'int'}
