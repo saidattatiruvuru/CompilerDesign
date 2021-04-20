@@ -352,7 +352,7 @@ def convert(toreg, fromreg): # convert stmt from one type to another
         theInstrs.append('mfc1 ' + int_reg[toreg[0]] + ' , $f31')
     else:
         theInstrs.append('mtc1 ' + int_reg[fromreg[0]] + ' , $f31')
-        theInstrs.append('cvt.w.s ' + float_reg[toreg[0]] + ' , $f31')
+        theInstrs.append('cvt.s.w ' + float_reg[toreg[0]] + ' , $f31')
 
 
 
