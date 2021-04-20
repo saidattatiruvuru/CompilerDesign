@@ -7,7 +7,6 @@ function int fibo(int n) {
 	}
 	while(i < n) {
 		int third = first + second;
-		print("\n", third);
 		first = second;
 		second = third;
 		i = i+1;
@@ -17,7 +16,7 @@ function int fibo(int n) {
 print("enter number ");
 int n = input(int);
 int ans = fibo(n);
-print(n, "th fibonacci: ", ans);
+print("\n", n, "th fibonacci: ", ans);
 print("\n enter an int");
 int f = input(int);
 int result = 0;

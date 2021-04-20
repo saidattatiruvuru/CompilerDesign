@@ -295,7 +295,7 @@ def checkarrayid(a , isLhs = False ):
           code.append({'inst_type':'ASGN' , 'src1': {'constant': 0 , 'type':'int'} , 'src2':{}, 'dest':resultTemp})
           for k in range(len(j['dimension'])):
             if type(a['dimension'][k]) == int:
-              if j['dimension'][k] <= a['dimension'][k] :
+              if j['dimension'][k] <= a['dimension'][k] or  0 > a['dimension'][k]:
                 flag = 0
                 j = a['identifier'] + 'Array out of bound'
                 break
@@ -311,12 +311,12 @@ def checkarrayid(a , isLhs = False ):
             elif type(a['dimension'][k]) == dict:
               #T4 = sgt i , dim (in newtemp+4)
               code.append({'inst_type':'ASGN' , 'src1': {'constant':j['dimension'][k] , 'type':'int'} , 'src2':{}, 'dest':sizeTemp})
-              code.append({'inst_type': 'SGT' , 'src1': a['dimension'][k] ,  'src2': sizeTemp , 'dest':curIndex})
+              code.append({'inst_type': 'SLT' , 'src1': a['dimension'][k] ,  'src2': sizeTemp , 'dest':curIndex})
               #IF0 T4 GOTO Lnext1
               #error
               #Lnext1:
               #.
-              code.append({'inst_type': 'IF0' , 'src1': curIndex, 'src2': {} , 'dest':{'Label' : 'L'+str(newLabel)}})
+              code.append({'inst_type': 'IF1' , 'src1': curIndex, 'src2': {} , 'dest':{'Label' : 'L'+str(newLabel)}})
               code.append({'inst_type': 'ERROR' , 'src1': {}, 'src2':{} , 'dest':{}})
               code.append({'inst_type': 'LABEL' , 'src1': {}, 'src2':{} , 'dest':{'Label' : 'L'+str(newLabel)}})
               newLabel = newLabel + 1
@@ -604,7 +604,7 @@ def p_funcdef(p):
     code += p[9]['Code']
     code += p[11]['Code']
   else:
-    p_error(str(p[3]) + " Function already Exist ")
+    p_error(str(p[3]) + " Function already Exists ")
     code.append({'inst_type': 'ERROR',  'src1': {}, 'src2':{} , 'dest':{}})
   p[0]['Code'] = code
   newTemp = p[4][1]
@@ -1048,7 +1048,7 @@ def p_singleterm(p):
     p[0]['PassedValue'] = res[1]
   else:
     p[0]['PassedValue'] = None
-    p_error(p[1])
+    p_error(p[1] + " identifier not found")
   p[0]['Code'] = []
   
     
@@ -1109,7 +1109,6 @@ def p_assign(p):
   p[0]['Code'] = p[1]['Code'] + p[3]['Code']
   #STORE stores the src1 to the variable in dest or to the address in the temp in dest
   if 'tempID' in p[1]['PassedValue'] or 'constant' in p[3]['PassedValue']:
-    print(p[3]['PassedValue'])
     p[0]['Code'].append({'inst_type':'ASGN' , 'src1': p[3]['PassedValue'] , 'src2':{}, 'dest':{'tempID':newTemp, 'type':p[3]['PassedValue']['type']}}) 
     p[3]['PassedValue'] = {'tempID':newTemp, 'type':p[3]['PassedValue']['type']}
     newTemp +=1
@@ -1121,7 +1120,7 @@ def p_lhs(p):
   result = checkid(p[1]) 
   if result[0] == False:
     p[0] = {}
-    p_error("identifier not found in scope")   
+    p_error(p[1] + " identifier not found in scope")   
   else:
     p[0] = {'PassedValue':result[1], 'Code':[]}       
 
@@ -1207,7 +1206,7 @@ def p_arg(p):
     p[0] = {'PassedValue':res[1] , 'Code':[]}
   else:
     p[0] = {}
-    p_error(p[1])  
+    p_error(p[1] + " identifier not found")  
 
 
 def p_arg_or(p):
@@ -1406,7 +1405,7 @@ def p_printable_and(p):
     p[0]['Code'].append({'inst_type':'PRINT', 'src1': temp, 'src2': {}, 'dest': {}})
   else:
     p[0] = {}
-    p_error(p[1] + " Not Found")
+    p_error(p[1]['identifier'] + " Not Found")
     p[0]['Code'] = [{'inst_type': 'ERROR', 'src1': {}, 'src2': {}, 'dest': {}}]
   
 
@@ -1489,8 +1488,7 @@ def p_decbegin(p):
 
 def p_type(p):
   '''type : FLOAT 
-  | INT 
-  | CHAR '''
+  | INT'''
   p[0] = p[1]
 
 def p_vars(p):
@@ -1554,7 +1552,8 @@ def p_arrayid(p):
 
 def p_arrayid1(p):
   'arrayid1 : arrayid1 LSB index RSB'
-  p[0]['dimension'].append(p[3])
+  p[1]['dimension'].append(p[3])
+  p[0]= p[1]
 
 def p_arrayidlast(p):
   'arrayid1 : IDENTIFIER LSB index RSB'
@@ -1591,12 +1590,11 @@ def p_emptyval(p):
 
 def p_error(p):
   global lineno
-  print(p)
   if type(p) == str:
-    print(str(lineno)+ " : " + p)
+    print(p)
   else:
     # p.value, p.type, p.lineno, p.lexpos
-    print(str(lineno)+ " : Unexpected token " + str(p.value))
+    print("Unexpected token " + str(p.value))
 
 parser = yacc.yacc()
 # data = '''

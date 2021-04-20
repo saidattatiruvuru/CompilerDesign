@@ -10,7 +10,7 @@ function binsrch(int src)
         i = i+1;
     }
     int beg=0, end=n-1, mid;
-    while(beg<end)
+    while(beg<=end)
     {
         mid= (beg+end)/2;
         if(arr[mid] == src)

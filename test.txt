@@ -1,0 +1,10 @@
+function f()
+{
+    int i = 0;
+}
+
+function int f()
+{
+    int j = 0+2-34;
+}
+int hi;

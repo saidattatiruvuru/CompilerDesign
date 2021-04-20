@@ -1,0 +1,27 @@
+int a[3][4];
+
+int i=0, j=0;
+ while(i<3)
+ {
+     j=0;
+     while(j<4)
+     {
+         a[i][j] = i*j;
+         j=j+1;
+     }
+    i = i+1;
+ }
+
+i=0;
+j=0;
+while(i<3)
+ {
+     j=0;
+     print("\n i= " , i);
+     while(j<4)
+     {
+         print("\n     j= ",j,"   a[i][j]: ", a[i][j]);
+         j=j+1;
+     }
+     i = i+1;
+ }
