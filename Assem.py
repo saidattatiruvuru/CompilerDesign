@@ -136,11 +136,9 @@ def getassem(code, src1, src2, dest): # give assembly code
     global theStrings
     if code['inst_type'] == 'NOT':
         if src1[1] == 'int':
-            theInstrs.append("li "+ int_reg[dest[0]] + ", 1")
-            theInstrs.append("sub "+ int_reg[dest[0]] + ", " + int_reg[dest[0]] + " , " + int_reg[src1[0]])
+            theInstrs.append("sub "+ int_reg[dest[0]] + ", $s7 , " + int_reg[src1[0]])
         elif src1[1] == 'float':
-            theInstrs.append("li.s "+ float_reg[dest[0]] + " ,1.0")
-            theInstrs.append("sub.s  "+ float_reg[dest[0]] + ", " + float_reg[dest[0]] + " , " + float_reg[src1[0]])
+            theInstrs.append("sub.s  "+ float_reg[dest[0]] + ", $f29 , " + float_reg[src1[0]])
 
     elif code['inst_type'] == 'SUB':
         if src1[1] == 'int':
@@ -154,22 +152,29 @@ def getassem(code, src1, src2, dest): # give assembly code
             theInstrs.append("div.s  "+ float_reg[dest[0]] + ", " + float_reg[src1[0]] + " , " + float_reg[src2[0]])
 
     elif code['inst_type'] == 'STORE':
-        if 'funcReturn' in code['src1']:
-            if src[1] == 'int':
-                theInstrs.append("move " + int_reg[dest[0]] + ", $v0")
-            if src[1] == 'float':
-                theInstrs.append("mov.s "+  float_reg[src1[0]]+ ", $f0")
         if 'tempID' in code['dest'].keys():
             if 'inside' in code['dest']['array'].keys():
                 theInstrs.append("add "+ int_reg[dest[0]] + ", $k1 , " + int_reg[dest[0]])   
             else:
                 theInstrs.append("add "+ int_reg[dest[0]] + ", $k0 , " + int_reg[dest[0]])
-            if src1[1] == 'int':
-                theInstrs.append("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
-            elif src1[1] == 'float':
-                theInstrs.append("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+            if 'funcReturn' in code['src1']:
+                if code['src1']['type'] == 'int':
+                    theInstrs.append("sw $v0, 0(" + int_reg[dest[0]] + ")")
+                elif code['src1']['type'] == 'float':
+                    theInstrs.append("s.s $f0, 0(" + int_reg[dest[0]] + ")")
+            else:
+                if src1[1] == 'int':
+                    theInstrs.append("sw " + int_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+                elif src1[1] == 'float':
+                    theInstrs.append("s.s " + float_reg[src1[0]]+ ", 0(" + int_reg[dest[0]] + ")")
+
         elif 'identifier' in code['dest'].keys():
-            if 'constant' not in code['src1'].keys():
+            if 'funcReturn' in code['src1']:
+                if code['src1']['type'] == 'int':
+                    theInstrs.append("move " + int_reg[dest[0]] + ", $v0")
+                elif code['src1']['type'] == 'float':
+                    theInstrs.append("mov.s "+  float_reg[dest[0]]+ ", $f0")
+            elif 'constant' not in code['src1'].keys():
                 if src1[1] == 'int':
                     theInstrs.append("move " + int_reg[dest[0]] + ", "  + int_reg[src1[0]])
                 elif src1[1] == 'float':
@@ -226,11 +231,10 @@ def getassem(code, src1, src2, dest): # give assembly code
         if src1[1] == 'int':
             theInstrs.append("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
         elif src1[1] == 'float':
-            theInstrs.append('li $f0, 0')
             theInstrs.append("li " + int_reg[dest[0]] + ", 0")
-            theInstrs.append("c.eq.s " + float_reg[src1[0]]+", $f0")
+            theInstrs.append("c.eq.s " + float_reg[src1[0]]+", $f30")
             theInstrs.append("bc1f _x"+ str(labelnum))
-            theInstrs.append("c.eq.s " + float_reg[src2[0]]+", $f0")
+            theInstrs.append("c.eq.s " + float_reg[src2[0]]+", $f30")
             theInstrs.append("bc1f _x"+ str(labelnum))
             theInstrs.append("j _x" + str(labelnum+1))
             theInstrs.append("_x"+str(labelnum)+":")
@@ -238,16 +242,34 @@ def getassem(code, src1, src2, dest): # give assembly code
             theInstrs.append("_x"+str(labelnum+1)+":")
             labelnum+=2
 
+    elif code['inst_type'] == "AND":
+        if src1[1] == 'int':
+            theInstrs.append("and "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+        elif src1[1] == 'float':
+            theInstrs.append("li " + int_reg[dest[0]] + ", 1")
+            theInstrs.append("c.eq.s " + float_reg[src1[0]]+", $f30")
+            theInstrs.append("bc1t _x"+ str(labelnum))
+            theInstrs.append("c.eq.s " + float_reg[src2[0]]+", $f30")
+            theInstrs.append("bc1t _x"+ str(labelnum))
+            theInstrs.append("j _x" + str(labelnum+1))
+            theInstrs.append("_x"+str(labelnum)+":")
+            theInstrs.append("li " + int_reg[dest[0]] + ", 0")
+            theInstrs.append("_x"+str(labelnum+1)+":")
+            labelnum+=2
+
     elif code['inst_type'] == "RETURN":
         if code['src1'] == {}:
             theInstrs.append('move $v0, $zero')
             theInstrs.append('li.s $f0, 0.0')
+        elif 'constant' in code['src1'].keys():
+            if code['src1']['type'] == 'int':
+                theInstrs.append('li $v0, ' + str(code['src1']['constant']))
+            elif code['src1']['type'] == 'float':
+                theInstrs.append('li.s $f0, ' + str(code['src1']['constant'])) 
         elif src1[1] == 'int':
             theInstrs.append('move $v0, ' + int_reg[src1[0]])
-            theInstrs.append('jr $ra')
         elif src1[1] == 'float':
-            theInstrs.append('mov.s $f0, ' + float_reg[src1[0]])
-            
+            theInstrs.append('mov.s $f0, ' + float_reg[src1[0]])            
         theInstrs.append('jr $ra')
 
     elif code['inst_type'] == "BREAK":
@@ -664,6 +686,7 @@ for i in range(len(theCode)):
         initialise()
         #print("hi and start of block")
 
+theStrings.append('_wordAlign: .word 0')
 theStrings.append('_dataStart: .space 4096')
 theStrings.append('.text ' )
 theStrings.append('.globl main ' )

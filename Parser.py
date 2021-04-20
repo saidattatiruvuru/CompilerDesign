@@ -661,16 +661,20 @@ def p_nulltypeargs_or(p):
   p[0] = []
 
 def p_typeargs(p):
-  'typeargs : typeargs typearg'
-  p[0] = p[1].append(p[2])
+  'typeargs : typeargs SEPARATORS typearg'
+  p[1].append(p[3])
+  p[0] = p[1]
 
 def p_typeargs_or(p):
   'typeargs : typearg'
   p[0] = [p[1]]
 
+  
+
 def p_typearg(p):
   'typearg : type typeargval'
   global lineno
+  
   p[2]["size"] =  p[2]["size"]*4
   p[2].update({'type': p[1], 'lineno':lineno})
   p[0] = p[2]
@@ -799,6 +803,7 @@ def p_equaltermval(p):
     if 'tempID' not in p[3]['PassedValue'].keys():
       p[0]['Code'].append({'inst_type':'ASGN', 'src1':p[3]['PassedValue'], 'src2':{}, 'dest':{'tempID': newTemp, 'type':p[3]['PassedValue']['type']}})
       p[3]['PassedValue'] = {'tempID': newTemp, 'type': p[3]['PassedValue']['type']}
+      newTemp += 1
     resultTemp = min(p[1]['PassedValue']['tempID'] , p[3]['PassedValue']['tempID'] )
     resValue = {'tempID':resultTemp , 'type':res[3]['type']}
     temp0 = {'tempID':newTemp , 'type':res[3]['type']}
@@ -1141,7 +1146,7 @@ def p_rhs_or2(p):
   p[0] = {}
   global newTemp
   p[0]['Code'] = p[1]['Code']   # {'value' : somvalue, 'stmttype' : 'funccall', 'type' : sometype}
-  p[0]['PassedValue'] = {'type':p[1]['type'], 'funcReturn':p[1]['PassedValue']['funcReturn']}
+  p[0]['PassedValue'] = {'type':p[1]['PassedValue']['type'], 'funcReturn':p[1]['PassedValue']['funcReturn']}
   newTemp = newTemp+1
   #print("heeeeerrrrrreeeee")
 
@@ -1166,7 +1171,7 @@ def p_funccall(p):
     p[0] = {}
     p_error(str(p[1])+ " does not match signature")
   else:
-    p[0] = {'PassedValue':{} , 'Code':{}}
+    p[0] = {'PassedValue':{} , 'Code':[]}
     #p[0] = {'func': p[1], 'argvalues': p[3]}
     p[0]['Code'] = p[3]['Code']
     p[0]['Code'].append({'inst_type':'FUNCALL', 'src1':curr_mem , 'src2':p[3]['PassedValue'], 'dest':{"Label":p[1]}})
@@ -1185,7 +1190,8 @@ def p_args(p):
   'args : args SEPARATORS arg'
   p[0] = {}  
   p[0]['PassedValue'] = p[1]['PassedValue']+ [p[3]['PassedValue']]
-  p[0]['Code']= p[1]['Code'].append(p[3]['Code'])
+  p[1]['Code'] += p[3]['Code']
+  p[0]['Code']= p[1]['Code'] 
 
 def p_args_or(p):
   'args : arg'
