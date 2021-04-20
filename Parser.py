@@ -1012,11 +1012,11 @@ def p_multerm(p):
     if p[2] == '*':
       p[0]['Code'].append({'inst_type':'MUL', 'src1': p[1]['PassedValue'] ,
                                               'src2': p[3]['PassedValue'] , 
-                                              'dest': {'tempID':resultTemp , 'type':res[3]}})
+                                              'dest': {'tempID':resultTemp , 'type':res[3]['type']}})
     else:
       p[0]['Code'].append({'inst_type':'DIV', 'src1': p[1]['PassedValue'] ,
                                               'src2': p[3]['PassedValue'] , 
-                                              'dest': {'tempID':resultTemp , 'type':res[3]}})
+                                              'dest': {'tempID':resultTemp , 'type':res[3]['type']}})
 
     p[0]['PassedValue'].update({'tempID':resultTemp, 'type':res[3]['type']})
     newTemp = resultTemp + 1
@@ -1469,8 +1469,11 @@ def p_declare(p):
     code += i['Code']
     if 'PassedValue' in i.keys():
       del i['Code']
-      code.append({'inst_type':'DECLARE', 'src1':i['PassedValue'], 'src2':{}, 'dest':i})
+      asgnval = i['PassedValue']
       del i['PassedValue']
+      code.append({'inst_type':'DECLARE', 'src1':{}, 'src2':{}, 'dest':i})
+      code.append({'inst_type':'STORE', 'src1':asgnval, 'src2':{}, 'dest':i})
+      
     else:
       del i['Code']
       code.append({'inst_type':'DECLARE', 'src1':{}, 'src2':{}, 'dest':i})
