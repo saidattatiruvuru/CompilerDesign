@@ -1,0 +1,12 @@
+LexToken(CONTINUE,'continue',58,302)
+11 : Unexpected token continue
+LexToken(RFB,'}',66,445)
+16 : Unexpected token }
+___________________
+{'inst_type': 'LABEL', 'src1': {}, 'src2': {}, 'dest': {'Label': 'main'}}
+___________________
+{'inst_type': 'PRINT', 'src1': {'value': 'i [1] : ', 'type': 'string'}, 'src2': {}, 'dest': {}}
+___________________
+{'inst_type': 'PRINT', 'src1': {'identifier': 'i', 'dimension': [], 'size': 4, 'type': 'int', 'lineno': 1, 'start_addr': 4}, 'src2': {}, 'dest': {}}
+___________________
+{'inst_type': 'PRINT', 'src1': {'value': '\\n', 'type': 'string'}, 'src2': {}, 'dest': {}}

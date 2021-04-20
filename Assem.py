@@ -370,7 +370,8 @@ def getassem(code, src1, src2, dest): # give assembly code
             theInstrs.append('lw ' + int_reg[dest[0]] + ', 0($a3)')
         else:
             theInstrs.append("l.s " + float_reg[dest[0]]+ ", 0($a3)")
-
+    elif code['inst_type'] == 'ERROR':
+        theInstrs.append('j _error')
     elif code['inst_type'] == 'EOF':
         theInstrs.append('jr $ra')
 
@@ -397,18 +398,34 @@ def convert(toreg, fromreg): # convert stmt from one type to another
 
 def load(reg, var): # just load stmt from addr of var accoridng to type of reg
     if 'identifier' in var.keys():
-        if reg[1] == 'int':
-            if 'inside' in var.keys():
-                theInstrs.append("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+        
+        if var['type'] == 'float':
+            if reg[1] == 'int':
+                if 'inside' in var.keys():
+                    theInstrs.append("l.s $f0, "+ str(var['start_addr']) +"($k1)")
+                else:
+                    theInstrs.append("l.s $f0, "+ str(var['start_addr']) +"($k0)")
+                theInstrs.append('cvt.w.s $f31, $f0' )
+                theInstrs.append('mfc1 ' + int_reg[reg[0]] + ' , $f31')
             else:
-                theInstrs.append("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
-        else:
-            if 'inside' in var.keys():
-                theInstrs.append("l.s " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+                if 'inside' in var.keys():
+                    theInstrs.append("l.s " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+                else:
+                    theInstrs.append("l.s " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
+        else:#var(src) is int
+            if reg[1] == 'float':
+                if 'inside' in var.keys():
+                    theInstrs.append("lw $a2, "+ str(var['start_addr']) +"($k1)")
+                else:
+                    theInstrs.append("lw $a2, "+ str(var['start_addr']) +"($k0)")
+                theInstrs.append('mtc1  $a2 , $f31')
+                theInstrs.append('cvt.s.w ' + float_reg[reg[0]] + ' , $f31')
             else:
-                theInstrs.append("l.s " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
-                    
-    
+                if 'inside' in var.keys():
+                    theInstrs.append("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+                else:
+                    theInstrs.append("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
+                
 
 def store_args(code): # initialize a0, a1 and store args in just before funcall, currmem is in src1 of code
 
@@ -471,8 +488,9 @@ first_initialise()
 
 for i in range(len(theCode)):
     
+    """print("___________________")
+    print(theCode[i])
     
-    """
     c = 0
     for i2 in var_to_reg:
         print(i2)
@@ -537,7 +555,7 @@ for i in range(len(theCode)):
                     if tempstr in var_to_reg.keys():
                         convert(reg_src[src], [var_to_reg[tempstr]['reg'], 'int'])
                     else:
-                        load(reg_src[src], theCode[i][src])
+                       load(reg_src[src], theCode[i][src])
                     freg_to_var[reg_src[src][0]] = entry
                 else: 
                     if tempstr in var_to_reg.keys():
@@ -583,8 +601,8 @@ for i in range(len(theCode)):
                         'isTemp': True
                     }
                     reg_src.update({src : [result[0], 'int']})
-                    if tempstr in var_to_reg.keys():
-                        convert(reg_src[src], [var_to_reg[tempstr]['reg'], 'float'])
+                    if tempstr in var_to_freg.keys():
+                        convert(reg_src[src], [var_to_freg[tempstr]['reg'], 'float'])
                     else:
                         load(reg_src[src], theCode[i][src])
                     reg_to_var[reg_src[src][0]] = entry
@@ -690,8 +708,6 @@ for i in range(len(theCode)):
                 load_arg(reg_dest, count)
                 count += 1
     if not isDestList:
-        print("___________________")
-        print(theCode[i])
         getassem(theCode[i], reg_src['src1'], reg_src['src2'], reg_dest)
 
     if theCode[i]['inst_type'] in ['IF0', 'IFEQL', 'IF1', 'RETURN']:
@@ -705,12 +721,20 @@ for i in range(len(theCode)):
         initialise()
         #print("hi and start of block")
 
+temp = "_strerror: .asciiz \" ERROR! \""
+theStrings.append(temp)
 theStrings.append('_wordAlign: .word 0')
 theStrings.append('_dataStart: .space 4096')
 theStrings.append('.text ' )
 theStrings.append('.globl main ' )
 theStrings += theInstrs
 theStrings.append('jr $ra')
+theStrings.append("_error:")
+theStrings.append("li $v0, 4")
+theStrings.append("la $a0, _strerror")
+theStrings.append("syscall")
+theStrings.append("li $v0, 10")
+theStrings.append("syscall")
 f = open('Result.asm' , 'w')
 
 for line in theStrings:

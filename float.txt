@@ -1,16 +1,28 @@
-int i = 3;
-int f = 7;
-//float f =5.5;
-int k = i && f;
-print(k,"\n");
-if(i && f)
-{
-	int j = f;
-	print(j,"\n");
-    print(f);
+// sample code for type conversions
+
+float f = 5.5;
+int i = 5 ;
+
+float f1 = i + f;
+print("f1 [10.5]  : ", f1, "\n");
+
+int i1 = i + f;
+print("i1 [10] : ", i1, "\n");
+
+int c = 4.5 + i;
+print("c [9] : ", c, "\n");
+
+while(i && f){
+    i = i - 1;
+    if( i == 3){
+        print("i ==3 : continued\n");
+        continue;
+    }
+    if(i == 1){
+        int k = i && f;
+        print("i && f [1]: ", k, "\n");
+        break;
+    }
+    print("i: ",i, "\n");
 }
-else{
-    int j = i || f;
-    print("here  ");
-	print(j,"\n");
-}
+print("i [1] : ",i, "\n");
