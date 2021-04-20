@@ -222,14 +222,24 @@ def getassem(code, src1, src2, dest): # give assembly code
             theInstrs.append("_x"+str(labelnum+1)+":")
             labelnum +=2
     elif code['inst_type'] == "FUNCALL":
+        theInstrs.append("sw  $ra, 0($sp)")
         theInstrs.append("jal "+ code['dest']['Label'])
+        theInstrs.append("lw  $ra, 0($sp)")
 
     elif code['inst_type'] == "GOTO":
         theInstrs.append("j "+ code['dest']['Label'])
 
     elif code['inst_type'] == "OR":
         if src1[1] == 'int':
-            theInstrs.append("or "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("li " + int_reg[dest[0]] + ", 0")
+            theInstrs.append("bnez " + int_reg[src1[0]]+ ", _x"+ str(labelnum))
+            theInstrs.append("bnez " + int_reg[src2[0]]+ ", _x"+ str(labelnum))
+            theInstrs.append("j _x" + str(labelnum+1))
+            theInstrs.append("_x"+str(labelnum)+":")
+            theInstrs.append("li " + int_reg[dest[0]] + ", 1")
+            theInstrs.append("_x"+str(labelnum+1)+":")
+            labelnum+=2
+
         elif src1[1] == 'float':
             theInstrs.append("li " + int_reg[dest[0]] + ", 0")
             theInstrs.append("c.eq.s " + float_reg[src1[0]]+", $f30")
@@ -244,7 +254,14 @@ def getassem(code, src1, src2, dest): # give assembly code
 
     elif code['inst_type'] == "AND":
         if src1[1] == 'int':
-            theInstrs.append("and "+ int_reg[dest[0]] + ", " + int_reg[src1[0]] + " , " + int_reg[src2[0]])
+            theInstrs.append("li " + int_reg[dest[0]] + ", 1")
+            theInstrs.append("beqz " + int_reg[src1[0]]+ ", _x"+ str(labelnum))
+            theInstrs.append("beqz " + int_reg[src2[0]]+ ", _x"+ str(labelnum))
+            theInstrs.append("j _x" + str(labelnum+1))
+            theInstrs.append("_x"+str(labelnum)+":")
+            theInstrs.append("li " + int_reg[dest[0]] + ", 0")
+            theInstrs.append("_x"+str(labelnum+1)+":")
+            labelnum+=2
         elif src1[1] == 'float':
             theInstrs.append("li " + int_reg[dest[0]] + ", 1")
             theInstrs.append("c.eq.s " + float_reg[src1[0]]+", $f30")
@@ -453,10 +470,9 @@ first_initialise()
 #print(blockHeader)
 
 for i in range(len(theCode)):
-    """
-    print("___________________")
-    print(theCode[i])
     
+    
+    """
     c = 0
     for i2 in var_to_reg:
         print(i2)
@@ -675,6 +691,8 @@ for i in range(len(theCode)):
                 load_arg(reg_dest, count)
                 count += 1
     if not isDestList:
+        print("___________________")
+        print(theCode[i])
         getassem(theCode[i], reg_src['src1'], reg_src['src2'], reg_dest)
 
     if theCode[i]['inst_type'] in ['IF0', 'IFEQL', 'IF1', 'RETURN']:

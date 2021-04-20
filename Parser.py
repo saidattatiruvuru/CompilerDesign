@@ -1012,11 +1012,11 @@ def p_multerm(p):
     if p[2] == '*':
       p[0]['Code'].append({'inst_type':'MUL', 'src1': p[1]['PassedValue'] ,
                                               'src2': p[3]['PassedValue'] , 
-                                              'dest': {'tempID':resultTemp , 'type':res[3]}})
+                                              'dest': {'tempID':resultTemp , 'type':res[3]['type']}})
     else:
       p[0]['Code'].append({'inst_type':'DIV', 'src1': p[1]['PassedValue'] ,
                                               'src2': p[3]['PassedValue'] , 
-                                              'dest': {'tempID':resultTemp , 'type':res[3]}})
+                                              'dest': {'tempID':resultTemp , 'type':res[3]['type']}})
 
     p[0]['PassedValue'].update({'tempID':resultTemp, 'type':res[3]['type']})
     newTemp = resultTemp + 1
