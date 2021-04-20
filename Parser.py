@@ -1468,8 +1468,11 @@ def p_declare(p):
     code += i['Code']
     if 'PassedValue' in i.keys():
       del i['Code']
-      code.append({'inst_type':'DECLARE', 'src1':i['PassedValue'], 'src2':{}, 'dest':i})
+      asgnval = i['PassedValue']
       del i['PassedValue']
+      code.append({'inst_type':'DECLARE', 'src1':{}, 'src2':{}, 'dest':i})
+      code.append({'inst_type':'STORE', 'src1':asgnval, 'src2':{}, 'dest':i})
+      
     else:
       del i['Code']
       code.append({'inst_type':'DECLARE', 'src1':{}, 'src2':{}, 'dest':i})
