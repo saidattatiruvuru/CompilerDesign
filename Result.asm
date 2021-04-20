@@ -1,182 +1,169 @@
 .data
-_str0: .asciiz "Array values "
-_str1: .asciiz "  "
-_str2: .asciiz "\n "
+_str0: .asciiz "\n "
+_str1: .asciiz "th fibonacci: "
+_str2: .asciiz "\nYay! "
+_str3: .asciiz "\nHurray "
 _dataStart: .space 4096
 .text 
 .globl main 
+fibo:
+move $a3, $k1
+lw $t0, 0($a3)
+addi $a3, $a3, 4
+li $t1, 0
+li $t2, 1
+li $t3, 0
+sw $t1, 4($k1)
+sw $t2, 8($k1)
+sw $t3, 12($k1)
+j L1
+L0:
+lw $t0, 4($k1)
+move $t1, $t0
+lw $t2, 8($k1)
+move $t3, $t2
+add $t1, $t1 , $t3
+move $t4, $t1
+li $v0, 4
+la $a0, _str0
+syscall
+li $v0, 1
+move $a0, $t4
+syscall
+move $t0, $t2
+move $t2, $t4
+sw $t4, 16($k1)
+sw $t0, 4($k1)
+sw $t2, 8($k1)
+L1:
+lw $t0, 12($k1)
+move $t2, $t0
+lw $t4, 0($k1)
+move $t1, $t4
+slt $t2, $t2 , $t1
+beq $t2, $s7, L0
+L2:
+lw $t0, 8($k1)
+move $v0, $t0
+jr $ra
+jr $ra
+jr $ra
 main:
 la $k0, _dataStart
 li $s7, 1
 li.s $f29, 1.0
 li.s $f30, 0.0
-li $t0, 0
 li $v0, 5
 syscall
-move $t1, $v0
-move $t2, $t1
-sw $t0, 44($k0)
-sw $t2, 0($k0)
-j L3
-L2:
-li $t0, 4
-li $t2, 0
-li $t3, 10
-lw $t4, 44($k0)
-sgt $t5, $t4 , $t3
-beqz $t5, L1
-L1:
-lw $t4, 44($k0)
-mul $t5, $t0 , $t4
-add $t2, $t5 , $t2
-mul $t0, $t0 , $t3
-li $t3, 4
-add $t6, $t2 , $t3
-li $v0, 5
-syscall
-move $t0, $v0
-add $t6, $k0 , $t6
-sw $t0, 0($t6)
-move $t5, $t4
-li $t2, 1
-add $t5, $t5 , $t2
-move $t4, $t5
-sw $t4, 44($k0)
-L3:
-lw $t4, 44($k0)
-move $t7, $t4
-lw $t8, 0($k0)
-move $t9, $t8
-slt $t7, $t7 , $t9
-beq $t7, $s7, L2
-L4:
-li $t4, 0
-li $t8, 0
-sw $t4, 48($k0)
-sw $t8, 52($k0)
-j L24
-L23:
-lw $t4, 48($k0)
-move $t3, $t4
-li $t8, 1
-add $t3, $t3 , $t8
-move $s0, $t3
-sw $s0, 52($k0)
-j L21
-L20:
-slt $t4, $t4 , $s0
-beq $t4, $s7, L17
-j L18
-L17:
-move $s1, $s0
-li $s2, 4
-li $s3, 0
-li $s4, 10
-lw $s5, 48($k0)
-sgt $s6, $s5 , $s4
-sw $s1, 56($k0)
-beqz $s6, L12
-L12:
-lw $s1, 48($k0)
-mul $s6, $s2 , $s1
-add $s3, $s6 , $s3
-mul $s2, $s2 , $s4
-li $s4, 4
-add $s0, $s3 , $s4
-add $s0, $k0 , $s0
-sw $s6, 0($s0)
-li $s5, 4
-li $t0, 0
-li $t0, 10
-lw $t1, 52($k0)
-sgt $t0, $t1 , $t0
-beqz $t0, L16
-L16:
-lw $t1, 52($k0)
-mul $t0, $s5 , $t1
-add $s1, $t0 , $s1
-mul $s5, $s5 , $t0
-li $t0, 4
-add $s4, $s1 , $t0
-lw $t0, 56($k0)
-add $s4, $k0 , $s4
-sw $t0, 0($s4)
-j L19
-L18:
-L19:
-lw $t0, 52($k0)
-move $t1, $t0
-li $s0, 1
-add $t1, $t1 , $s0
-move $t0, $t1
-sw $t0, 52($k0)
-L21:
-lw $t0, 52($k0)
-move $t8, $t0
-lw $t1, 0($k0)
-move $t2, $t1
-slt $t8, $t8 , $t2
-beq $t8, $s7, L20
-L22:
-lw $t0, 48($k0)
-move $s0, $t0
-li $s2, 1
-add $s0, $s0 , $s2
-move $t0, $s0
-sw $t0, 48($k0)
-L24:
-lw $t0, 48($k0)
-move $t1, $t0
-lw $t2, 0($k0)
-move $t3, $t2
-slt $t1, $t1 , $t3
-beq $t1, $s7, L23
-L25:
-li $t0, 0
-sw $t0, 44($k0)
-j L29
-L28:
-li $v0, 4
-la $a0, _str0
-syscall
-lw $t0, 44($k0)
+move $t2, $v0
+move $t0, $t2
+li $k1, 4
+add $k1, $k1, $k0
+move $a3, $k1
+li $a1, 1
+sw $t0, 0($a3)
+addi $a3, $a3, 4
+sw $t0, 0($k0)
+jal fibo
+lw $t4, 0($k0)
 li $v0, 1
-move $a0, $t0
+move $a0, $t4
 syscall
 li $v0, 4
 la $a0, _str1
 syscall
-li $s4, 4
-li $t2, 0
-li $s1, 10
-sgt $s5, $t0 , $s1
-beqz $s5, L27
-
-L27:
-lw $t0, 44($k0)
-mul $s5, $s4 , $t0
-add $t2, $s5 , $t2
-mul $s4, $s4 , $s1
-addi  $a3, $k0 , 4
-add  $a3, $a3 , $t2
-lw $s3, 0($a3)
 li $v0, 1
-move $a0, $s3
+move $a0, $t0
 syscall
+li $v0, 6
+syscall
+mov.s $f1, $f0
+mov.s $f2, $f1
+li.s $f3, 0.0
+mov.s $f1, $f2
+li $t1, 0
+cvt.w.s $f31, $f1
+mfc1 $t5 , $f31
+slt $t2, $t5 , $t1
+sw $t0, 4($k0)
+sw $t0, 4($k0)
+s.s $f2, 8($k0)
+s.s $f3, 12($k0)
+beq $t2, $s7, L9
+j L10
+L9:
+l.s $f2, 8($k0)
+mov.s $f3, $f2
+li $t3, -1
+cvt.w.s $f31, $f3
+mfc1 $t0 , $f31
+sgt $t1, $t0 , $t3
+li $t1, 1
+sub $t1, $t1 , $t1
+mov.s $f4, $f2
+li $t4, -3
+cvt.w.s $f31, $f4
+mfc1 $t6 , $f31
+slt $t3, $t6 , $t4
+li $t3, 1
+sub $t3, $t3 , $t3
+li $t3, 2
+mtc1 $t1 , $f31
+cvt.w.s $f5 , $f31
+mov.s $f6, $f5
+mov.s $f4, $f6
+li $t7, 2
+cvt.w.s $f31, $f4
+mfc1 $t8 , $f31
+sgt $t7, $t8 , $t7
+cvt.w.s $f31, $f4
+mfc1 $t9 , $f31
+slt $s0, $t9 , $t7
+or $t3, $t7 , $s0
+li $t3, 1
+sub $t3, $t3 , $t3
+s.s $f6, 12($k0)
+beq $t3, $s7, L3
+j L4
+L3:
 li $v0, 4
 la $a0, _str2
 syscall
-move $s4, $t0
-li $s5, 1
-add $s4, $s4 , $s5
-move $t0, $s4
-sw $t0, 44($k0)
-L29:
-lw $t0, 44($k0)
-move $s2, $t0
-lw $t1, 0($k0)
-move $s6, $t1
-slt $s2, $s2 , $s6
-beq $s2, $s7, L28
-L30:
+j L5
+L4:
+L5:
+j L11
+L10:
+l.s $f2, 8($k0)
+mov.s $f6, $f2
+li $s0, 1
+cvt.w.s $f31, $f6
+mfc1 $s1 , $f31
+or $t7, $s1 , $s0
+li $s0, -2
+mtc1 $t7 , $f31
+cvt.w.s $f7 , $f31
+mov.s $f8, $f7
+mov.s $f9, $f8
+li $s2, -2
+cvt.w.s $f31, $f9
+mfc1 $s3 , $f31
+sgt $s2, $s3 , $s2
+cvt.w.s $f31, $f9
+mfc1 $s4 , $f31
+slt $s5, $s4 , $s2
+or $s0, $s2 , $s5
+li $s0, 1
+sub $s0, $s0 , $s0
+s.s $f8, 12($k0)
+beq $s0, $s7, L6
+j L7
+L6:
+li $v0, 4
+la $a0, _str3
+syscall
+j L8
+L7:
+L8:
+L11:
 jr $ra

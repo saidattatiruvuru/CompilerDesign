@@ -178,7 +178,7 @@ def getassem(code, src1, src2, dest): # give assembly code
                 if dest[1] == 'int':
                     theInstrs.append("li " + int_reg[dest[0]] + ", "  + str(code['src1']['constant']) )
                 elif dest[1] == 'float':
-                    theInstrs.append("li.s " + float_reg[dest[0]]+ ", " + str(code['src1']['constant']) )
+                    theInstrs.append("li.s " + float_reg[dest[0]]+ ", " + str(float(code['src1']['constant'])) )
 
 
     elif code['inst_type'] == 'INPUT':
@@ -278,7 +278,7 @@ def getassem(code, src1, src2, dest): # give assembly code
             if dest[1] == 'int':
                 theInstrs.append("li " + int_reg[dest[0]] +  ", " + str(code['src1']['constant']))
             elif dest[1] == 'float':
-                theInstrs.append("li.s " + float_reg[dest[0]] +  ", " + str(code['src1']['constant']))
+                theInstrs.append("li.s " + float_reg[dest[0]] +  ", " + str(float(code['src1']['constant'])))
         elif code['src1'] != {} and src1 != []:
             if dest[1] == 'int':
                 theInstrs.append("move " + int_reg[dest[0]] +  ", " + int_reg[src1[0]] )
@@ -330,7 +330,7 @@ def getassem(code, src1, src2, dest): # give assembly code
         if dest[1] == 'int':
             theInstrs.append('lw ' + int_reg[dest[0]] + ', 0($a3)')
         else:
-            theInstrs.append("lw.s " + float_reg[dest[0]]+ ", 0($a3)")
+            theInstrs.append("l.s " + float_reg[dest[0]]+ ", 0($a3)")
 
     elif code['inst_type'] == 'EOF':
         theInstrs.append('jr $ra')
@@ -365,9 +365,9 @@ def load(reg, var): # just load stmt from addr of var accoridng to type of reg
                 theInstrs.append("lw " + int_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
         else:
             if 'inside' in var.keys():
-                theInstrs.append("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
+                theInstrs.append("l.s " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k1)")
             else:
-                theInstrs.append("lw " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
+                theInstrs.append("l.s " + float_reg[reg[0]]+ ", "+ str(var['start_addr']) +"($k0)")
                     
     
 
@@ -383,7 +383,7 @@ def store_args(code): # initialize a0, a1 and store args in just before funcall,
                 theInstrs.append('li $a2, ' + str(arg['constant']))
                 theInstrs.append('sw $a2, 0($a3)')
             else:
-                theInstrs.append('li.s $f31, ' + str(arg['constant']))
+                theInstrs.append('li.s $f31, ' + str(float(arg['constant'])))
                 theInstrs.append('s.s $f31, 0($a3)')
         elif 'tempID' in arg.keys():
             keystr = json.dumps(sorted(arg.items()))
@@ -406,7 +406,7 @@ def store_args(code): # initialize a0, a1 and store args in just before funcall,
             else:
                 if keystr not in var_to_freg.keys():
                     theInstrs.append("addi  $a2, $k0, " + str(arg['start_addr']))
-                    theInstrs.append('lw.s $f31, 0($a2)')
+                    theInstrs.append('l.s $f31, 0($a2)')
                     theInstrs.append('s.s $f31, 0($a3)')
                 else:
                     reg = var_to_freg[keystr]
@@ -420,7 +420,7 @@ def load_arg(reg, count): # load from addr a0 + count*4 in funcdef
     if reg[1] == 'int':
         theInstrs.append('lw ' + int_reg[reg[0]] + ', 0($a3)')
     else:
-        theInstrs.append('lw.s ' + float_reg[reg[0]] + ', 0($a3)')
+        theInstrs.append('l.s ' + float_reg[reg[0]] + ', 0($a3)')
     theInstrs.append('addi $a3, $a3, 4')
 
 
